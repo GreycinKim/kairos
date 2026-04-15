@@ -1,0 +1,12 @@
+[
+  {"id": "ev-exodus-sea", "name": "Crossing the Red Sea", "locationId": "red-sea-crossing", "era": "exodus-conquest", "description": "Israel passes through the sea on dry ground."},
+  {"id": "ev-sinai-law", "name": "Covenant at Sinai", "locationId": "mount-sinai", "era": "exodus-conquest", "description": "The Lord gives the law to Moses."},
+  {"id": "ev-jericho", "name": "Fall of Jericho", "locationId": "jericho", "era": "exodus-conquest", "description": "First major city taken in Canaan."},
+  {"id": "ev-david-zion", "name": "David captures Jerusalem", "locationId": "jerusalem", "era": "united-kingdom", "description": "Zion becomes the city of David."},
+  {"id": "ev-solomon-temple", "name": "Solomon dedicates the Temple", "locationId": "jerusalem", "era": "united-kingdom", "description": "The ark rests in the house Yahweh promised."},
+  {"id": "ev-babylon-exile", "name": "Judah exiled to Babylon", "locationId": "babylon", "era": "exile-return", "description": "Temple destroyed; prophetic hope preserved."},
+  {"id": "ev-jesus-birth", "name": "Birth of Jesus", "locationId": "bethlehem", "era": "jesus-ministry", "description": "The Word becomes flesh in David’s town."},
+  {"id": "ev-pentecost", "name": "Pentecost", "locationId": "jerusalem", "era": "early-church", "description": "The Spirit poured out; church born in power."},
+  {"id": "ev-paul-conversion", "name": "Paul’s conversion", "locationId": "damascus", "era": "early-church", "description": "Saul meets the risen Christ on the road."},
+  {"id": "ev-areopagus", "name": "Paul at the Areopagus", "locationId": "athens", "era": "early-church", "description": "The unknown God proclaimed to philosophers."}
+]

@@ -1,0 +1,28 @@
+{
+  "source": "Describe your import pack",
+  "people": [
+    {
+      "slug": "person-slug",
+      "timeline_event": {
+        "title": "Person name (timeline)",
+        "type": "person",
+        "start_year": null,
+        "end_year": null,
+        "description": null,
+        "color": "#5d7f9a",
+        "icon": "👤",
+        "era": "Bible timeline",
+        "author": null,
+        "written_start_year": null,
+        "written_end_year": null
+      },
+      "profile": {
+        "name": "Person name (timeline)",
+        "scope": "bible",
+        "title": "",
+        "biography": "",
+        "scriptureAppearances": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "source": "Describe your import pack",
+  "places": [
+    {
+      "slug": "place-slug",
+      "place": {
+        "name": "Place name",
+        "description": "",
+        "scriptureAppearances": [{ "book": "Genesis", "chapter": 1 }],
+        "relatedTimelineEventIds": []
+      }
+    }
+  ]
+}

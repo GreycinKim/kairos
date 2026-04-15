@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kairos — Biblical Geography</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div id="app" class="app">
+      <header class="toolbar" role="banner">
+        <div class="toolbar__brand">
+          <span class="toolbar__title">Biblical geography</span>
+          <span class="toolbar__subtitle">Ancient Near East &amp; Mediterranean</span>
+        </div>
+        <div class="toolbar__search-wrap">
+          <label class="visually-hidden" for="map-search">Search places, events, and journeys</label>
+          <input type="search" id="map-search" class="toolbar__search" placeholder="Search places, events, journeys…" autocomplete="off" />
+          <ul id="search-results" class="search-dropdown" hidden role="listbox"></ul>
+        </div>
+        <div class="toolbar__filters" role="group" aria-label="Testament filter">
+          <button type="button" class="seg-btn seg-btn--active" data-testament="all" aria-pressed="true">All</button>
+          <button type="button" class="seg-btn" data-testament="OT" aria-pressed="false">Old Testament</button>
+          <button type="button" class="seg-btn" data-testament="NT" aria-pressed="false">New Testament</button>
+        </div>
+      </header>
+
+      <div class="era-bar">
+        <div class="era-bar__label" id="era-label">All eras</div>
+        <div class="era-bar__range">
+          <span class="era-bar__tick" data-era-idx="0">Patriarchs</span>
+          <span class="era-bar__tick" data-era-idx="1">Exodus</span>
+          <span class="era-bar__tick" data-era-idx="2">United K.</span>
+          <span class="era-bar__tick" data-era-idx="3">Divided K.</span>
+          <span class="era-bar__tick" data-era-idx="4">Exile</span>
+          <span class="era-bar__tick" data-era-idx="5">2nd Temple</span>
+          <span class="era-bar__tick" data-era-idx="6">Jesus</span>
+          <span class="era-bar__tick" data-era-idx="7">Church</span>
+        </div>
+        <label class="visually-hidden" for="era-slider">Historical era</label>
+        <input type="range" id="era-slider" class="era-slider" min="0" max="8" value="8" step="1" aria-valuemin="0" aria-valuemax="8" aria-valuenow="8" />
+        <p class="era-bar__hint" id="era-hint">Showing all periods. Drag the slider to filter by era.</p>
+      </div>
+
+      <div class="layout">
+        <div id="map" class="map" role="application" aria-label="Interactive biblical map"></div>
+
+        <aside id="side-panel" class="side-panel" aria-hidden="true" aria-labelledby="panel-title">
+          <div class="side-panel__header">
+            <h2 id="panel-title" class="side-panel__title"></h2>
+            <button type="button" id="panel-close" class="side-panel__close" aria-label="Close panel">×</button>
+          </div>
+          <div id="panel-body" class="side-panel__body"></div>
+        </aside>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

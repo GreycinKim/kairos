@@ -1,0 +1,3555 @@
+{
+  "dataNotes": [
+    "Many route place ids are schematic centroids; refine coordinates in locations.json as needed.",
+    "Second journey return uses Jerusalem → Damascus → Antioch as a schematic overland close.",
+    "Merged 95 routes from biblical-routes-import.json on 2026-04-14."
+  ],
+  "routes": [
+    {
+      "id": "abraham-ur-to-canaan",
+      "label": "Abraham: Ur to Canaan",
+      "category": "patriarchs",
+      "person": "Abraham",
+      "description": "The founding migration — Terah's household leaves Ur, pauses at Haran, then Abraham completes the journey to Canaan at God's call.",
+      "era": "patriarchs",
+      "bibleRef": "Genesis 11:31–12:9",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "ur",
+          "to": "haran",
+          "mode": "land",
+          "ref": "Genesis 11:31"
+        },
+        {
+          "from": "haran",
+          "to": "shechem",
+          "mode": "land",
+          "ref": "Genesis 12:4-6"
+        },
+        {
+          "from": "shechem",
+          "to": "bethel",
+          "mode": "land",
+          "ref": "Genesis 12:8"
+        },
+        {
+          "from": "bethel",
+          "to": "negev",
+          "mode": "land",
+          "ref": "Genesis 12:9"
+        }
+      ]
+    },
+    {
+      "id": "jacob-beersheba-haran",
+      "label": "Jacob: Beersheba → Bethel → Haran",
+      "category": "patriarchs",
+      "stopPlaceIds": [
+        "beersheba",
+        "bethel",
+        "haran"
+      ]
+    },
+    {
+      "id": "joseph-dothan-egypt",
+      "label": "Joseph: Dothan → Egypt (Memphis area, simplified)",
+      "category": "patriarchs",
+      "stopPlaceIds": [
+        "dothan",
+        "memphis-egypt"
+      ]
+    },
+    {
+      "id": "moses-toward-land",
+      "label": "Moses: Sinai → Nebo → Jericho (illustrative segments)",
+      "category": "exodus",
+      "stopPlaceIds": [
+        "mount-sinai",
+        "mount-nebo",
+        "jericho"
+      ]
+    },
+    {
+      "id": "jesus-galilee-judea",
+      "label": "Jesus ministry: Galilee loop → Jerusalem",
+      "category": "jesus",
+      "stopPlaceIds": [
+        "nazareth",
+        "capernaum",
+        "sea-of-galilee",
+        "bethlehem",
+        "jerusalem"
+      ]
+    },
+    {
+      "id": "paul-first-journey",
+      "label": "Paul's First Missionary Journey",
+      "category": "paul",
+      "person": "Paul / Barnabas",
+      "description": "Sent out from Antioch, Paul and Barnabas sail to Cyprus, cross the island, sail to Pamphylia, and journey inland through Pisidia and Lycaonia before retracing their steps.",
+      "era": "early-church",
+      "bibleRef": "Acts 13–14",
+      "transportMode": "mixed",
+      "segments": [
+        {
+          "from": "antioch",
+          "to": "seleucia-pieria",
+          "mode": "land",
+          "ref": "Acts 13:4"
+        },
+        {
+          "from": "seleucia-pieria",
+          "to": "salamis-cyprus",
+          "mode": "sea",
+          "ref": "Acts 13:4"
+        },
+        {
+          "from": "salamis-cyprus",
+          "to": "paphos",
+          "mode": "land",
+          "ref": "Acts 13:6"
+        },
+        {
+          "from": "paphos",
+          "to": "perga",
+          "mode": "sea",
+          "ref": "Acts 13:13"
+        },
+        {
+          "from": "perga",
+          "to": "antioch-pisidia",
+          "mode": "land",
+          "ref": "Acts 13:14"
+        },
+        {
+          "from": "antioch-pisidia",
+          "to": "iconium",
+          "mode": "land",
+          "ref": "Acts 13:51"
+        },
+        {
+          "from": "iconium",
+          "to": "lystra",
+          "mode": "land",
+          "ref": "Acts 14:6"
+        },
+        {
+          "from": "lystra",
+          "to": "derbe",
+          "mode": "land",
+          "ref": "Acts 14:20"
+        },
+        {
+          "from": "derbe",
+          "to": "lystra",
+          "mode": "land",
+          "ref": "Acts 14:21"
+        },
+        {
+          "from": "lystra",
+          "to": "iconium",
+          "mode": "land",
+          "ref": "Acts 14:21"
+        },
+        {
+          "from": "iconium",
+          "to": "antioch-pisidia",
+          "mode": "land",
+          "ref": "Acts 14:21"
+        },
+        {
+          "from": "antioch-pisidia",
+          "to": "perga",
+          "mode": "land",
+          "ref": "Acts 14:25"
+        },
+        {
+          "from": "perga",
+          "to": "antioch",
+          "mode": "sea",
+          "ref": "Acts 14:26"
+        }
+      ]
+    },
+    {
+      "id": "paul-second-journey",
+      "label": "Paul's Second Missionary Journey",
+      "category": "paul",
+      "person": "Paul / Silas",
+      "description": "Paul and Silas go overland through Syria and Cilicia, pick up Timothy in Lystra, cross to Macedonia following the vision, plant churches in Philippi, Thessalonica, Berea, Athens, and Corinth.",
+      "era": "early-church",
+      "bibleRef": "Acts 15:40–18:22",
+      "transportMode": "mixed",
+      "segments": [
+        {
+          "from": "antioch",
+          "to": "derbe",
+          "mode": "land",
+          "ref": "Acts 15:41-16:1"
+        },
+        {
+          "from": "derbe",
+          "to": "lystra",
+          "mode": "land",
+          "ref": "Acts 16:1"
+        },
+        {
+          "from": "lystra",
+          "to": "iconium",
+          "mode": "land",
+          "ref": "Acts 16:2"
+        },
+        {
+          "from": "iconium",
+          "to": "troas",
+          "mode": "land",
+          "ref": "Acts 16:6-8"
+        },
+        {
+          "from": "troas",
+          "to": "samothrace",
+          "mode": "sea",
+          "ref": "Acts 16:11"
+        },
+        {
+          "from": "samothrace",
+          "to": "philippi-neapolis",
+          "mode": "sea",
+          "ref": "Acts 16:11"
+        },
+        {
+          "from": "philippi-neapolis",
+          "to": "philippi",
+          "mode": "land",
+          "ref": "Acts 16:12"
+        },
+        {
+          "from": "philippi",
+          "to": "amphipolis",
+          "mode": "land",
+          "ref": "Acts 17:1"
+        },
+        {
+          "from": "amphipolis",
+          "to": "apollonia-macedonia",
+          "mode": "land",
+          "ref": "Acts 17:1"
+        },
+        {
+          "from": "apollonia-macedonia",
+          "to": "thessalonica",
+          "mode": "land",
+          "ref": "Acts 17:1"
+        },
+        {
+          "from": "thessalonica",
+          "to": "berea-macedonia",
+          "mode": "land",
+          "ref": "Acts 17:10"
+        },
+        {
+          "from": "berea-macedonia",
+          "to": "athens",
+          "mode": "sea",
+          "ref": "Acts 17:14-15"
+        },
+        {
+          "from": "athens",
+          "to": "corinth",
+          "mode": "land",
+          "ref": "Acts 18:1"
+        },
+        {
+          "from": "corinth",
+          "to": "cenchreae",
+          "mode": "land",
+          "ref": "Acts 18:18"
+        },
+        {
+          "from": "cenchreae",
+          "to": "ephesus",
+          "mode": "sea",
+          "ref": "Acts 18:19"
+        },
+        {
+          "from": "ephesus",
+          "to": "caesarea",
+          "mode": "sea",
+          "ref": "Acts 18:21-22"
+        },
+        {
+          "from": "caesarea",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "Acts 18:22"
+        },
+        {
+          "from": "jerusalem",
+          "to": "antioch",
+          "mode": "land",
+          "ref": "Acts 18:22"
+        }
+      ]
+    },
+    {
+      "id": "paul-third-journey",
+      "label": "Paul's Third Missionary Journey",
+      "category": "paul",
+      "person": "Paul",
+      "description": "Paul spends three years in Ephesus as his Asian base, then travels through Macedonia and Greece, returns by land through Macedonia, crosses to Troas, and coasts down to Miletus and Jerusalem.",
+      "era": "early-church",
+      "bibleRef": "Acts 18:23–21:17",
+      "transportMode": "mixed",
+      "segments": [
+        {
+          "from": "antioch",
+          "to": "derbe",
+          "mode": "land",
+          "ref": "Acts 18:23"
+        },
+        {
+          "from": "derbe",
+          "to": "iconium",
+          "mode": "land",
+          "ref": "Acts 18:23"
+        },
+        {
+          "from": "iconium",
+          "to": "ephesus",
+          "mode": "land",
+          "ref": "Acts 19:1"
+        },
+        {
+          "from": "ephesus",
+          "to": "troas",
+          "mode": "land",
+          "ref": "Acts 20:1"
+        },
+        {
+          "from": "troas",
+          "to": "philippi",
+          "mode": "land",
+          "ref": "Acts 20:2"
+        },
+        {
+          "from": "philippi",
+          "to": "thessalonica",
+          "mode": "land",
+          "ref": "Acts 20:3"
+        },
+        {
+          "from": "thessalonica",
+          "to": "berea-macedonia",
+          "mode": "land",
+          "ref": "Acts 20:3"
+        },
+        {
+          "from": "berea-macedonia",
+          "to": "troas",
+          "mode": "sea",
+          "ref": "Acts 20:5-6"
+        },
+        {
+          "from": "troas",
+          "to": "assos",
+          "mode": "land",
+          "ref": "Acts 20:13"
+        },
+        {
+          "from": "assos",
+          "to": "mitylene",
+          "mode": "sea",
+          "ref": "Acts 20:14"
+        },
+        {
+          "from": "mitylene",
+          "to": "chios",
+          "mode": "sea",
+          "ref": "Acts 20:15"
+        },
+        {
+          "from": "chios",
+          "to": "samos",
+          "mode": "sea",
+          "ref": "Acts 20:15"
+        },
+        {
+          "from": "samos",
+          "to": "miletos",
+          "mode": "sea",
+          "ref": "Acts 20:15"
+        },
+        {
+          "from": "miletos",
+          "to": "cos-island",
+          "mode": "sea",
+          "ref": "Acts 21:1"
+        },
+        {
+          "from": "cos-island",
+          "to": "rhodes",
+          "mode": "sea",
+          "ref": "Acts 21:1"
+        },
+        {
+          "from": "rhodes",
+          "to": "patara",
+          "mode": "sea",
+          "ref": "Acts 21:1"
+        },
+        {
+          "from": "patara",
+          "to": "tyre",
+          "mode": "sea",
+          "ref": "Acts 21:3"
+        },
+        {
+          "from": "tyre",
+          "to": "sidon",
+          "mode": "land",
+          "ref": "Acts 21:7"
+        },
+        {
+          "from": "sidon",
+          "to": "caesarea",
+          "mode": "sea",
+          "ref": "Acts 21:8"
+        },
+        {
+          "from": "caesarea",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "Acts 21:15"
+        }
+      ]
+    },
+    {
+      "id": "paul-voyage-to-rome",
+      "label": "Paul's Voyage to Rome",
+      "category": "paul",
+      "transportMode": "mixed",
+      "stopPlaceIds": [
+        "caesarea",
+        "sidon",
+        "myra",
+        "cnidus",
+        "fair-havens-crete",
+        "malta-melita",
+        "syracuse",
+        "regium",
+        "puteoli",
+        "appii-forum",
+        "three-taverns",
+        "rome"
+      ],
+      "segments": [
+        {
+          "from": "caesarea",
+          "to": "sidon",
+          "mode": "sea"
+        },
+        {
+          "from": "sidon",
+          "to": "myra",
+          "mode": "sea"
+        },
+        {
+          "from": "myra",
+          "to": "cnidus",
+          "mode": "sea"
+        },
+        {
+          "from": "cnidus",
+          "to": "fair-havens-crete",
+          "mode": "sea"
+        },
+        {
+          "from": "fair-havens-crete",
+          "to": "malta-melita",
+          "mode": "sea"
+        },
+        {
+          "from": "malta-melita",
+          "to": "syracuse",
+          "mode": "sea"
+        },
+        {
+          "from": "syracuse",
+          "to": "regium",
+          "mode": "sea"
+        },
+        {
+          "from": "regium",
+          "to": "puteoli",
+          "mode": "sea"
+        },
+        {
+          "from": "puteoli",
+          "to": "appii-forum",
+          "mode": "land"
+        },
+        {
+          "from": "appii-forum",
+          "to": "three-taverns",
+          "mode": "land"
+        },
+        {
+          "from": "three-taverns",
+          "to": "rome",
+          "mode": "land"
+        }
+      ]
+    },
+    {
+      "id": "abraham-egypt-sojourn",
+      "label": "Abraham: Canaan to Egypt and Back",
+      "category": "patriarchs",
+      "person": "Abraham",
+      "description": "Driven by famine, Abraham descends to Egypt where Pharaoh takes Sarai. After the plagues Pharaoh sends them away and Abraham returns north.",
+      "era": "patriarchs",
+      "bibleRef": "Genesis 12:10–13:4",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "negev",
+          "to": "memphis-egypt",
+          "mode": "land",
+          "ref": "Genesis 12:10"
+        },
+        {
+          "from": "memphis-egypt",
+          "to": "negev",
+          "mode": "land",
+          "ref": "Genesis 13:1"
+        },
+        {
+          "from": "negev",
+          "to": "bethel",
+          "mode": "land",
+          "ref": "Genesis 13:3"
+        }
+      ]
+    },
+    {
+      "id": "abraham-lot-separation",
+      "label": "Abraham and Lot Separate",
+      "category": "patriarchs",
+      "person": "Abraham",
+      "description": "After strife between their herdsmen, Abraham lets Lot choose the Jordan plain. Abraham moves to Hebron.",
+      "era": "patriarchs",
+      "bibleRef": "Genesis 13:5–18",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "bethel",
+          "to": "dead-sea",
+          "mode": "land",
+          "ref": "Genesis 13:10-11"
+        },
+        {
+          "from": "bethel",
+          "to": "hebron",
+          "mode": "land",
+          "ref": "Genesis 13:18"
+        }
+      ]
+    },
+    {
+      "id": "abraham-rescue-lot",
+      "label": "Abraham Rescues Lot",
+      "category": "patriarchs",
+      "person": "Abraham",
+      "description": "Abraham pursues the four kings who captured Lot all the way to Dan, defeats them by night, and returns through Salem where Melchizedek blesses him.",
+      "era": "patriarchs",
+      "bibleRef": "Genesis 14:13–24",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "hebron",
+          "to": "dan-city",
+          "mode": "land",
+          "ref": "Genesis 14:14"
+        },
+        {
+          "from": "dan-city",
+          "to": "damascus",
+          "mode": "land",
+          "ref": "Genesis 14:15"
+        },
+        {
+          "from": "damascus",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "Genesis 14:17-18"
+        },
+        {
+          "from": "jerusalem",
+          "to": "hebron",
+          "mode": "land",
+          "ref": "Genesis 14:24"
+        }
+      ]
+    },
+    {
+      "id": "abraham-mount-moriah",
+      "label": "Abraham: Journey to Mount Moriah",
+      "category": "patriarchs",
+      "person": "Abraham",
+      "description": "The three-day journey from Beersheba to offer Isaac on Mount Moriah — the supreme test of faith. God provides the ram. Abraham names the place 'The Lord Will Provide.'",
+      "era": "patriarchs",
+      "bibleRef": "Genesis 22:1–19",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "beersheba",
+          "to": "hebron",
+          "mode": "land",
+          "ref": "Genesis 22:3-4"
+        },
+        {
+          "from": "hebron",
+          "to": "bethlehem",
+          "mode": "land",
+          "ref": "Genesis 22:4"
+        },
+        {
+          "from": "bethlehem",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "Genesis 22:4-9"
+        }
+      ]
+    },
+    {
+      "id": "abraham-gerar-sojourn",
+      "label": "Abraham at Gerar",
+      "category": "patriarchs",
+      "person": "Abraham",
+      "description": "Abraham moves to Gerar and again passes Sarah off as his sister before Abimelech. He then digs wells at Beersheba and makes a covenant.",
+      "era": "patriarchs",
+      "bibleRef": "Genesis 20:1–21:34",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "hebron",
+          "to": "gerar",
+          "mode": "land",
+          "ref": "Genesis 20:1"
+        },
+        {
+          "from": "gerar",
+          "to": "beersheba",
+          "mode": "land",
+          "ref": "Genesis 21:31-34"
+        }
+      ]
+    },
+    {
+      "id": "hagar-wilderness-flight",
+      "label": "Hagar: Wilderness Flights",
+      "category": "patriarchs",
+      "person": "Hagar",
+      "description": "Twice Hagar flees into the wilderness — first when pregnant with Ishmael, then when expelled with the boy. God meets her both times.",
+      "era": "patriarchs",
+      "bibleRef": "Genesis 16:1–16; 21:14–21",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "hebron",
+          "to": "beer-lahai-roi",
+          "mode": "land",
+          "ref": "Genesis 16:7-14"
+        },
+        {
+          "from": "beersheba",
+          "to": "wilderness-sin",
+          "mode": "land",
+          "ref": "Genesis 21:14"
+        },
+        {
+          "from": "wilderness-sin",
+          "to": "midian-region",
+          "mode": "land",
+          "ref": "Genesis 21:21"
+        }
+      ]
+    },
+    {
+      "id": "isaac-gerar-beersheba",
+      "label": "Isaac: Gerar to Beersheba",
+      "category": "patriarchs",
+      "person": "Isaac",
+      "description": "Isaac sojourns in Gerar during famine, again passes Rebekah as his sister, digs wells, and finally settles at Beersheba where God appears to him.",
+      "era": "patriarchs",
+      "bibleRef": "Genesis 26:1–33",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "beersheba",
+          "to": "gerar",
+          "mode": "land",
+          "ref": "Genesis 26:1"
+        },
+        {
+          "from": "gerar",
+          "to": "beersheba",
+          "mode": "land",
+          "ref": "Genesis 26:23"
+        }
+      ]
+    },
+    {
+      "id": "jacob-canaan-to-haran",
+      "label": "Jacob: Fleeing to Haran",
+      "category": "patriarchs",
+      "person": "Jacob",
+      "description": "Jacob flees Esau's wrath, sleeps at Bethel and sees the ladder of angels, then continues to Paddan-Aram. He serves Laban for twenty years.",
+      "era": "patriarchs",
+      "bibleRef": "Genesis 27:43–29:14",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "beersheba",
+          "to": "bethel",
+          "mode": "land",
+          "ref": "Genesis 28:10-19"
+        },
+        {
+          "from": "bethel",
+          "to": "haran",
+          "mode": "land",
+          "ref": "Genesis 29:1-4"
+        }
+      ]
+    },
+    {
+      "id": "jacob-return-canaan",
+      "label": "Jacob: Return from Haran",
+      "category": "patriarchs",
+      "person": "Jacob",
+      "description": "Jacob departs secretly from Laban, is pursued and reconciled at Gilead, wrestles at Peniel, meets Esau, and settles at Shechem then Bethel.",
+      "era": "patriarchs",
+      "bibleRef": "Genesis 31–35",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "haran",
+          "to": "gilead",
+          "mode": "land",
+          "ref": "Genesis 31:21-25"
+        },
+        {
+          "from": "gilead",
+          "to": "penuel",
+          "mode": "land",
+          "ref": "Genesis 32:22-30"
+        },
+        {
+          "from": "penuel",
+          "to": "shechem",
+          "mode": "land",
+          "ref": "Genesis 33:18"
+        },
+        {
+          "from": "shechem",
+          "to": "bethel",
+          "mode": "land",
+          "ref": "Genesis 35:1-8"
+        },
+        {
+          "from": "bethel",
+          "to": "bethlehem",
+          "mode": "land",
+          "ref": "Genesis 35:16"
+        },
+        {
+          "from": "bethlehem",
+          "to": "hebron",
+          "mode": "land",
+          "ref": "Genesis 35:27"
+        }
+      ]
+    },
+    {
+      "id": "jacob-canaan-to-egypt",
+      "label": "Jacob: Descent to Egypt",
+      "category": "patriarchs",
+      "person": "Jacob",
+      "description": "At God's word Jacob takes his whole household from Beersheba down to Egypt to be reunited with Joseph. He stops at Beersheba for a final vision.",
+      "era": "patriarchs",
+      "bibleRef": "Genesis 46:1–7",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "hebron",
+          "to": "beersheba",
+          "mode": "land",
+          "ref": "Genesis 46:1"
+        },
+        {
+          "from": "beersheba",
+          "to": "goshen",
+          "mode": "land",
+          "ref": "Genesis 46:6-7"
+        }
+      ]
+    },
+    {
+      "id": "joseph-canaan-to-egypt",
+      "label": "Joseph: Canaan to Egypt (as slave)",
+      "category": "patriarchs",
+      "person": "Joseph",
+      "description": "Joseph is thrown into a pit at Dothan by his brothers, sold to Ishmaelite traders, and taken down to Egypt as a slave.",
+      "era": "patriarchs",
+      "bibleRef": "Genesis 37:12–36",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "hebron",
+          "to": "shechem",
+          "mode": "land",
+          "ref": "Genesis 37:14"
+        },
+        {
+          "from": "shechem",
+          "to": "dothan",
+          "mode": "land",
+          "ref": "Genesis 37:17"
+        },
+        {
+          "from": "dothan",
+          "to": "goshen",
+          "mode": "land",
+          "ref": "Genesis 37:28"
+        },
+        {
+          "from": "goshen",
+          "to": "memphis-egypt",
+          "mode": "land",
+          "ref": "Genesis 39:1"
+        }
+      ]
+    },
+    {
+      "id": "joseph-prison-to-palace",
+      "label": "Joseph: Prison to Palace",
+      "category": "patriarchs",
+      "person": "Joseph",
+      "description": "Joseph rises from Potiphar's house to prison to the throne room of Pharaoh, all within the confines of Egypt.",
+      "era": "patriarchs",
+      "bibleRef": "Genesis 39–41",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "memphis-egypt",
+          "to": "memphis-egypt",
+          "mode": "land",
+          "ref": "Genesis 41:14-43"
+        }
+      ]
+    },
+    {
+      "id": "moses-egypt-to-midian",
+      "label": "Moses: Egypt to Midian",
+      "category": "exodus",
+      "person": "Moses",
+      "description": "Moses flees Egypt after killing an Egyptian taskmaster. He sits at a well in Midian where he meets Jethro's daughters and eventually marries Zipporah.",
+      "era": "exodus-conquest",
+      "bibleRef": "Exodus 2:15–22",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "memphis-egypt",
+          "to": "midian-region",
+          "mode": "land",
+          "ref": "Exodus 2:15"
+        }
+      ]
+    },
+    {
+      "id": "moses-midian-to-egypt",
+      "label": "Moses: Return to Egypt",
+      "category": "exodus",
+      "person": "Moses",
+      "description": "After the burning bush encounter at Sinai, Moses returns to Egypt with his wife and sons to confront Pharaoh.",
+      "era": "exodus-conquest",
+      "bibleRef": "Exodus 4:18–31",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "mount-sinai",
+          "to": "midian-region",
+          "mode": "land",
+          "ref": "Exodus 4:18"
+        },
+        {
+          "from": "midian-region",
+          "to": "goshen",
+          "mode": "land",
+          "ref": "Exodus 4:27-29"
+        }
+      ]
+    },
+    {
+      "id": "israel-exodus-route",
+      "label": "The Exodus: Egypt to Sinai",
+      "category": "exodus",
+      "person": "Moses / Israel",
+      "description": "Israel departs from Rameses, crosses the sea, and journeys through the wilderness to Mount Sinai. The foundational journey of Israelite identity.",
+      "era": "exodus-conquest",
+      "bibleRef": "Exodus 12–19",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "rameses-city",
+          "to": "red-sea-crossing",
+          "mode": "land",
+          "ref": "Exodus 12:37; 13:17-18"
+        },
+        {
+          "from": "red-sea-crossing",
+          "to": "marah",
+          "mode": "land",
+          "ref": "Exodus 15:22-23"
+        },
+        {
+          "from": "marah",
+          "to": "elim",
+          "mode": "land",
+          "ref": "Exodus 15:27"
+        },
+        {
+          "from": "elim",
+          "to": "wilderness-sin",
+          "mode": "land",
+          "ref": "Exodus 16:1"
+        },
+        {
+          "from": "wilderness-sin",
+          "to": "rephidim",
+          "mode": "land",
+          "ref": "Exodus 17:1"
+        },
+        {
+          "from": "rephidim",
+          "to": "mount-sinai",
+          "mode": "land",
+          "ref": "Exodus 19:1-2"
+        }
+      ]
+    },
+    {
+      "id": "israel-sinai-to-kadesh",
+      "label": "Sinai to Kadesh Barnea",
+      "category": "exodus",
+      "person": "Moses / Israel",
+      "description": "Israel departs Sinai for Canaan but the spies' negative report at Kadesh Barnea triggers forty years of wandering.",
+      "era": "exodus-conquest",
+      "bibleRef": "Numbers 10–14",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "mount-sinai",
+          "to": "kadesh-barnea",
+          "mode": "land",
+          "ref": "Numbers 10:11-12; 13:26"
+        }
+      ]
+    },
+    {
+      "id": "israel-wilderness-wandering",
+      "label": "Forty Years of Wilderness Wandering",
+      "category": "exodus",
+      "person": "Moses / Israel",
+      "description": "The generation condemned to die in the wilderness wanders between Kadesh, the Sinai, and Edom before finally reaching the plains of Moab.",
+      "era": "exodus-conquest",
+      "bibleRef": "Numbers 15–36; Deuteronomy 1–2",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "kadesh-barnea",
+          "to": "mount-sinai",
+          "mode": "land",
+          "ref": "Numbers 14:25"
+        },
+        {
+          "from": "mount-sinai",
+          "to": "edom-region",
+          "mode": "land",
+          "ref": "Numbers 20:14-21"
+        },
+        {
+          "from": "edom-region",
+          "to": "moab-region",
+          "mode": "land",
+          "ref": "Numbers 21:10-20"
+        },
+        {
+          "from": "moab-region",
+          "to": "heshbon",
+          "mode": "land",
+          "ref": "Numbers 21:25"
+        },
+        {
+          "from": "heshbon",
+          "to": "moab-region",
+          "mode": "land",
+          "ref": "Numbers 22:1"
+        }
+      ]
+    },
+    {
+      "id": "moses-nebo-death",
+      "label": "Moses: Plains of Moab to Mount Nebo",
+      "category": "exodus",
+      "person": "Moses",
+      "description": "Moses' final journey — from the plains of Moab to the summit of Mount Nebo where God shows him the promised land before his death.",
+      "era": "exodus-conquest",
+      "bibleRef": "Deuteronomy 32:48–52; 34:1–8",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "moab-region",
+          "to": "mount-nebo",
+          "mode": "land",
+          "ref": "Deuteronomy 34:1"
+        }
+      ]
+    },
+    {
+      "id": "joshua-conquest-central",
+      "label": "Joshua: Central Campaign",
+      "category": "conquest",
+      "person": "Joshua",
+      "description": "Joshua 1–9: preparation and spies (1–2); Jordan crossing (3–4); Gilgal, Jericho (5–6); Ai after Achan (7–8); Gibeonite covenant (9). Moab / Mt. Nebo context to Gilgal and the hill country.",
+      "era": "exodus-conquest",
+      "bibleRef": "Joshua 3–9",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "moab-region",
+          "to": "gilgal",
+          "mode": "land",
+          "ref": "Joshua 3:1; 4:19"
+        },
+        {
+          "from": "gilgal",
+          "to": "jericho",
+          "mode": "land",
+          "ref": "Joshua 6:1-2"
+        },
+        {
+          "from": "jericho",
+          "to": "ai",
+          "mode": "land",
+          "ref": "Joshua 7:2"
+        },
+        {
+          "from": "ai",
+          "to": "gibeon",
+          "mode": "land",
+          "ref": "Joshua 9:3-6"
+        },
+        {
+          "from": "gibeon",
+          "to": "gilgal",
+          "mode": "land",
+          "ref": "Joshua 9:6"
+        }
+      ]
+    },
+    {
+      "id": "joshua-conquest-southern",
+      "label": "Joshua: Southern Campaign",
+      "category": "conquest",
+      "person": "Joshua",
+      "description": "Joshua 10: Gibeon battle and long day (10:1–15); southern sweep through the Shephelah and Negev (10:16–43).",
+      "era": "exodus-conquest",
+      "bibleRef": "Joshua 10",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "gilgal",
+          "to": "gibeon",
+          "mode": "land",
+          "ref": "Joshua 10:9"
+        },
+        {
+          "from": "gibeon",
+          "to": "azekah",
+          "mode": "land",
+          "ref": "Joshua 10:10"
+        },
+        {
+          "from": "azekah",
+          "to": "lachish",
+          "mode": "land",
+          "ref": "Joshua 10:31"
+        },
+        {
+          "from": "lachish",
+          "to": "hebron",
+          "mode": "land",
+          "ref": "Joshua 10:36"
+        },
+        {
+          "from": "hebron",
+          "to": "debir",
+          "mode": "land",
+          "ref": "Joshua 10:38"
+        },
+        {
+          "from": "debir",
+          "to": "gilgal",
+          "mode": "land",
+          "ref": "Joshua 10:43"
+        }
+      ]
+    },
+    {
+      "id": "joshua-conquest-northern",
+      "label": "Joshua: Northern Campaign",
+      "category": "conquest",
+      "person": "Joshua",
+      "description": "Joshua 11: northern coalition defeated at the Waters of Merom; Hazor burned. Joshua 12 lists conquered kings as a summary of the campaigns.",
+      "era": "exodus-conquest",
+      "bibleRef": "Joshua 11",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "gilgal",
+          "to": "mount-tabor",
+          "mode": "land",
+          "ref": "Joshua 11:1-5"
+        },
+        {
+          "from": "mount-tabor",
+          "to": "hazor",
+          "mode": "land",
+          "ref": "Joshua 11:10"
+        },
+        {
+          "from": "hazor",
+          "to": "dan-city",
+          "mode": "land",
+          "ref": "Joshua 11:8"
+        },
+        {
+          "from": "dan-city",
+          "to": "gilgal",
+          "mode": "land",
+          "ref": "Joshua 11:23"
+        }
+      ]
+    },
+    {
+      "id": "ark-covenant-philistine-circuit",
+      "label": "Ark of the Covenant: Ebenezer, Philistia, and return",
+      "category": "united-kingdom",
+      "person": "Ark of the Covenant",
+      "description": "Shiloh to the battle of Ebenezer (1 Sam 4); Philistines capture the ark to Ashdod, Gath, and Ekron (1 Sam 5); returned to Beth Shemesh (1 Sam 6); Kiriath Jearim (1 Sam 7:1); David brings the ark toward Jerusalem (2 Sam 6; 1 Chr 13–15).",
+      "era": "united-kingdom",
+      "bibleRef": "1 Samuel 4 – 7:1; 2 Samuel 6; 1 Chronicles 13–15",
+      "transportMode": "land",
+      "stopPlaceIds": [
+        "shiloh",
+        "ebenezer-1sam4",
+        "ashdod",
+        "gath",
+        "ekron",
+        "beth-shemesh",
+        "kiriath-jearim",
+        "jerusalem"
+      ]
+    },
+    {
+      "id": "deborah-barak-campaign",
+      "label": "Deborah and Barak: Battle of Kishon",
+      "category": "judges",
+      "person": "Deborah / Barak",
+      "description": "Deborah summons Barak from Kedesh. Israel musters at Mount Tabor and sweeps down on Sisera's chariot army at the Kishon river.",
+      "era": "divided-kingdom",
+      "bibleRef": "Judges 4–5",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "ramah-benjamin",
+          "to": "kedesh-naphtali",
+          "mode": "land",
+          "ref": "Judges 4:6"
+        },
+        {
+          "from": "kedesh-naphtali",
+          "to": "mount-tabor",
+          "mode": "land",
+          "ref": "Judges 4:12"
+        },
+        {
+          "from": "mount-tabor",
+          "to": "megiddo",
+          "mode": "land",
+          "ref": "Judges 4:15-16"
+        },
+        {
+          "from": "megiddo",
+          "to": "kedesh-naphtali",
+          "mode": "land",
+          "ref": "Judges 4:17-22"
+        }
+      ]
+    },
+    {
+      "id": "gideon-midian-campaign",
+      "label": "Gideon: Defeat of Midian",
+      "category": "judges",
+      "person": "Gideon",
+      "description": "Gideon musters forces at the spring of Harod, reduces his army to 300, routs the Midianites at night, and pursues them across the Jordan.",
+      "era": "divided-kingdom",
+      "bibleRef": "Judges 6–8",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "jezreel",
+          "to": "mount-tabor",
+          "mode": "land",
+          "ref": "Judges 7:1"
+        },
+        {
+          "from": "mount-tabor",
+          "to": "beth-shan",
+          "mode": "land",
+          "ref": "Judges 7:22"
+        },
+        {
+          "from": "beth-shan",
+          "to": "penuel",
+          "mode": "land",
+          "ref": "Judges 8:8"
+        },
+        {
+          "from": "penuel",
+          "to": "succoth-jordan",
+          "mode": "land",
+          "ref": "Judges 8:5-8"
+        }
+      ]
+    },
+    {
+      "id": "samson-life-route",
+      "label": "Samson: Life and Journeys",
+      "category": "judges",
+      "person": "Samson",
+      "description": "Samson's turbulent life moves between Zorah, Timnah, Gaza, the Valley of Sorek, and finally back to Gaza where he dies.",
+      "era": "divided-kingdom",
+      "bibleRef": "Judges 13–16",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "zorah",
+          "to": "timnah-sorek",
+          "mode": "land",
+          "ref": "Judges 14:1"
+        },
+        {
+          "from": "timnah-sorek",
+          "to": "ashkelon-coast",
+          "mode": "land",
+          "ref": "Judges 14:19"
+        },
+        {
+          "from": "ashkelon-coast",
+          "to": "zorah",
+          "mode": "land",
+          "ref": "Judges 14:19"
+        },
+        {
+          "from": "zorah",
+          "to": "timnah-sorek",
+          "mode": "land",
+          "ref": "Judges 15:1"
+        },
+        {
+          "from": "timnah-sorek",
+          "to": "gaza-city",
+          "mode": "land",
+          "ref": "Judges 16:1"
+        },
+        {
+          "from": "gaza-city",
+          "to": "timnah-sorek",
+          "mode": "land",
+          "ref": "Judges 16:4"
+        },
+        {
+          "from": "timnah-sorek",
+          "to": "gaza-city",
+          "mode": "land",
+          "ref": "Judges 16:21-30"
+        }
+      ]
+    },
+    {
+      "id": "ruth-naomi-moab-bethlehem",
+      "label": "Ruth and Naomi: Moab to Bethlehem",
+      "category": "judges",
+      "person": "Ruth / Naomi",
+      "description": "Naomi returns from Moab after her husband and sons die. Ruth refuses to leave her. They journey to Bethlehem at the beginning of the barley harvest.",
+      "era": "united-kingdom",
+      "bibleRef": "Ruth 1",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "moab-region",
+          "to": "bethlehem",
+          "mode": "land",
+          "ref": "Ruth 1:19"
+        }
+      ]
+    },
+    {
+      "id": "jephthah-ammon-campaign",
+      "label": "Jephthah: Ammonite Campaign",
+      "category": "judges",
+      "person": "Jephthah",
+      "description": "Jephthah passes through Ammon and Moab, vows his vow, and defeats the Ammonites — at the cost of his daughter.",
+      "era": "divided-kingdom",
+      "bibleRef": "Judges 11",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "gilead",
+          "to": "ammon-region",
+          "mode": "land",
+          "ref": "Judges 11:29"
+        },
+        {
+          "from": "ammon-region",
+          "to": "moab-region",
+          "mode": "land",
+          "ref": "Judges 11:18"
+        },
+        {
+          "from": "moab-region",
+          "to": "gilead",
+          "mode": "land",
+          "ref": "Judges 11:33"
+        }
+      ]
+    },
+    {
+      "id": "samuel-circuit",
+      "label": "Samuel's Annual Circuit",
+      "category": "united-kingdom",
+      "person": "Samuel",
+      "description": "Samuel judged Israel on an annual circuit from his home in Ramah through Bethel, Gilgal, and Mizpah.",
+      "era": "united-kingdom",
+      "bibleRef": "1 Samuel 7:15–17",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "ramah-benjamin",
+          "to": "bethel",
+          "mode": "land",
+          "ref": "1 Samuel 7:16"
+        },
+        {
+          "from": "bethel",
+          "to": "gilgal",
+          "mode": "land",
+          "ref": "1 Samuel 7:16"
+        },
+        {
+          "from": "gilgal",
+          "to": "mizpah-benjamin",
+          "mode": "land",
+          "ref": "1 Samuel 7:16"
+        },
+        {
+          "from": "mizpah-benjamin",
+          "to": "ramah-benjamin",
+          "mode": "land",
+          "ref": "1 Samuel 7:17"
+        }
+      ]
+    },
+    {
+      "id": "samuel-anoints-saul",
+      "label": "Samuel Anoints Saul",
+      "category": "united-kingdom",
+      "person": "Samuel",
+      "description": "Saul searching for lost donkeys encounters Samuel at Ramah, is privately anointed, then publicly acclaimed king at Mizpah and confirmed at Gilgal.",
+      "era": "united-kingdom",
+      "bibleRef": "1 Samuel 9–11",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "gibeah",
+          "to": "ramah-benjamin",
+          "mode": "land",
+          "ref": "1 Samuel 9:6-10"
+        },
+        {
+          "from": "ramah-benjamin",
+          "to": "mizpah-benjamin",
+          "mode": "land",
+          "ref": "1 Samuel 10:17"
+        },
+        {
+          "from": "mizpah-benjamin",
+          "to": "gilgal",
+          "mode": "land",
+          "ref": "1 Samuel 11:14-15"
+        }
+      ]
+    },
+    {
+      "id": "samuel-anoints-david",
+      "label": "Samuel Anoints David",
+      "category": "united-kingdom",
+      "person": "Samuel",
+      "description": "God sends Samuel from Ramah to Bethlehem to anoint the youngest son of Jesse as king.",
+      "era": "united-kingdom",
+      "bibleRef": "1 Samuel 16:1–13",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "ramah-benjamin",
+          "to": "bethlehem",
+          "mode": "land",
+          "ref": "1 Samuel 16:1-4"
+        }
+      ]
+    },
+    {
+      "id": "saul-campaigns",
+      "label": "Saul: Military Campaigns",
+      "category": "united-kingdom",
+      "person": "Saul",
+      "description": "Saul's major campaigns: relief of Jabesh Gilead, defeat of the Philistines at Michmash, war with the Amalekites, and final battle at Gilboa.",
+      "era": "united-kingdom",
+      "bibleRef": "1 Samuel 11; 13–14; 15; 31",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "gibeah",
+          "to": "jabesh-gilead",
+          "mode": "land",
+          "ref": "1 Samuel 11:1-11"
+        },
+        {
+          "from": "jabesh-gilead",
+          "to": "gibeah",
+          "mode": "land",
+          "ref": "1 Samuel 11:12-13"
+        },
+        {
+          "from": "gibeah",
+          "to": "michmash",
+          "mode": "land",
+          "ref": "1 Samuel 13:2"
+        },
+        {
+          "from": "michmash",
+          "to": "gibeah",
+          "mode": "land",
+          "ref": "1 Samuel 14:46"
+        },
+        {
+          "from": "gibeah",
+          "to": "negev",
+          "mode": "land",
+          "ref": "1 Samuel 15:4"
+        },
+        {
+          "from": "negev",
+          "to": "mount-gilboa",
+          "mode": "land",
+          "ref": "1 Samuel 31:1"
+        }
+      ]
+    },
+    {
+      "id": "saul-pursues-david",
+      "label": "Saul Pursues David",
+      "category": "united-kingdom",
+      "person": "Saul",
+      "description": "Saul's increasingly frantic pursuit of David across the Judean wilderness — from Gibeah to Ramah, Nob, the Shephelah, En-Gedi, and the Wilderness of Ziph.",
+      "era": "united-kingdom",
+      "bibleRef": "1 Samuel 19–26",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "gibeah",
+          "to": "ramah-benjamin",
+          "mode": "land",
+          "ref": "1 Samuel 19:22"
+        },
+        {
+          "from": "ramah-benjamin",
+          "to": "nob",
+          "mode": "land",
+          "ref": "1 Samuel 22:9"
+        },
+        {
+          "from": "nob",
+          "to": "adullam",
+          "mode": "land",
+          "ref": "1 Samuel 22:1"
+        },
+        {
+          "from": "adullam",
+          "to": "en-gedi",
+          "mode": "land",
+          "ref": "1 Samuel 24:1"
+        },
+        {
+          "from": "en-gedi",
+          "to": "ziph-wilderness",
+          "mode": "land",
+          "ref": "1 Samuel 26:1-2"
+        }
+      ]
+    },
+    {
+      "id": "david-early-life",
+      "label": "David: From Shepherd to Court",
+      "category": "united-kingdom",
+      "person": "David",
+      "description": "David's trajectory from Bethlehem shepherd to Saul's court musician to giant-killer — from the Elah Valley to the palace at Gibeah.",
+      "era": "united-kingdom",
+      "bibleRef": "1 Samuel 16–17",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "bethlehem",
+          "to": "gibeah",
+          "mode": "land",
+          "ref": "1 Samuel 16:21"
+        },
+        {
+          "from": "gibeah",
+          "to": "elah-valley",
+          "mode": "land",
+          "ref": "1 Samuel 17:20"
+        },
+        {
+          "from": "elah-valley",
+          "to": "gibeah",
+          "mode": "land",
+          "ref": "1 Samuel 18:2"
+        }
+      ]
+    },
+    {
+      "id": "david-fugitive-route",
+      "label": "David: Fugitive from Saul",
+      "category": "united-kingdom",
+      "person": "David",
+      "description": "David's years as a fugitive: from Gibeah through Nob, Gath, Adullam, Keilah, Ziph, En-Gedi, and finally to Philistine territory at Ziklag.",
+      "era": "united-kingdom",
+      "bibleRef": "1 Samuel 19–27",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "gibeah",
+          "to": "ramah-benjamin",
+          "mode": "land",
+          "ref": "1 Samuel 19:18"
+        },
+        {
+          "from": "ramah-benjamin",
+          "to": "nob",
+          "mode": "land",
+          "ref": "1 Samuel 21:1"
+        },
+        {
+          "from": "nob",
+          "to": "gath",
+          "mode": "land",
+          "ref": "1 Samuel 21:10"
+        },
+        {
+          "from": "gath",
+          "to": "adullam",
+          "mode": "land",
+          "ref": "1 Samuel 22:1"
+        },
+        {
+          "from": "adullam",
+          "to": "moab-region",
+          "mode": "land",
+          "ref": "1 Samuel 22:3"
+        },
+        {
+          "from": "moab-region",
+          "to": "adullam",
+          "mode": "land",
+          "ref": "1 Samuel 22:4"
+        },
+        {
+          "from": "adullam",
+          "to": "keilah",
+          "mode": "land",
+          "ref": "1 Samuel 23:1-5"
+        },
+        {
+          "from": "keilah",
+          "to": "ziph-wilderness",
+          "mode": "land",
+          "ref": "1 Samuel 23:14"
+        },
+        {
+          "from": "ziph-wilderness",
+          "to": "en-gedi",
+          "mode": "land",
+          "ref": "1 Samuel 24:1"
+        },
+        {
+          "from": "en-gedi",
+          "to": "ziph-wilderness",
+          "mode": "land",
+          "ref": "1 Samuel 26:2"
+        },
+        {
+          "from": "ziph-wilderness",
+          "to": "gath",
+          "mode": "land",
+          "ref": "1 Samuel 27:2"
+        },
+        {
+          "from": "gath",
+          "to": "ziklag",
+          "mode": "land",
+          "ref": "1 Samuel 27:6"
+        }
+      ]
+    },
+    {
+      "id": "david-hebron-to-jerusalem",
+      "label": "David: Hebron to Jerusalem",
+      "category": "united-kingdom",
+      "person": "David",
+      "description": "David is crowned at Hebron over Judah, then all Israel after Ishbosheth's death. He captures Jerusalem from the Jebusites and makes it his capital.",
+      "era": "united-kingdom",
+      "bibleRef": "2 Samuel 2; 5",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "ziklag",
+          "to": "hebron",
+          "mode": "land",
+          "ref": "2 Samuel 2:1-4"
+        },
+        {
+          "from": "hebron",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "2 Samuel 5:6"
+        }
+      ]
+    },
+    {
+      "id": "david-absalom-flight",
+      "label": "David: Flight from Absalom",
+      "category": "united-kingdom",
+      "person": "David",
+      "description": "David flees Jerusalem barefoot across the Kidron and over the Mount of Olives to Mahanaim in Gilead as Absalom takes the city.",
+      "era": "united-kingdom",
+      "bibleRef": "2 Samuel 15–17",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "jerusalem",
+          "to": "mount-of-olives",
+          "mode": "land",
+          "ref": "2 Samuel 15:30"
+        },
+        {
+          "from": "mount-of-olives",
+          "to": "gilgal",
+          "mode": "land",
+          "ref": "2 Samuel 15:32"
+        },
+        {
+          "from": "gilgal",
+          "to": "mahanaim",
+          "mode": "land",
+          "ref": "2 Samuel 17:24"
+        },
+        {
+          "from": "mahanaim",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "2 Samuel 19:15"
+        }
+      ]
+    },
+    {
+      "id": "david-ark-to-jerusalem",
+      "label": "David: Ark Brought to Jerusalem",
+      "category": "united-kingdom",
+      "person": "David",
+      "description": "David brings the ark from Kiriath Jearim to Jerusalem — with a terrifying interruption at the threshing floor of Nacon before the joyful procession into the city.",
+      "era": "united-kingdom",
+      "bibleRef": "2 Samuel 6; 1 Chronicles 13–16",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "kiriath-jearim",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "2 Samuel 6:2-15"
+        }
+      ]
+    },
+    {
+      "id": "david-ammonite-campaign",
+      "label": "David: Ammonite and Aramean Wars",
+      "category": "united-kingdom",
+      "person": "David",
+      "description": "David's general Joab fights Ammon while David stays in Jerusalem — leading to the Bathsheba incident. Joab eventually captures Rabbah.",
+      "era": "united-kingdom",
+      "bibleRef": "2 Samuel 10–12",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "jerusalem",
+          "to": "ammon-region",
+          "mode": "land",
+          "ref": "2 Samuel 10:7"
+        },
+        {
+          "from": "ammon-region",
+          "to": "damascus",
+          "mode": "land",
+          "ref": "2 Samuel 10:16-18"
+        },
+        {
+          "from": "damascus",
+          "to": "ammon-region",
+          "mode": "land",
+          "ref": "2 Samuel 12:26"
+        },
+        {
+          "from": "ammon-region",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "2 Samuel 12:31"
+        }
+      ]
+    },
+    {
+      "id": "solomon-gibeon-wisdom",
+      "label": "Solomon: To Gibeon for Wisdom",
+      "category": "united-kingdom",
+      "person": "Solomon",
+      "description": "The young Solomon goes to the great high place at Gibeon to sacrifice; God appears in a dream and grants him wisdom.",
+      "era": "united-kingdom",
+      "bibleRef": "1 Kings 3:4–15",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "jerusalem",
+          "to": "gibeon",
+          "mode": "land",
+          "ref": "1 Kings 3:4"
+        }
+      ]
+    },
+    {
+      "id": "queen-of-sheba-route",
+      "label": "Queen of Sheba to Jerusalem",
+      "category": "united-kingdom",
+      "person": "Queen of Sheba",
+      "description": "The Queen of Sheba travels from South Arabia (Yemen) northward along the incense route to test Solomon with hard questions and exchange lavish gifts.",
+      "era": "united-kingdom",
+      "bibleRef": "1 Kings 10:1–13",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "edom-region",
+          "to": "negev",
+          "mode": "land",
+          "ref": "1 Kings 10:2"
+        },
+        {
+          "from": "negev",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "1 Kings 10:2"
+        }
+      ]
+    },
+    {
+      "id": "elijah-cherith-zarephath",
+      "label": "Elijah: Cherith and Zarephath",
+      "category": "divided-kingdom",
+      "person": "Elijah",
+      "description": "Elijah flees Ahab after announcing the drought. God directs him east to the Wadi Cherith, then north to the widow of Zarephath in Sidon where he raises her son.",
+      "era": "divided-kingdom",
+      "bibleRef": "1 Kings 17",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "gilead",
+          "to": "gilead",
+          "mode": "land",
+          "ref": "1 Kings 17:1-3"
+        },
+        {
+          "from": "gilead",
+          "to": "sidon",
+          "mode": "land",
+          "ref": "1 Kings 17:9"
+        },
+        {
+          "from": "sidon",
+          "to": "mount-carmel",
+          "mode": "land",
+          "ref": "1 Kings 18:1"
+        }
+      ]
+    },
+    {
+      "id": "elijah-carmel-horeb",
+      "label": "Elijah: Carmel to Horeb",
+      "category": "divided-kingdom",
+      "person": "Elijah",
+      "description": "After the fire on Carmel Elijah flees Jezebel's threat south through Beersheba into the wilderness. An angel feeds him twice. He walks forty days to Horeb where God speaks in the still small voice.",
+      "era": "divided-kingdom",
+      "bibleRef": "1 Kings 18:41–19:18",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "mount-carmel",
+          "to": "jezreel",
+          "mode": "land",
+          "ref": "1 Kings 18:46"
+        },
+        {
+          "from": "jezreel",
+          "to": "beersheba",
+          "mode": "land",
+          "ref": "1 Kings 19:3"
+        },
+        {
+          "from": "beersheba",
+          "to": "mount-sinai",
+          "mode": "land",
+          "ref": "1 Kings 19:8"
+        }
+      ]
+    },
+    {
+      "id": "elijah-calls-elisha",
+      "label": "Elijah Calls Elisha",
+      "category": "divided-kingdom",
+      "person": "Elijah",
+      "description": "Returning from Horeb, Elijah finds Elisha ploughing at Abel Meholah and throws his mantle over him.",
+      "era": "divided-kingdom",
+      "bibleRef": "1 Kings 19:19–21",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "mount-sinai",
+          "to": "gilead",
+          "mode": "land",
+          "ref": "1 Kings 19:19"
+        },
+        {
+          "from": "gilead",
+          "to": "jezreel",
+          "mode": "land",
+          "ref": "1 Kings 19:19"
+        }
+      ]
+    },
+    {
+      "id": "elijah-ascension-route",
+      "label": "Elijah: Journey to Ascension",
+      "category": "divided-kingdom",
+      "person": "Elijah",
+      "description": "Elijah and Elisha's final journey together from Gilgal through Bethel and Jericho to the Jordan, where Elijah is taken up in the whirlwind.",
+      "era": "divided-kingdom",
+      "bibleRef": "2 Kings 2:1–11",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "gilgal",
+          "to": "bethel",
+          "mode": "land",
+          "ref": "2 Kings 2:2"
+        },
+        {
+          "from": "bethel",
+          "to": "jericho",
+          "mode": "land",
+          "ref": "2 Kings 2:4"
+        },
+        {
+          "from": "jericho",
+          "to": "jordan-river",
+          "mode": "land",
+          "ref": "2 Kings 2:6-8"
+        }
+      ]
+    },
+    {
+      "id": "elisha-ministry-circuit",
+      "label": "Elisha: Ministry Circuit",
+      "category": "divided-kingdom",
+      "person": "Elisha",
+      "description": "Elisha's prophetic ministry takes him across Israel — from the Jordan crossing to Jericho, Bethel, Carmel, Shunem, Dothan, Samaria, and into Aram.",
+      "era": "divided-kingdom",
+      "bibleRef": "2 Kings 2–9",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "jordan-river",
+          "to": "jericho",
+          "mode": "land",
+          "ref": "2 Kings 2:18-19"
+        },
+        {
+          "from": "jericho",
+          "to": "bethel",
+          "mode": "land",
+          "ref": "2 Kings 2:23"
+        },
+        {
+          "from": "bethel",
+          "to": "mount-carmel",
+          "mode": "land",
+          "ref": "2 Kings 2:25"
+        },
+        {
+          "from": "mount-carmel",
+          "to": "samaria",
+          "mode": "land",
+          "ref": "2 Kings 2:25"
+        },
+        {
+          "from": "samaria",
+          "to": "shunem",
+          "mode": "land",
+          "ref": "2 Kings 4:8"
+        },
+        {
+          "from": "shunem",
+          "to": "mount-carmel",
+          "mode": "land",
+          "ref": "2 Kings 4:25"
+        },
+        {
+          "from": "mount-carmel",
+          "to": "shunem",
+          "mode": "land",
+          "ref": "2 Kings 4:32"
+        },
+        {
+          "from": "shunem",
+          "to": "dothan",
+          "mode": "land",
+          "ref": "2 Kings 6:13"
+        },
+        {
+          "from": "dothan",
+          "to": "samaria",
+          "mode": "land",
+          "ref": "2 Kings 6:19-20"
+        },
+        {
+          "from": "samaria",
+          "to": "damascus",
+          "mode": "land",
+          "ref": "2 Kings 8:7"
+        }
+      ]
+    },
+    {
+      "id": "naaman-to-elisha",
+      "label": "Naaman: Damascus to Samaria",
+      "category": "divided-kingdom",
+      "person": "Naaman",
+      "description": "The Aramean commander Naaman travels from Damascus to Elisha in Samaria seeking healing from leprosy. Elisha tells him to wash in the Jordan seven times.",
+      "era": "divided-kingdom",
+      "bibleRef": "2 Kings 5",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "damascus",
+          "to": "samaria",
+          "mode": "land",
+          "ref": "2 Kings 5:9"
+        },
+        {
+          "from": "samaria",
+          "to": "jordan-river",
+          "mode": "land",
+          "ref": "2 Kings 5:14"
+        },
+        {
+          "from": "jordan-river",
+          "to": "damascus",
+          "mode": "land",
+          "ref": "2 Kings 5:15-19"
+        }
+      ]
+    },
+    {
+      "id": "jonah-flight-and-mission",
+      "label": "Jonah: Flight and Mission",
+      "category": "divided-kingdom",
+      "person": "Jonah",
+      "description": "Jonah flees from God's call to Nineveh by boarding a ship at Joppa bound for Tarshish. After the storm and the great fish, he is vomited ashore and goes to Nineveh.",
+      "era": "divided-kingdom",
+      "bibleRef": "Jonah 1–4",
+      "transportMode": "mixed",
+      "segments": [
+        {
+          "from": "samaria",
+          "to": "joppa",
+          "mode": "land",
+          "ref": "Jonah 1:3"
+        },
+        {
+          "from": "joppa",
+          "to": "tarshish",
+          "mode": "sea",
+          "ref": "Jonah 1:3"
+        },
+        {
+          "from": "joppa",
+          "to": "nineveh",
+          "mode": "land",
+          "ref": "Jonah 3:3"
+        }
+      ]
+    },
+    {
+      "id": "jeremiah-jerusalem-to-egypt",
+      "label": "Jeremiah: Jerusalem to Egypt",
+      "category": "exile-return",
+      "person": "Jeremiah",
+      "description": "After Jerusalem's fall and Gedaliah's assassination, the remaining people force Jeremiah to accompany them to Egypt against God's word. He ends his days at Tahpanhes.",
+      "era": "exile-return",
+      "bibleRef": "Jeremiah 40–44",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "jerusalem",
+          "to": "ramah-benjamin",
+          "mode": "land",
+          "ref": "Jeremiah 40:1"
+        },
+        {
+          "from": "ramah-benjamin",
+          "to": "mizpah-benjamin",
+          "mode": "land",
+          "ref": "Jeremiah 40:6"
+        },
+        {
+          "from": "mizpah-benjamin",
+          "to": "tahpanhes",
+          "mode": "land",
+          "ref": "Jeremiah 43:7"
+        }
+      ]
+    },
+    {
+      "id": "ezekiel-exile-babylon",
+      "label": "Ezekiel: Jerusalem to Babylon",
+      "category": "exile-return",
+      "person": "Ezekiel",
+      "description": "Ezekiel was deported with King Jehoiachin in 597 BC, the first wave of Babylonian exiles. He ministered among the exiles at Tel Abib on the Chebar canal near Nippur.",
+      "era": "exile-return",
+      "bibleRef": "Ezekiel 1:1–3; 2 Kings 24:14–16",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "jerusalem",
+          "to": "babylon",
+          "mode": "land",
+          "ref": "2 Kings 24:14-16"
+        },
+        {
+          "from": "babylon",
+          "to": "babylon",
+          "mode": "land",
+          "ref": "Ezekiel 1:1-3"
+        }
+      ]
+    },
+    {
+      "id": "daniel-jerusalem-babylon",
+      "label": "Daniel: Jerusalem to Babylon",
+      "category": "exile-return",
+      "person": "Daniel",
+      "description": "Daniel is deported from Jerusalem to Babylon as a young man in 605 BC under Nebuchadnezzar. He serves there through Babylonian and Persian regimes for over 70 years.",
+      "era": "exile-return",
+      "bibleRef": "Daniel 1:1–6",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "jerusalem",
+          "to": "babylon",
+          "mode": "land",
+          "ref": "Daniel 1:1-6"
+        }
+      ]
+    },
+    {
+      "id": "daniel-susa-vision",
+      "label": "Daniel: Vision at Susa",
+      "category": "exile-return",
+      "person": "Daniel",
+      "description": "Daniel receives his vision of the ram and goat while at Susa (possibly in a visionary transport) by the Ulai canal.",
+      "era": "exile-return",
+      "bibleRef": "Daniel 8:1–2",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "babylon",
+          "to": "susa",
+          "mode": "land",
+          "ref": "Daniel 8:1-2"
+        }
+      ]
+    },
+    {
+      "id": "zerubbabel-return-exile",
+      "label": "Zerubbabel: Return from Exile",
+      "category": "exile-return",
+      "person": "Zerubbabel",
+      "description": "The first return under Zerubbabel and Jeshua — nearly 50,000 exiles travel from Babylon along the Euphrates route northwest then south into Canaan to Jerusalem.",
+      "era": "exile-return",
+      "bibleRef": "Ezra 1–3",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "babylon",
+          "to": "haran",
+          "mode": "land",
+          "ref": "Ezra 1:11"
+        },
+        {
+          "from": "haran",
+          "to": "damascus",
+          "mode": "land",
+          "ref": "Ezra 2:1"
+        },
+        {
+          "from": "damascus",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "Ezra 3:1"
+        }
+      ]
+    },
+    {
+      "id": "ezra-return-exile",
+      "label": "Ezra: Return from Babylon",
+      "category": "exile-return",
+      "person": "Ezra",
+      "description": "Ezra leads the second return from Babylon to Jerusalem in 458 BC with about 1,500 men. He assembles the group at the Ahava canal and arrives after a four-month journey.",
+      "era": "exile-return",
+      "bibleRef": "Ezra 7–8",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "babylon",
+          "to": "haran",
+          "mode": "land",
+          "ref": "Ezra 8:15"
+        },
+        {
+          "from": "haran",
+          "to": "damascus",
+          "mode": "land",
+          "ref": "Ezra 8:31"
+        },
+        {
+          "from": "damascus",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "Ezra 8:32"
+        }
+      ]
+    },
+    {
+      "id": "nehemiah-susa-jerusalem",
+      "label": "Nehemiah: Susa to Jerusalem",
+      "category": "exile-return",
+      "person": "Nehemiah",
+      "description": "Nehemiah receives news of Jerusalem's broken walls in Susa. Artaxerxes grants him leave. He travels to Jerusalem and leads the wall's rebuilding in 52 days.",
+      "era": "exile-return",
+      "bibleRef": "Nehemiah 1–2",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "susa",
+          "to": "damascus",
+          "mode": "land",
+          "ref": "Nehemiah 2:9"
+        },
+        {
+          "from": "damascus",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "Nehemiah 2:11"
+        }
+      ]
+    },
+    {
+      "id": "esther-susa-life",
+      "label": "Esther: Life in Susa",
+      "category": "exile-return",
+      "person": "Esther",
+      "description": "Esther's entire story takes place within the citadel of Susa — from her initial presentation to the palace through the reversal of Haman's decree.",
+      "era": "exile-return",
+      "bibleRef": "Esther 1–10",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "susa",
+          "to": "susa",
+          "mode": "land",
+          "ref": "Esther 2:8"
+        }
+      ]
+    },
+    {
+      "id": "jesus-birth-magi",
+      "label": "Magi: Journey to Bethlehem",
+      "category": "jesus-ministry",
+      "person": "Magi",
+      "description": "Wise men from the east follow the star to Jerusalem, then to Bethlehem. Warned in a dream, they return home by another route.",
+      "era": "jesus-ministry",
+      "bibleRef": "Matthew 2:1–12",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "babylon",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "Matthew 2:1"
+        },
+        {
+          "from": "jerusalem",
+          "to": "bethlehem",
+          "mode": "land",
+          "ref": "Matthew 2:8"
+        },
+        {
+          "from": "bethlehem",
+          "to": "edom-region",
+          "mode": "land",
+          "ref": "Matthew 2:12"
+        }
+      ]
+    },
+    {
+      "id": "jesus-holy-family-egypt",
+      "label": "Holy Family: Flight to Egypt",
+      "category": "jesus-ministry",
+      "person": "Jesus / Mary / Joseph",
+      "description": "Warned in a dream, Joseph takes Mary and the infant Jesus to Egypt to escape Herod's massacre. After Herod's death they return and settle in Nazareth.",
+      "era": "jesus-ministry",
+      "bibleRef": "Matthew 2:13–23",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "bethlehem",
+          "to": "goshen",
+          "mode": "land",
+          "ref": "Matthew 2:14"
+        },
+        {
+          "from": "goshen",
+          "to": "nazareth",
+          "mode": "land",
+          "ref": "Matthew 2:21-23"
+        }
+      ]
+    },
+    {
+      "id": "jesus-baptism-temptation",
+      "label": "Jesus: Baptism and Temptation",
+      "category": "jesus-ministry",
+      "person": "Jesus",
+      "description": "Jesus comes from Galilee to the Jordan to be baptised by John. Immediately the Spirit drives him into the wilderness for forty days of temptation.",
+      "era": "jesus-ministry",
+      "bibleRef": "Matthew 3:13–4:11",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "nazareth",
+          "to": "jordan-river",
+          "mode": "land",
+          "ref": "Matthew 3:13"
+        },
+        {
+          "from": "jordan-river",
+          "to": "wilderness-sin",
+          "mode": "land",
+          "ref": "Matthew 4:1"
+        },
+        {
+          "from": "wilderness-sin",
+          "to": "nazareth",
+          "mode": "land",
+          "ref": "Matthew 4:12"
+        }
+      ]
+    },
+    {
+      "id": "jesus-galilean-ministry",
+      "label": "Jesus: Galilean Ministry",
+      "category": "jesus-ministry",
+      "person": "Jesus",
+      "description": "Jesus moves from Nazareth to make Capernaum his base, calling disciples from the lake shore and teaching throughout the Galilean synagogues.",
+      "era": "jesus-ministry",
+      "bibleRef": "Matthew 4:12–25; Mark 1:14–2:22",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "nazareth",
+          "to": "capernaum",
+          "mode": "land",
+          "ref": "Matthew 4:13"
+        },
+        {
+          "from": "capernaum",
+          "to": "sea-of-galilee",
+          "mode": "land",
+          "ref": "Matthew 4:18"
+        },
+        {
+          "from": "sea-of-galilee",
+          "to": "capernaum",
+          "mode": "land",
+          "ref": "Mark 1:29"
+        },
+        {
+          "from": "capernaum",
+          "to": "nazareth",
+          "mode": "land",
+          "ref": "Luke 4:16"
+        },
+        {
+          "from": "nazareth",
+          "to": "cana",
+          "mode": "land",
+          "ref": "John 2:1"
+        },
+        {
+          "from": "cana",
+          "to": "capernaum",
+          "mode": "land",
+          "ref": "John 2:12"
+        },
+        {
+          "from": "capernaum",
+          "to": "bethsaida",
+          "mode": "land",
+          "ref": "Mark 6:45"
+        },
+        {
+          "from": "bethsaida",
+          "to": "capernaum",
+          "mode": "sea",
+          "ref": "Mark 6:53"
+        },
+        {
+          "from": "capernaum",
+          "to": "chorazin",
+          "mode": "land",
+          "ref": "Matthew 11:21"
+        },
+        {
+          "from": "chorazin",
+          "to": "nain",
+          "mode": "land",
+          "ref": "Luke 7:11"
+        },
+        {
+          "from": "nain",
+          "to": "magdala",
+          "mode": "land",
+          "ref": "Luke 8:2"
+        },
+        {
+          "from": "magdala",
+          "to": "capernaum",
+          "mode": "land",
+          "ref": "Mark 8:10"
+        }
+      ]
+    },
+    {
+      "id": "jesus-tyre-sidon",
+      "label": "Jesus: Withdrawal to Tyre and Sidon",
+      "category": "jesus-ministry",
+      "person": "Jesus",
+      "description": "Jesus withdraws to the region of Tyre and Sidon where a Syrophoenician woman seeks healing for her daughter. He returns through the Decapolis.",
+      "era": "jesus-ministry",
+      "bibleRef": "Matthew 15:21–39; Mark 7:24–8:10",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "capernaum",
+          "to": "tyre",
+          "mode": "land",
+          "ref": "Mark 7:24"
+        },
+        {
+          "from": "tyre",
+          "to": "sidon",
+          "mode": "land",
+          "ref": "Mark 7:31"
+        },
+        {
+          "from": "sidon",
+          "to": "sea-of-galilee",
+          "mode": "land",
+          "ref": "Mark 7:31"
+        },
+        {
+          "from": "sea-of-galilee",
+          "to": "capernaum",
+          "mode": "sea",
+          "ref": "Mark 8:10"
+        }
+      ]
+    },
+    {
+      "id": "jesus-caesarea-philippi",
+      "label": "Jesus: To Caesarea Philippi",
+      "category": "jesus-ministry",
+      "person": "Jesus",
+      "description": "Jesus takes his disciples north to Caesarea Philippi — Peter's confession, the first prediction of the Passion, and the Transfiguration on the mountain.",
+      "era": "jesus-ministry",
+      "bibleRef": "Matthew 16:13–17:9",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "capernaum",
+          "to": "caesarea-philippi",
+          "mode": "land",
+          "ref": "Matthew 16:13"
+        },
+        {
+          "from": "caesarea-philippi",
+          "to": "mount-hermon",
+          "mode": "land",
+          "ref": "Matthew 17:1"
+        },
+        {
+          "from": "mount-hermon",
+          "to": "capernaum",
+          "mode": "land",
+          "ref": "Matthew 17:24"
+        }
+      ]
+    },
+    {
+      "id": "jesus-samaria-woman",
+      "label": "Jesus: Through Samaria",
+      "category": "jesus-ministry",
+      "person": "Jesus",
+      "description": "Jesus passes through Samaria and stops at Jacob's well in Sychar where he speaks with the Samaritan woman and stays two days.",
+      "era": "jesus-ministry",
+      "bibleRef": "John 4:1–42",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "jerusalem",
+          "to": "sychar",
+          "mode": "land",
+          "ref": "John 4:4-5"
+        },
+        {
+          "from": "sychar",
+          "to": "cana",
+          "mode": "land",
+          "ref": "John 4:43-46"
+        },
+        {
+          "from": "cana",
+          "to": "capernaum",
+          "mode": "land",
+          "ref": "John 4:47"
+        }
+      ]
+    },
+    {
+      "id": "jesus-jerusalem-feasts",
+      "label": "Jesus: Jerusalem Festival Visits",
+      "category": "jesus-ministry",
+      "person": "Jesus",
+      "description": "Jesus makes multiple visits to Jerusalem for feasts — healing at Bethesda (John 5), the Feast of Tabernacles (John 7–8), Hanukkah (John 10), raising Lazarus (John 11).",
+      "era": "jesus-ministry",
+      "bibleRef": "John 5; 7; 10; 11",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "capernaum",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "John 5:1"
+        },
+        {
+          "from": "jerusalem",
+          "to": "capernaum",
+          "mode": "land",
+          "ref": "John 6:1"
+        },
+        {
+          "from": "capernaum",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "John 7:10"
+        },
+        {
+          "from": "jerusalem",
+          "to": "bethany",
+          "mode": "land",
+          "ref": "John 11:18"
+        },
+        {
+          "from": "bethany",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "John 12:12"
+        }
+      ]
+    },
+    {
+      "id": "jesus-lazarus-perea",
+      "label": "Jesus: Perea and Raising Lazarus",
+      "category": "jesus-ministry",
+      "person": "Jesus",
+      "description": "Jesus withdraws across the Jordan to Perea, receives news of Lazarus's illness, waits two days, then returns to raise him in Bethany.",
+      "era": "jesus-ministry",
+      "bibleRef": "John 10:40–11:44",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "jerusalem",
+          "to": "jordan-river",
+          "mode": "land",
+          "ref": "John 10:40"
+        },
+        {
+          "from": "jordan-river",
+          "to": "bethany",
+          "mode": "land",
+          "ref": "John 11:17-18"
+        },
+        {
+          "from": "bethany",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "John 11:55"
+        }
+      ]
+    },
+    {
+      "id": "jesus-final-journey-jerusalem",
+      "label": "Jesus: Final Journey to Jerusalem",
+      "category": "jesus-ministry",
+      "person": "Jesus",
+      "description": "Jesus makes his determined final journey from Galilee through Perea, stops at Jericho where he heals blind Bartimaeus and eats with Zacchaeus, and arrives at Bethany.",
+      "era": "jesus-ministry",
+      "bibleRef": "Luke 9:51; 18:31–19:28; Mark 10:1–52",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "capernaum",
+          "to": "jordan-river",
+          "mode": "land",
+          "ref": "Mark 10:1"
+        },
+        {
+          "from": "jordan-river",
+          "to": "jericho",
+          "mode": "land",
+          "ref": "Mark 10:46"
+        },
+        {
+          "from": "jericho",
+          "to": "bethany",
+          "mode": "land",
+          "ref": "Luke 19:29"
+        },
+        {
+          "from": "bethany",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "Matthew 21:1-10"
+        }
+      ]
+    },
+    {
+      "id": "jesus-passion-week-route",
+      "label": "Jesus: Passion Week in Jerusalem",
+      "category": "jesus-ministry",
+      "person": "Jesus",
+      "description": "The final week — triumphal entry, Temple cleansing, Olivet Discourse, Last Supper in the upper room, Gethsemane, arrest, trials before Caiaphas and Pilate, crucifixion at Golgotha.",
+      "era": "jesus-ministry",
+      "bibleRef": "Matthew 21–27; Mark 11–15; Luke 19–23; John 12–19",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "bethphage",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "Matthew 21:1-9"
+        },
+        {
+          "from": "jerusalem",
+          "to": "bethany",
+          "mode": "land",
+          "ref": "Matthew 21:17"
+        },
+        {
+          "from": "bethany",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "Matthew 21:18"
+        },
+        {
+          "from": "jerusalem",
+          "to": "mount-of-olives",
+          "mode": "land",
+          "ref": "Matthew 24:3"
+        },
+        {
+          "from": "mount-of-olives",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "Matthew 26:17-20"
+        },
+        {
+          "from": "jerusalem",
+          "to": "gethsemane",
+          "mode": "land",
+          "ref": "John 18:1"
+        },
+        {
+          "from": "gethsemane",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "John 18:12"
+        },
+        {
+          "from": "jerusalem",
+          "to": "golgotha",
+          "mode": "land",
+          "ref": "John 19:17"
+        }
+      ]
+    },
+    {
+      "id": "jesus-resurrection-appearances",
+      "label": "Jesus: Resurrection Appearances",
+      "category": "jesus-ministry",
+      "person": "Jesus",
+      "description": "The risen Jesus appears in Jerusalem, on the road to Emmaus, by the Sea of Galilee, on a mountain in Galilee, and finally ascends from the Mount of Olives.",
+      "era": "jesus-ministry",
+      "bibleRef": "Luke 24; John 20–21; Matthew 28; Acts 1",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "golgotha",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "Luke 24:13"
+        },
+        {
+          "from": "jerusalem",
+          "to": "emmaus",
+          "mode": "land",
+          "ref": "Luke 24:13"
+        },
+        {
+          "from": "emmaus",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "Luke 24:33"
+        },
+        {
+          "from": "jerusalem",
+          "to": "sea-of-galilee",
+          "mode": "land",
+          "ref": "John 21:1"
+        },
+        {
+          "from": "sea-of-galilee",
+          "to": "mount-hermon",
+          "mode": "land",
+          "ref": "Matthew 28:16"
+        },
+        {
+          "from": "mount-hermon",
+          "to": "mount-of-olives",
+          "mode": "land",
+          "ref": "Acts 1:12"
+        }
+      ]
+    },
+    {
+      "id": "john-baptist-ministry",
+      "label": "John the Baptist: Wilderness Ministry",
+      "category": "jesus-ministry",
+      "person": "John the Baptist",
+      "description": "John preaches in the Judean wilderness along the Jordan, baptising at Bethany beyond the Jordan and at Aenon near Salim. He is imprisoned at Machaerus.",
+      "era": "jesus-ministry",
+      "bibleRef": "Matthew 3; John 1:28; 3:23",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "wilderness-sin",
+          "to": "jordan-river",
+          "mode": "land",
+          "ref": "Matthew 3:1-6"
+        },
+        {
+          "from": "jordan-river",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "John 1:29"
+        },
+        {
+          "from": "jerusalem",
+          "to": "jordan-river",
+          "mode": "land",
+          "ref": "John 3:23"
+        }
+      ]
+    },
+    {
+      "id": "peter-ministry-coastal",
+      "label": "Peter: Coastal Ministry",
+      "category": "early-church",
+      "person": "Peter",
+      "description": "Peter travels the coastal plain — healing Aeneas in Lydda, raising Dorcas in Joppa, receiving his vision on a rooftop, and visiting the centurion Cornelius in Caesarea.",
+      "era": "early-church",
+      "bibleRef": "Acts 9:32–10:48",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "jerusalem",
+          "to": "lydda",
+          "mode": "land",
+          "ref": "Acts 9:32"
+        },
+        {
+          "from": "lydda",
+          "to": "joppa",
+          "mode": "land",
+          "ref": "Acts 9:38"
+        },
+        {
+          "from": "joppa",
+          "to": "caesarea",
+          "mode": "land",
+          "ref": "Acts 10:23-24"
+        },
+        {
+          "from": "caesarea",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "Acts 11:2"
+        }
+      ]
+    },
+    {
+      "id": "peter-antioch-visit",
+      "label": "Peter: Visit to Antioch",
+      "category": "early-church",
+      "person": "Peter",
+      "description": "Peter visits the church at Antioch where Paul later confronts him publicly for withdrawing from Gentile table fellowship under pressure from James's delegation.",
+      "era": "early-church",
+      "bibleRef": "Galatians 2:11–14",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "jerusalem",
+          "to": "antioch",
+          "mode": "land",
+          "ref": "Galatians 2:11"
+        }
+      ]
+    },
+    {
+      "id": "philip-evangelist-samaria-ethiopia",
+      "label": "Philip: Samaria and Ethiopian Eunuch",
+      "category": "early-church",
+      "person": "Philip the Evangelist",
+      "description": "Philip flees Jerusalem persecution and preaches in Samaria with great effect. An angel redirects him to the Gaza road where he baptises the Ethiopian court official, then is transported to Azotus.",
+      "era": "early-church",
+      "bibleRef": "Acts 8:4–40",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "jerusalem",
+          "to": "samaria",
+          "mode": "land",
+          "ref": "Acts 8:5"
+        },
+        {
+          "from": "samaria",
+          "to": "gaza-city",
+          "mode": "land",
+          "ref": "Acts 8:26"
+        },
+        {
+          "from": "gaza-city",
+          "to": "ashdod",
+          "mode": "land",
+          "ref": "Acts 8:40"
+        },
+        {
+          "from": "ashdod",
+          "to": "caesarea",
+          "mode": "land",
+          "ref": "Acts 8:40"
+        }
+      ]
+    },
+    {
+      "id": "paul-damascus-conversion",
+      "label": "Paul: Damascus Road Conversion",
+      "category": "paul",
+      "person": "Paul",
+      "description": "Saul travels from Jerusalem to Damascus to arrest Christians. The risen Jesus appears to him in blinding light. He is led into Damascus, fasts three days, then is baptised by Ananias.",
+      "era": "early-church",
+      "bibleRef": "Acts 9:1–22",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "jerusalem",
+          "to": "damascus",
+          "mode": "land",
+          "ref": "Acts 9:3"
+        }
+      ]
+    },
+    {
+      "id": "paul-damascus-arabia-return",
+      "label": "Paul: Damascus, Arabia, Jerusalem",
+      "category": "paul",
+      "person": "Paul",
+      "description": "After conversion Paul goes to Arabia (likely Nabataean territory near Petra), returns to Damascus for three years, then visits Jerusalem for fifteen days to meet Peter and James.",
+      "era": "early-church",
+      "bibleRef": "Galatians 1:17–18; Acts 9:23–26",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "damascus",
+          "to": "petra",
+          "mode": "land",
+          "ref": "Galatians 1:17"
+        },
+        {
+          "from": "petra",
+          "to": "damascus",
+          "mode": "land",
+          "ref": "Galatians 1:17"
+        },
+        {
+          "from": "damascus",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "Acts 9:26"
+        },
+        {
+          "from": "jerusalem",
+          "to": "caesarea",
+          "mode": "land",
+          "ref": "Acts 9:30"
+        },
+        {
+          "from": "caesarea",
+          "to": "antioch",
+          "mode": "sea",
+          "ref": "Acts 9:30"
+        }
+      ]
+    },
+    {
+      "id": "paul-jerusalem-council",
+      "label": "Paul: Jerusalem Council",
+      "category": "paul",
+      "person": "Paul / Barnabas",
+      "description": "Paul and Barnabas travel from Antioch to Jerusalem for the council that settles the Gentile circumcision question, then return with Silas and Judas Barsabbas.",
+      "era": "early-church",
+      "bibleRef": "Acts 15:1–35",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "antioch",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "Acts 15:2"
+        },
+        {
+          "from": "jerusalem",
+          "to": "antioch",
+          "mode": "land",
+          "ref": "Acts 15:30"
+        }
+      ]
+    },
+    {
+      "id": "paul-voyage-rome",
+      "label": "Paul's Voyage to Rome",
+      "category": "paul",
+      "person": "Paul",
+      "description": "Paul sails as a prisoner from Caesarea, coasting past Cyprus and Anatolia, through the storm and shipwreck at Malta, then up through Sicily and Italy to Rome.",
+      "era": "early-church",
+      "bibleRef": "Acts 27–28",
+      "transportMode": "mixed",
+      "segments": [
+        {
+          "from": "jerusalem",
+          "to": "caesarea",
+          "mode": "land",
+          "ref": "Acts 23:31-35"
+        },
+        {
+          "from": "caesarea",
+          "to": "sidon",
+          "mode": "sea",
+          "ref": "Acts 27:3"
+        },
+        {
+          "from": "sidon",
+          "to": "myra",
+          "mode": "sea",
+          "ref": "Acts 27:5"
+        },
+        {
+          "from": "myra",
+          "to": "cnidus",
+          "mode": "sea",
+          "ref": "Acts 27:7"
+        },
+        {
+          "from": "cnidus",
+          "to": "fair-havens-crete",
+          "mode": "sea",
+          "ref": "Acts 27:8"
+        },
+        {
+          "from": "fair-havens-crete",
+          "to": "malta-melita",
+          "mode": "sea",
+          "ref": "Acts 27:14-41"
+        },
+        {
+          "from": "malta-melita",
+          "to": "syracuse",
+          "mode": "sea",
+          "ref": "Acts 28:12"
+        },
+        {
+          "from": "syracuse",
+          "to": "regium",
+          "mode": "sea",
+          "ref": "Acts 28:13"
+        },
+        {
+          "from": "regium",
+          "to": "puteoli",
+          "mode": "sea",
+          "ref": "Acts 28:13"
+        },
+        {
+          "from": "puteoli",
+          "to": "appii-forum",
+          "mode": "land",
+          "ref": "Acts 28:15"
+        },
+        {
+          "from": "appii-forum",
+          "to": "three-taverns",
+          "mode": "land",
+          "ref": "Acts 28:15"
+        },
+        {
+          "from": "three-taverns",
+          "to": "rome",
+          "mode": "land",
+          "ref": "Acts 28:16"
+        }
+      ]
+    },
+    {
+      "id": "paul-post-acts-travels",
+      "label": "Paul: Post-Acts Travels (Tradition)",
+      "category": "paul",
+      "person": "Paul",
+      "description": "Based on the Pastoral Epistles, Paul may have been released from Roman imprisonment and travelled to Spain, Crete, Ephesus, Macedonia, Nicopolis, and Troas before his second arrest and execution in Rome.",
+      "era": "early-church",
+      "bibleRef": "Romans 15:24; Titus 1:5; 3:12; 2 Timothy 4:13",
+      "transportMode": "mixed",
+      "segments": [
+        {
+          "from": "rome",
+          "to": "brundisium",
+          "mode": "land",
+          "ref": "Romans 15:24"
+        },
+        {
+          "from": "brundisium",
+          "to": "dyrrachium",
+          "mode": "sea",
+          "ref": "Romans 15:24"
+        },
+        {
+          "from": "dyrrachium",
+          "to": "nicopolis-epirus",
+          "mode": "land",
+          "ref": "Titus 3:12"
+        },
+        {
+          "from": "nicopolis-epirus",
+          "to": "crete",
+          "mode": "sea",
+          "ref": "Titus 1:5"
+        },
+        {
+          "from": "crete",
+          "to": "ephesus",
+          "mode": "sea",
+          "ref": "1 Timothy 1:3"
+        },
+        {
+          "from": "ephesus",
+          "to": "troas",
+          "mode": "land",
+          "ref": "2 Timothy 4:13"
+        },
+        {
+          "from": "troas",
+          "to": "rome",
+          "mode": "sea",
+          "ref": "2 Timothy 1:17"
+        }
+      ]
+    },
+    {
+      "id": "barnabas-independent-journey",
+      "label": "Barnabas: Cyprus with Mark",
+      "category": "paul",
+      "person": "Barnabas",
+      "description": "After separating from Paul over John Mark, Barnabas takes Mark and sails to Cyprus — his home island — to continue missionary work there.",
+      "era": "early-church",
+      "bibleRef": "Acts 15:39",
+      "transportMode": "sea",
+      "segments": [
+        {
+          "from": "antioch",
+          "to": "salamis-cyprus",
+          "mode": "sea",
+          "ref": "Acts 15:39"
+        }
+      ]
+    },
+    {
+      "id": "apollos-alexandria-to-corinth",
+      "label": "Apollos: Alexandria to Corinth",
+      "category": "early-church",
+      "person": "Apollos",
+      "description": "Apollos comes from Alexandria to Ephesus, preaches boldly, is instructed more fully by Priscilla and Aquila, then crosses to Achaia and Corinth where he powerfully refutes the Jews.",
+      "era": "early-church",
+      "bibleRef": "Acts 18:24–19:1",
+      "transportMode": "mixed",
+      "segments": [
+        {
+          "from": "memphis-egypt",
+          "to": "ephesus",
+          "mode": "sea",
+          "ref": "Acts 18:24"
+        },
+        {
+          "from": "ephesus",
+          "to": "corinth",
+          "mode": "sea",
+          "ref": "Acts 18:27"
+        },
+        {
+          "from": "corinth",
+          "to": "ephesus",
+          "mode": "sea",
+          "ref": "1 Corinthians 16:12"
+        }
+      ]
+    },
+    {
+      "id": "john-apostle-ephesus-patmos",
+      "label": "John the Apostle: Ephesus and Patmos",
+      "category": "early-church",
+      "person": "John the Apostle",
+      "description": "According to strong early tradition, John settled in Ephesus in his later years and was exiled to the island of Patmos where he received the Revelation. He was released and returned to Ephesus.",
+      "era": "early-church",
+      "bibleRef": "Revelation 1:9",
+      "transportMode": "mixed",
+      "segments": [
+        {
+          "from": "jerusalem",
+          "to": "ephesus",
+          "mode": "sea",
+          "ref": "Revelation 1:9"
+        },
+        {
+          "from": "ephesus",
+          "to": "patmos",
+          "mode": "sea",
+          "ref": "Revelation 1:9"
+        },
+        {
+          "from": "patmos",
+          "to": "ephesus",
+          "mode": "sea",
+          "ref": "Revelation 1:9"
+        },
+        {
+          "from": "ephesus",
+          "to": "smyrna",
+          "mode": "land",
+          "ref": "Revelation 2:8"
+        },
+        {
+          "from": "smyrna",
+          "to": "pergamon",
+          "mode": "land",
+          "ref": "Revelation 2:12"
+        },
+        {
+          "from": "pergamon",
+          "to": "thyatira",
+          "mode": "land",
+          "ref": "Revelation 2:18"
+        },
+        {
+          "from": "thyatira",
+          "to": "sardis",
+          "mode": "land",
+          "ref": "Revelation 3:1"
+        },
+        {
+          "from": "sardis",
+          "to": "philadelphia-asia",
+          "mode": "land",
+          "ref": "Revelation 3:7"
+        },
+        {
+          "from": "philadelphia-asia",
+          "to": "laodicea",
+          "mode": "land",
+          "ref": "Revelation 3:14"
+        }
+      ]
+    },
+    {
+      "id": "mark-ministry-journey",
+      "label": "John Mark: Ministry Journey",
+      "category": "early-church",
+      "person": "John Mark",
+      "description": "Mark's journeys from Jerusalem with Barnabas and Paul, his return from Perga, his later work with Barnabas in Cyprus, and his eventual reconciliation with Paul.",
+      "era": "early-church",
+      "bibleRef": "Acts 13:5-13; 15:37-39; Colossians 4:10; 2 Timothy 4:11",
+      "transportMode": "mixed",
+      "segments": [
+        {
+          "from": "jerusalem",
+          "to": "antioch",
+          "mode": "land",
+          "ref": "Acts 12:25"
+        },
+        {
+          "from": "antioch",
+          "to": "salamis-cyprus",
+          "mode": "sea",
+          "ref": "Acts 13:4-5"
+        },
+        {
+          "from": "salamis-cyprus",
+          "to": "paphos",
+          "mode": "land",
+          "ref": "Acts 13:6"
+        },
+        {
+          "from": "paphos",
+          "to": "perga",
+          "mode": "sea",
+          "ref": "Acts 13:13"
+        },
+        {
+          "from": "perga",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "Acts 13:13"
+        },
+        {
+          "from": "jerusalem",
+          "to": "antioch",
+          "mode": "land",
+          "ref": "Acts 15:37"
+        },
+        {
+          "from": "antioch",
+          "to": "salamis-cyprus",
+          "mode": "sea",
+          "ref": "Acts 15:39"
+        }
+      ]
+    },
+    {
+      "id": "titus-ministry-route",
+      "label": "Titus: Ministry in Corinth and Crete",
+      "category": "early-church",
+      "person": "Titus",
+      "description": "Titus served as Paul's troubleshooter in Corinth during the painful letter period, was left in Crete to appoint elders, and was summoned to Nicopolis.",
+      "era": "early-church",
+      "bibleRef": "2 Corinthians 7:6; Titus 1:5; 3:12",
+      "transportMode": "mixed",
+      "segments": [
+        {
+          "from": "ephesus",
+          "to": "corinth",
+          "mode": "sea",
+          "ref": "2 Corinthians 7:6"
+        },
+        {
+          "from": "corinth",
+          "to": "antioch",
+          "mode": "sea",
+          "ref": "2 Corinthians 7:6"
+        },
+        {
+          "from": "antioch",
+          "to": "crete",
+          "mode": "sea",
+          "ref": "Titus 1:5"
+        },
+        {
+          "from": "crete",
+          "to": "nicopolis-epirus",
+          "mode": "sea",
+          "ref": "Titus 3:12"
+        }
+      ]
+    },
+    {
+      "id": "joseph-brothers-egypt",
+      "label": "Joseph's Brothers: Canaan to Egypt",
+      "category": "patriarchs",
+      "person": "Joseph's Brothers",
+      "description": "Joseph's ten brothers make multiple trips to Egypt during the famine to buy grain, eventually bringing Benjamin and then the whole family.",
+      "era": "patriarchs",
+      "bibleRef": "Genesis 42–46",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "hebron",
+          "to": "memphis-egypt",
+          "mode": "land",
+          "ref": "Genesis 42:3"
+        },
+        {
+          "from": "memphis-egypt",
+          "to": "hebron",
+          "mode": "land",
+          "ref": "Genesis 42:29"
+        },
+        {
+          "from": "hebron",
+          "to": "memphis-egypt",
+          "mode": "land",
+          "ref": "Genesis 43:15"
+        },
+        {
+          "from": "memphis-egypt",
+          "to": "goshen",
+          "mode": "land",
+          "ref": "Genesis 45:28-46:7"
+        }
+      ]
+    },
+    {
+      "id": "balaam-moab-journey",
+      "label": "Balaam: Mesopotamia to Moab",
+      "category": "exodus",
+      "person": "Balaam",
+      "description": "Balak king of Moab summons Balaam from Pethor in Mesopotamia to curse Israel. God turns the curses to blessings. Balaam's donkey speaks on the road.",
+      "era": "exodus-conquest",
+      "bibleRef": "Numbers 22–24",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "haran",
+          "to": "moab-region",
+          "mode": "land",
+          "ref": "Numbers 22:5-7"
+        },
+        {
+          "from": "moab-region",
+          "to": "haran",
+          "mode": "land",
+          "ref": "Numbers 24:25"
+        }
+      ]
+    },
+    {
+      "id": "rahab-spies-jericho",
+      "label": "Joshua's Spies: Jericho Reconnaissance",
+      "category": "conquest",
+      "person": "Joshua's Spies",
+      "description": "Joshua sends two spies secretly to Jericho. They stay with Rahab who hides them. They report back that the people's hearts have melted.",
+      "era": "exodus-conquest",
+      "bibleRef": "Joshua 2",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "moab-region",
+          "to": "jericho",
+          "mode": "land",
+          "ref": "Joshua 2:1"
+        },
+        {
+          "from": "jericho",
+          "to": "moab-region",
+          "mode": "land",
+          "ref": "Joshua 2:23-24"
+        }
+      ]
+    },
+    {
+      "id": "caleb-conquest-hebron",
+      "label": "Caleb: Claiming Hebron",
+      "category": "conquest",
+      "person": "Caleb",
+      "description": "At age 85, Caleb claims the mountain God promised him forty-five years earlier when he gave a faithful spy report. He drives out the Anakim from Hebron.",
+      "era": "exodus-conquest",
+      "bibleRef": "Joshua 14:6–15",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "gilgal",
+          "to": "hebron",
+          "mode": "land",
+          "ref": "Joshua 14:13"
+        }
+      ]
+    },
+    {
+      "id": "levite-concubine-gibeah",
+      "label": "Levite and Concubine: Road to Gibeah",
+      "category": "judges",
+      "person": "Levite",
+      "description": "A Levite from Ephraim retrieves his concubine from Bethlehem and travels home. They stop at Gibeah of Benjamin where the horrific outrage occurs that triggers a civil war.",
+      "era": "divided-kingdom",
+      "bibleRef": "Judges 19",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "bethlehem",
+          "to": "gibeah",
+          "mode": "land",
+          "ref": "Judges 19:14"
+        },
+        {
+          "from": "gibeah",
+          "to": "mizpah-benjamin",
+          "mode": "land",
+          "ref": "Judges 20:1"
+        }
+      ]
+    },
+    {
+      "id": "hannah-pilgrimage-shiloh",
+      "label": "Hannah: Annual Pilgrimage to Shiloh",
+      "category": "united-kingdom",
+      "person": "Hannah",
+      "description": "Elkanah's family makes their annual pilgrimage from Ramah to Shiloh. Hannah prays desperately for a son. After Samuel's birth she fulfils her vow and brings him to Eli.",
+      "era": "united-kingdom",
+      "bibleRef": "1 Samuel 1",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "ramah-benjamin",
+          "to": "shiloh",
+          "mode": "land",
+          "ref": "1 Samuel 1:3"
+        },
+        {
+          "from": "shiloh",
+          "to": "ramah-benjamin",
+          "mode": "land",
+          "ref": "1 Samuel 1:19"
+        },
+        {
+          "from": "ramah-benjamin",
+          "to": "shiloh",
+          "mode": "land",
+          "ref": "1 Samuel 1:24"
+        }
+      ]
+    },
+    {
+      "id": "ark-philistines-journey",
+      "label": "Ark of the Covenant: Philistine Journey",
+      "category": "united-kingdom",
+      "person": "The Ark",
+      "description": "The captured ark travels from Ebenezer to Ashdod, then to Gath, to Ekron — causing plagues everywhere — before being returned on a cart to Beth Shemesh and Kiriath Jearim.",
+      "era": "united-kingdom",
+      "bibleRef": "1 Samuel 4–7",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "shiloh",
+          "to": "ashdod",
+          "mode": "land",
+          "ref": "1 Samuel 5:1"
+        },
+        {
+          "from": "ashdod",
+          "to": "gath",
+          "mode": "land",
+          "ref": "1 Samuel 5:8"
+        },
+        {
+          "from": "gath",
+          "to": "ekron",
+          "mode": "land",
+          "ref": "1 Samuel 5:10"
+        },
+        {
+          "from": "ekron",
+          "to": "beth-shan",
+          "mode": "land",
+          "ref": "1 Samuel 6:12"
+        },
+        {
+          "from": "beth-shan",
+          "to": "kiriath-jearim",
+          "mode": "land",
+          "ref": "1 Samuel 7:1"
+        }
+      ]
+    },
+    {
+      "id": "ezra-jerusalem-reform",
+      "label": "Ezra: Jerusalem Reform Ministry",
+      "category": "exile-return",
+      "person": "Ezra",
+      "description": "Ezra's ministry in Jerusalem — reading the Law at the Water Gate, leading the great assembly of repentance, and reforming the mixed marriages.",
+      "era": "exile-return",
+      "bibleRef": "Nehemiah 8–9",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "jerusalem",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "Nehemiah 8:1"
+        }
+      ]
+    },
+    {
+      "id": "nehemiah-wall-survey",
+      "label": "Nehemiah: Midnight Survey of Jerusalem Walls",
+      "category": "exile-return",
+      "person": "Nehemiah",
+      "description": "Three days after arriving, Nehemiah makes his secret night inspection of Jerusalem's broken walls before announcing the rebuilding project.",
+      "era": "exile-return",
+      "bibleRef": "Nehemiah 2:11–16",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "jerusalem",
+          "to": "kidron-valley",
+          "mode": "land",
+          "ref": "Nehemiah 2:13"
+        },
+        {
+          "from": "kidron-valley",
+          "to": "pool-of-siloam",
+          "mode": "land",
+          "ref": "Nehemiah 2:14"
+        },
+        {
+          "from": "pool-of-siloam",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "Nehemiah 2:15"
+        }
+      ]
+    },
+    {
+      "id": "hezekiah-tunnel-defense",
+      "label": "Hezekiah: Defense of Jerusalem",
+      "category": "divided-kingdom",
+      "person": "Hezekiah",
+      "description": "As Assyria advances, Hezekiah cuts Siloam's tunnel, reinforces Jerusalem's walls, and receives Isaiah's prophecy that the city will be spared.",
+      "era": "divided-kingdom",
+      "bibleRef": "2 Kings 18–19; 2 Chronicles 32",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "lachish",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "2 Kings 18:14"
+        },
+        {
+          "from": "jerusalem",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "2 Kings 19:35"
+        }
+      ]
+    },
+    {
+      "id": "josiah-reform-journey",
+      "label": "Josiah: Covenant Renewal and Death",
+      "category": "divided-kingdom",
+      "person": "Josiah",
+      "description": "Josiah's reform sweeps from Jerusalem through Bethel and the cities of Samaria, desecrating all the high places. He later dies at Megiddo fighting Pharaoh Necho.",
+      "era": "divided-kingdom",
+      "bibleRef": "2 Kings 23",
+      "transportMode": "land",
+      "segments": [
+        {
+          "from": "jerusalem",
+          "to": "bethel",
+          "mode": "land",
+          "ref": "2 Kings 23:15"
+        },
+        {
+          "from": "bethel",
+          "to": "samaria",
+          "mode": "land",
+          "ref": "2 Kings 23:19"
+        },
+        {
+          "from": "samaria",
+          "to": "jerusalem",
+          "mode": "land",
+          "ref": "2 Kings 23:20"
+        },
+        {
+          "from": "jerusalem",
+          "to": "megiddo",
+          "mode": "land",
+          "ref": "2 Kings 23:29"
+        }
+      ]
+    }
+  ]
+}

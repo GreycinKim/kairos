@@ -1,0 +1,13 @@
+{
+  "overlays": [
+    {
+      "id": "demo-roman-soft-blob",
+      "label": "Demo: soft region (replace with AWMC / your GeoJSON)",
+      "geojsonUrl": "bible-map/data/overlays/roman-reach-soft-hint.geojson",
+      "fillColor": "#c9a36a",
+      "fillOpacity": 0.26,
+      "lineColor": "#7a4a1f",
+      "attributionNote": "Illustrative ellipse only — not an accurate Roman boundary."
+    }
+  ]
+}

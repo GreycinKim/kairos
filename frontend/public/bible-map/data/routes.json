@@ -1,0 +1,2223 @@
+[
+  {
+    "id": "abram-ur-haran-canaan",
+    "name": "Terah’s household: Ur → Haran → Canaan",
+    "summary": "Genesis 11–12: from Ur of the Chaldeans toward Haran, then Abram into Canaan.",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "patriarchs"
+    ],
+    "books": [
+      "Genesis"
+    ],
+    "path": [
+      [
+        30.96,
+        46.1
+      ],
+      [
+        36.86,
+        39.03
+      ],
+      [
+        32.21,
+        35.29
+      ],
+      [
+        31.93,
+        35.22
+      ]
+    ],
+    "labels": [
+      "Ur",
+      "Haran",
+      "Shechem",
+      "Bethel ridge"
+    ]
+  },
+  {
+    "id": "abram-egypt-return",
+    "name": "Abram: Canaan → Egypt → Negev",
+    "summary": "Famine descent to Egypt and return by the Negev (Gen 12).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "patriarchs"
+    ],
+    "books": [
+      "Genesis"
+    ],
+    "path": [
+      [
+        31.78,
+        35.23
+      ],
+      [
+        29.85,
+        31.25
+      ],
+      [
+        31.25,
+        34.79
+      ]
+    ],
+    "labels": [
+      "Hebron area",
+      "Memphis region",
+      "Negev"
+    ]
+  },
+  {
+    "id": "lot-sodom",
+    "name": "Lot: Bethel toward Sodom plain",
+    "summary": "Lot pitches toward Sodom from the Jordan plain (Gen 13).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "patriarchs"
+    ],
+    "books": [
+      "Genesis"
+    ],
+    "path": [
+      [
+        31.93,
+        35.22
+      ],
+      [
+        31.85,
+        35.45
+      ],
+      [
+        31.08,
+        35.42
+      ]
+    ],
+    "labels": [
+      "Bethel",
+      "Jordan",
+      "Sodom region"
+    ]
+  },
+  {
+    "id": "isaac-gerar-beersheba",
+    "name": "Isaac: Gerar ↔ Beersheba wells",
+    "summary": "Famine sojourn in Gerar and well-digging in the Negev (Gen 26).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "patriarchs"
+    ],
+    "books": [
+      "Genesis"
+    ],
+    "path": [
+      [
+        31.4,
+        34.6
+      ],
+      [
+        31.25,
+        34.79
+      ],
+      [
+        31.53,
+        35.1
+      ]
+    ],
+    "labels": [
+      "Gerar",
+      "Beersheba",
+      "Hebron"
+    ]
+  },
+  {
+    "id": "jacob-laban-return",
+    "name": "Jacob: Haran → Mahanaim → Shechem",
+    "summary": "Return from Paddan Aram to Canaan with family and flocks (Gen 31–33).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "patriarchs"
+    ],
+    "books": [
+      "Genesis"
+    ],
+    "path": [
+      [
+        36.86,
+        39.03
+      ],
+      [
+        32.2,
+        35.65
+      ],
+      [
+        32.21,
+        35.29
+      ]
+    ],
+    "labels": [
+      "Haran",
+      "Mahanaim",
+      "Shechem"
+    ]
+  },
+  {
+    "id": "joseph-slavery-egypt",
+    "name": "Joseph: Dothan → Egypt",
+    "summary": "Brothers sell Joseph; Ishmaelites/Midianites toward Egypt (Gen 37).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "patriarchs"
+    ],
+    "books": [
+      "Genesis"
+    ],
+    "path": [
+      [
+        32.425,
+        35.2
+      ],
+      [
+        29.85,
+        31.25
+      ]
+    ],
+    "labels": [
+      "Dothan",
+      "Lower Egypt"
+    ]
+  },
+  {
+    "id": "israel-exodus-red-sea",
+    "name": "Exodus: Goshen toward Red Sea",
+    "summary": "Israel leaves Rameses area toward the sea (Ex 12–14).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "exodus-conquest"
+    ],
+    "books": [
+      "Exodus"
+    ],
+    "path": [
+      [
+        30.8,
+        31.85
+      ],
+      [
+        29.52,
+        32.35
+      ]
+    ],
+    "labels": [
+      "Nile delta",
+      "Sea crossing region"
+    ]
+  },
+  {
+    "id": "exodus-mar-elim",
+    "name": "Wilderness: Marah → Elim",
+    "summary": "Bitter waters then Elim’s springs (Ex 15).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "exodus-conquest"
+    ],
+    "books": [
+      "Exodus"
+    ],
+    "path": [
+      [
+        29.3,
+        32.8
+      ],
+      [
+        28.9,
+        33.2
+      ]
+    ],
+    "labels": [
+      "Marah (schematic)",
+      "Elim"
+    ]
+  },
+  {
+    "id": "exodus-sinai",
+    "name": "Israel: wilderness → Sinai",
+    "summary": "Journey to the mountain of God (Ex 19).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "exodus-conquest"
+    ],
+    "books": [
+      "Exodus"
+    ],
+    "path": [
+      [
+        28.55,
+        33.42
+      ],
+      [
+        28.5394,
+        33.9753
+      ]
+    ],
+    "labels": [
+      "Wilderness",
+      "Sinai (Horeb)"
+    ]
+  },
+  {
+    "id": "spies-canaan-return",
+    "name": "Twelve spies: Kadesh → Hebron ridge → return",
+    "summary": "Mission from Kadesh into the hill country (Num 13).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "exodus-conquest"
+    ],
+    "books": [
+      "Numbers"
+    ],
+    "path": [
+      [
+        30.688,
+        34.433
+      ],
+      [
+        31.65,
+        34.97
+      ],
+      [
+        30.688,
+        34.433
+      ]
+    ],
+    "labels": [
+      "Kadesh",
+      "Hebron hills",
+      "Kadesh"
+    ]
+  },
+  {
+    "id": "israel-jordan-jericho",
+    "name": "Israel: Jordan → Gilgal → Jericho",
+    "summary": "Crossing and camp opposite Jericho (Josh 3–4).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "exodus-conquest"
+    ],
+    "books": [
+      "Joshua"
+    ],
+    "path": [
+      [
+        31.85,
+        35.57
+      ],
+      [
+        31.926,
+        35.45
+      ],
+      [
+        31.8561,
+        35.4622
+      ]
+    ],
+    "labels": [
+      "Jordan ford",
+      "Gilgal",
+      "Jericho"
+    ]
+  },
+  {
+    "id": "southern-campaign",
+    "name": "Joshua: southern coalition sweep",
+    "summary": "Southern kings coalition toward Gibeon then descent (Josh 10).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "exodus-conquest"
+    ],
+    "books": [
+      "Joshua"
+    ],
+    "path": [
+      [
+        31.848,
+        35.178
+      ],
+      [
+        31.71,
+        34.89
+      ],
+      [
+        31.564,
+        34.85
+      ]
+    ],
+    "labels": [
+      "Gibeon",
+      "Jarmuth",
+      "Lachish"
+    ]
+  },
+  {
+    "id": "dan-migration",
+    "name": "Dan: west toward Laish",
+    "summary": "Tribe scouts and migration north to Laish (Judg 18).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "divided-kingdom"
+    ],
+    "books": [
+      "Judges"
+    ],
+    "path": [
+      [
+        31.7,
+        34.85
+      ],
+      [
+        33.248,
+        35.602
+      ]
+    ],
+    "labels": [
+      "Philistine border",
+      "Dan/Laish"
+    ]
+  },
+  {
+    "id": "ark-kirjath-jearim-shiloh",
+    "name": "Ark: Ebenezer → Kirjath Jearim (schematic)",
+    "summary": "Philistine capture and return arc (1 Sam 4–7).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "united-kingdom"
+    ],
+    "books": [
+      "1 Samuel"
+    ],
+    "path": [
+      [
+        31.78,
+        34.85
+      ],
+      [
+        31.771,
+        35.107
+      ]
+    ],
+    "labels": [
+      "Philistia",
+      "Kiriath Jearim"
+    ]
+  },
+  {
+    "id": "david-goliath-pursuit",
+    "name": "Saul & David: valley of Elah pursuit",
+    "summary": "Philistine muster and pursuit toward Ekron (1 Sam 17).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "united-kingdom"
+    ],
+    "books": [
+      "1 Samuel"
+    ],
+    "path": [
+      [
+        31.68,
+        34.98
+      ],
+      [
+        31.778,
+        34.85
+      ]
+    ],
+    "labels": [
+      "Socoh",
+      "Ekron"
+    ]
+  },
+  {
+    "id": "david-flee-saul",
+    "name": "David: Gibeah area → wilderness refuges",
+    "summary": "Flight through wilderness strongholds (1 Sam 19–23).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "united-kingdom"
+    ],
+    "books": [
+      "1 Samuel"
+    ],
+    "path": [
+      [
+        31.85,
+        35.22
+      ],
+      [
+        31.48,
+        35.18
+      ],
+      [
+        31.45,
+        35.39
+      ]
+    ],
+    "labels": [
+      "Gibeah",
+      "Ziph",
+      "En Gedi"
+    ]
+  },
+  {
+    "id": "david-ziklag-philistia",
+    "name": "David: Judah toward Ziklag",
+    "summary": "Dwelling among Philistines at Ziklag (1 Sam 27).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "united-kingdom"
+    ],
+    "books": [
+      "1 Samuel"
+    ],
+    "path": [
+      [
+        31.53,
+        35.1
+      ],
+      [
+        31.38,
+        34.62
+      ]
+    ],
+    "labels": [
+      "Hebron area",
+      "Ziklag"
+    ]
+  },
+  {
+    "id": "absalom-revolt",
+    "name": "Absalom: Hebron → Jerusalem",
+    "summary": "Revolt route toward David’s capital (2 Sam 15–18).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "united-kingdom"
+    ],
+    "books": [
+      "2 Samuel"
+    ],
+    "path": [
+      [
+        31.5326,
+        35.0998
+      ],
+      [
+        31.7683,
+        35.2137
+      ]
+    ],
+    "labels": [
+      "Hebron",
+      "Jerusalem"
+    ]
+  },
+  {
+    "id": "elijah-carmel-jezreel",
+    "name": "Elijah: Carmel to Jezreel",
+    "summary": "After Carmel, Elijah runs before Ahab’s chariot (1 Kgs 18).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "divided-kingdom"
+    ],
+    "books": [
+      "1 Kings"
+    ],
+    "path": [
+      [
+        32.732,
+        34.985
+      ],
+      [
+        32.51,
+        35.21
+      ]
+    ],
+    "labels": [
+      "Carmel",
+      "Jezreel"
+    ]
+  },
+  {
+    "id": "elijah-horeb",
+    "name": "Elijah: Beersheba → Horeb",
+    "summary": "Forty-day wilderness journey to the mount of God (1 Kgs 19).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "divided-kingdom"
+    ],
+    "books": [
+      "1 Kings"
+    ],
+    "path": [
+      [
+        31.25,
+        34.79
+      ],
+      [
+        28.5394,
+        33.9753
+      ]
+    ],
+    "labels": [
+      "Beersheba",
+      "Horeb"
+    ]
+  },
+  {
+    "id": "jonah-joppa-sea",
+    "name": "Jonah: Joppa toward Tarshish",
+    "summary": "Flees by ship from Joppa (Jon 1).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "divided-kingdom"
+    ],
+    "books": [
+      "Jonah"
+    ],
+    "path": [
+      [
+        32.054,
+        34.752
+      ],
+      [
+        35.5,
+        28
+      ]
+    ],
+    "labels": [
+      "Joppa",
+      "West Mediterranean (schematic)"
+    ]
+  },
+  {
+    "id": "jonah-nineveh",
+    "name": "Jonah: Nineveh circuit",
+    "summary": "Obedient preaching walk in the great city (Jon 3).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "divided-kingdom"
+    ],
+    "books": [
+      "Jonah"
+    ],
+    "path": [
+      [
+        36.3594,
+        43.1528
+      ],
+      [
+        36.37,
+        43.18
+      ],
+      [
+        36.35,
+        43.14
+      ]
+    ],
+    "labels": [
+      "Nineveh gate area",
+      "—",
+      "—"
+    ]
+  },
+  {
+    "id": "exile-babylon",
+    "name": "Judah: Jerusalem → Babylon",
+    "summary": "Exile march east to Babylon (2 Kgs 25; Ps 137).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "exile-return"
+    ],
+    "books": [
+      "2 Kings",
+      "Psalms"
+    ],
+    "path": [
+      [
+        31.7683,
+        35.2137
+      ],
+      [
+        33.1,
+        38.5
+      ],
+      [
+        32.5355,
+        44.4275
+      ]
+    ],
+    "labels": [
+      "Jerusalem",
+      "Desert arc",
+      "Babylon"
+    ]
+  },
+  {
+    "id": "exiles-return",
+    "name": "Return: Babylon → Jerusalem",
+    "summary": "Zerubbabel’s caravan horizon (Ezra 1–2).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "exile-return"
+    ],
+    "books": [
+      "Ezra"
+    ],
+    "path": [
+      [
+        32.5355,
+        44.4275
+      ],
+      [
+        34.5,
+        40
+      ],
+      [
+        31.7683,
+        35.2137
+      ]
+    ],
+    "labels": [
+      "Babylon",
+      "Fertile Crescent",
+      "Jerusalem"
+    ]
+  },
+  {
+    "id": "alexander-to-east",
+    "name": "Greek era: coast to interior (schematic)",
+    "summary": "Hellenistic city networks linking coast and Decapolis (intertestamental).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "second-temple"
+    ],
+    "books": [
+      "1 Maccabees"
+    ],
+    "path": [
+      [
+        32.498,
+        34.8918
+      ],
+      [
+        32.88,
+        35.5754
+      ],
+      [
+        32.91,
+        35.63
+      ]
+    ],
+    "labels": [
+      "Caesarea",
+      "Capernaum",
+      "Bethsaida"
+    ]
+  },
+  {
+    "id": "mary-joseph-bethlehem",
+    "name": "Mary & Joseph: Galilee to Bethlehem",
+    "summary": "Census journey for Jesus’ birth (Lk 2).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "jesus-ministry"
+    ],
+    "books": [
+      "Luke"
+    ],
+    "path": [
+      [
+        32.6996,
+        35.3035
+      ],
+      [
+        31.7054,
+        35.2024
+      ]
+    ],
+    "labels": [
+      "Nazareth",
+      "Bethlehem"
+    ]
+  },
+  {
+    "id": "jesus-baptism",
+    "name": "Jesus: Nazareth area → Jordan",
+    "summary": "Baptism at the Jordan (Mk 1; Mt 3).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "jesus-ministry"
+    ],
+    "books": [
+      "Gospels"
+    ],
+    "path": [
+      [
+        32.6996,
+        35.3035
+      ],
+      [
+        32.18,
+        35.57
+      ]
+    ],
+    "labels": [
+      "Nazareth",
+      "Jordan"
+    ]
+  },
+  {
+    "id": "jesus-galilee-circuit",
+    "name": "Jesus: Galilee preaching circuit",
+    "summary": "Synagogue-to-synagogue ministry around the lake (Mk 1–6).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "jesus-ministry"
+    ],
+    "books": [
+      "Gospels"
+    ],
+    "path": [
+      [
+        32.88,
+        35.5754
+      ],
+      [
+        32.826,
+        35.588
+      ],
+      [
+        32.732,
+        34.985
+      ],
+      [
+        32.6996,
+        35.3035
+      ]
+    ],
+    "labels": [
+      "Capernaum",
+      "Sea circuit",
+      "Carmel",
+      "Nazareth"
+    ]
+  },
+  {
+    "id": "jesus-decapolis",
+    "name": "Jesus: Decapolis region loop",
+    "summary": "Pig herd cliff and Gentile mission hints (Mk 5).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "jesus-ministry"
+    ],
+    "books": [
+      "Mark"
+    ],
+    "path": [
+      [
+        32.88,
+        35.5754
+      ],
+      [
+        32.65,
+        35.75
+      ],
+      [
+        32.88,
+        35.5754
+      ]
+    ],
+    "labels": [
+      "Capernaum",
+      "Gerasa region",
+      "Return"
+    ]
+  },
+  {
+    "id": "jesus-samaria-jerusalem",
+    "name": "Jesus: Galilee → Samaria → Judea",
+    "summary": "Luke travel narrative toward Jerusalem (Lk 9–19).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "jesus-ministry"
+    ],
+    "books": [
+      "Luke"
+    ],
+    "path": [
+      [
+        32.6996,
+        35.3035
+      ],
+      [
+        32.224,
+        35.268
+      ],
+      [
+        31.7683,
+        35.2137
+      ]
+    ],
+    "labels": [
+      "Galilee",
+      "Sychar",
+      "Jerusalem"
+    ]
+  },
+  {
+    "id": "jesus-passion-entry",
+    "name": "Jesus: Jericho → Bethany → Jerusalem",
+    "summary": "Final ascent and triumphal entry (Mk 10–11).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "jesus-ministry"
+    ],
+    "books": [
+      "Gospels"
+    ],
+    "path": [
+      [
+        31.8561,
+        35.4622
+      ],
+      [
+        31.771,
+        35.262
+      ],
+      [
+        31.7683,
+        35.2137
+      ]
+    ],
+    "labels": [
+      "Jericho",
+      "Bethany",
+      "Jerusalem"
+    ]
+  },
+  {
+    "id": "road-emmaus",
+    "name": "Emmaus road",
+    "summary": "Two disciples walk and recognize the risen Lord (Lk 24).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "jesus-ministry"
+    ],
+    "books": [
+      "Luke"
+    ],
+    "path": [
+      [
+        31.7683,
+        35.2137
+      ],
+      [
+        31.84,
+        34.98
+      ]
+    ],
+    "labels": [
+      "Jerusalem",
+      "Emmaus (trad.)"
+    ]
+  },
+  {
+    "id": "philip-gaza",
+    "name": "Philip: Jerusalem → Gaza road",
+    "summary": "Ethiopian eunuch on the desert road (Acts 8).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Acts"
+    ],
+    "path": [
+      [
+        31.7683,
+        35.2137
+      ],
+      [
+        31.5,
+        34.4667
+      ]
+    ],
+    "labels": [
+      "Jerusalem",
+      "Gaza road"
+    ]
+  },
+  {
+    "id": "paul-damascus-road",
+    "name": "Saul: Jerusalem → Damascus",
+    "summary": "Conversion journey interrupted near Damascus (Acts 9).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Acts"
+    ],
+    "path": [
+      [
+        31.7683,
+        35.2137
+      ],
+      [
+        35.5,
+        37
+      ],
+      [
+        33.5138,
+        36.2765
+      ]
+    ],
+    "labels": [
+      "Jerusalem",
+      "Syrian desert arc",
+      "Damascus"
+    ]
+  },
+  {
+    "id": "paul-first-journey-antioch",
+    "name": "Paul I: Antioch → Cyprus",
+    "summary": "Sent from Syrian Antioch to Salamis (Acts 13).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Acts"
+    ],
+    "path": [
+      [
+        36.2026,
+        36.1606
+      ],
+      [
+        35.18,
+        33.9
+      ]
+    ],
+    "labels": [
+      "Antioch",
+      "Salamis"
+    ]
+  },
+  {
+    "id": "paul-pamphylia-pisidia",
+    "name": "Paul I: Perga → Pisidian Antioch",
+    "summary": "Inland to Pisidian Antioch (Acts 13–14).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Acts"
+    ],
+    "path": [
+      [
+        36.96,
+        30.85
+      ],
+      [
+        37.83,
+        31.17
+      ]
+    ],
+    "labels": [
+      "Perga",
+      "Pisidian Antioch"
+    ]
+  },
+  {
+    "id": "paul-iconium-lystra",
+    "name": "Paul I: Iconium → Lystra → Derbe",
+    "summary": "Southern Galatian cities (Acts 14).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Acts"
+    ],
+    "path": [
+      [
+        37.8667,
+        32.4833
+      ],
+      [
+        37.59,
+        32.35
+      ],
+      [
+        37.35,
+        33.3
+      ]
+    ],
+    "labels": [
+      "Iconium",
+      "Lystra",
+      "Derbe"
+    ]
+  },
+  {
+    "id": "paul-return-attalia",
+    "name": "Paul I: coast return to Attalia",
+    "summary": "Sailed from Attalia to Antioch (Acts 14).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Acts"
+    ],
+    "path": [
+      [
+        37.35,
+        33.3
+      ],
+      [
+        36.88,
+        30.68
+      ],
+      [
+        36.2026,
+        36.1606
+      ]
+    ],
+    "labels": [
+      "Derbe",
+      "Attalia",
+      "Antioch"
+    ]
+  },
+  {
+    "id": "paul-second-journey-europe",
+    "name": "Paul II: Troas → Neapolis → Philippi",
+    "summary": "Macedonian call and first European landing (Acts 16).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Acts"
+    ],
+    "path": [
+      [
+        39.75,
+        26.15
+      ],
+      [
+        40.939,
+        24.406
+      ],
+      [
+        41.013,
+        24.286
+      ]
+    ],
+    "labels": [
+      "Troas",
+      "Neapolis",
+      "Philippi"
+    ]
+  },
+  {
+    "id": "paul-amphipolis-thessalonica",
+    "name": "Paul II: Amphipolis → Thessalonica",
+    "summary": "Coastal road mission (Acts 17).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Acts"
+    ],
+    "path": [
+      [
+        40.82,
+        23.847
+      ],
+      [
+        40.587,
+        22.45
+      ],
+      [
+        40.6401,
+        22.9444
+      ]
+    ],
+    "labels": [
+      "Amphipolis",
+      "Apollonia",
+      "Thessalonica"
+    ]
+  },
+  {
+    "id": "paul-berea-athens",
+    "name": "Paul II: Berea → Athens",
+    "summary": "Philosophers and Areopagus (Acts 17).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Acts"
+    ],
+    "path": [
+      [
+        40.523,
+        22.202
+      ],
+      [
+        38.4237,
+        23.7275
+      ]
+    ],
+    "labels": [
+      "Berea",
+      "Athens"
+    ]
+  },
+  {
+    "id": "paul-corinth-ephesus",
+    "name": "Paul II: Corinth ↔ Ephesus",
+    "summary": "Extended Corinth stay then Ephesian base (Acts 18–19).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Acts"
+    ],
+    "path": [
+      [
+        37.938,
+        22.932
+      ],
+      [
+        37.939,
+        27.341
+      ]
+    ],
+    "labels": [
+      "Corinth",
+      "Ephesus"
+    ]
+  },
+  {
+    "id": "paul-third-journey-miletus",
+    "name": "Paul III: Ephesus → Miletus",
+    "summary": "Farewell to elders (Acts 20).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Acts"
+    ],
+    "path": [
+      [
+        37.939,
+        27.341
+      ],
+      [
+        37.53,
+        27.28
+      ]
+    ],
+    "labels": [
+      "Ephesus",
+      "Miletus"
+    ]
+  },
+  {
+    "id": "paul-coast-asia",
+    "name": "Paul III: Troas → Assos → Chios → Samos",
+    "summary": "Return voyage legs (Acts 20).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Acts"
+    ],
+    "path": [
+      [
+        39.75,
+        26.15
+      ],
+      [
+        39.487,
+        26.336
+      ],
+      [
+        38.368,
+        26.135
+      ],
+      [
+        37.754,
+        26.976
+      ]
+    ],
+    "labels": [
+      "Troas",
+      "Assos",
+      "Chios",
+      "Samos"
+    ]
+  },
+  {
+    "id": "paul-jerusalem-custody",
+    "name": "Paul: Ephesus → Jerusalem",
+    "summary": "Return and arrest in the temple courts (Acts 21).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Acts"
+    ],
+    "path": [
+      [
+        37.939,
+        27.341
+      ],
+      [
+        36.96,
+        30.85
+      ],
+      [
+        31.7683,
+        35.2137
+      ]
+    ],
+    "labels": [
+      "Ephesus",
+      "Caesarea Maritima",
+      "Jerusalem"
+    ]
+  },
+  {
+    "id": "paul-caesarea-rome-ship",
+    "name": "Paul: Caesarea → Rome (sea arc)",
+    "summary": "Custody voyage with shipwreck and Italy landings (Acts 27–28).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Acts"
+    ],
+    "path": [
+      [
+        32.498,
+        34.8918
+      ],
+      [
+        36.244,
+        29.985
+      ],
+      [
+        36.685,
+        27.373
+      ],
+      [
+        35.937,
+        14.375
+      ],
+      [
+        37.075,
+        15.286
+      ],
+      [
+        40.832,
+        14.121
+      ],
+      [
+        41.9028,
+        12.4964
+      ]
+    ],
+    "labels": [
+      "Caesarea",
+      "Myra",
+      "Cnidus",
+      "Malta",
+      "Syracuse",
+      "Puteoli",
+      "Rome"
+    ]
+  },
+  {
+    "id": "wise-men-jerusalem-bethlehem",
+    "name": "Magi: Jerusalem → Bethlehem",
+    "summary": "Star-led inquiry and short journey south (Mt 2).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "jesus-ministry"
+    ],
+    "books": [
+      "Matthew"
+    ],
+    "path": [
+      [
+        31.7683,
+        35.2137
+      ],
+      [
+        31.7054,
+        35.2024
+      ]
+    ],
+    "labels": [
+      "Jerusalem",
+      "Bethlehem"
+    ]
+  },
+  {
+    "id": "ark-noah-mountains",
+    "name": "Noah’s ark: mountains of Ararat region",
+    "summary": "Resting of the ark in the eastern highlands (Gen 8).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "patriarchs"
+    ],
+    "books": [
+      "Genesis"
+    ],
+    "path": [
+      [
+        39.7,
+        44.3
+      ],
+      [
+        39.72,
+        44.28
+      ]
+    ],
+    "labels": [
+      "Ararat region"
+    ]
+  },
+  {
+    "id": "abraham-mamre-hebron",
+    "name": "Abraham: Mamre / Hebron orbit",
+    "summary": "Tent life near the oaks of Mamre (Gen 13; 18).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "patriarchs"
+    ],
+    "books": [
+      "Genesis"
+    ],
+    "path": [
+      [
+        31.53,
+        35.1
+      ],
+      [
+        31.5326,
+        35.0998
+      ]
+    ],
+    "labels": [
+      "Hebron approach",
+      "Hebron"
+    ]
+  },
+  {
+    "id": "census-quirinius-schematic",
+    "name": "Judea ↔ Galilee travel (schematic)",
+    "summary": "Population movements under Roman administration (Lk 2:1–5 context).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "jesus-ministry"
+    ],
+    "books": [
+      "Luke"
+    ],
+    "path": [
+      [
+        31.7683,
+        35.2137
+      ],
+      [
+        32.6996,
+        35.3035
+      ]
+    ],
+    "labels": [
+      "Jerusalem",
+      "Nazareth"
+    ]
+  },
+  {
+    "id": "peter-joppa-caesarea",
+    "name": "Peter: Lydda → Joppa → Caesarea",
+    "summary": "Healing Dorcas then Cornelius’ house (Acts 9–10).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Acts"
+    ],
+    "path": [
+      [
+        32.001,
+        34.888
+      ],
+      [
+        32.054,
+        34.752
+      ],
+      [
+        32.498,
+        34.8918
+      ]
+    ],
+    "labels": [
+      "Lydda",
+      "Joppa",
+      "Caesarea"
+    ]
+  },
+  {
+    "id": "silas-jerusalem-letter",
+    "name": "Judizers journey (schematic)",
+    "summary": "Controversy resolved; letter carried from Jerusalem council horizon (Acts 15).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Acts"
+    ],
+    "path": [
+      [
+        31.7683,
+        35.2137
+      ],
+      [
+        36.2026,
+        36.1606
+      ]
+    ],
+    "labels": [
+      "Jerusalem",
+      "Antioch"
+    ]
+  },
+  {
+    "id": "benhadad-aphek",
+    "name": "Syrian campaign toward Aphek (schematic)",
+    "summary": "Aramean wars near Israel’s interior (1 Kgs 20).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "divided-kingdom"
+    ],
+    "books": [
+      "1 Kings"
+    ],
+    "path": [
+      [
+        33.5138,
+        36.2765
+      ],
+      [
+        32.55,
+        35.32
+      ]
+    ],
+    "labels": [
+      "Damascus",
+      "Jezreel Aphek"
+    ]
+  },
+  {
+    "id": "assyria-samaria-deportation",
+    "name": "Assyria ↔ Samaria (schematic)",
+    "summary": "Northern exile horizon (2 Kgs 17).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "divided-kingdom"
+    ],
+    "books": [
+      "2 Kings"
+    ],
+    "path": [
+      [
+        32.2763,
+        35.1982
+      ],
+      [
+        36.3594,
+        43.1528
+      ]
+    ],
+    "labels": [
+      "Samaria",
+      "Nineveh region"
+    ]
+  },
+  {
+    "id": "josiah-megiddo",
+    "name": "Josiah: Jerusalem toward Megiddo",
+    "summary": "Final campaign to Pharaoh Neco (2 Kgs 23).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "divided-kingdom"
+    ],
+    "books": [
+      "2 Kings"
+    ],
+    "path": [
+      [
+        31.7683,
+        35.2137
+      ],
+      [
+        32.5842,
+        35.1821
+      ]
+    ],
+    "labels": [
+      "Jerusalem",
+      "Megiddo"
+    ]
+  },
+  {
+    "id": "nehemiah-wall-circuit",
+    "name": "Nehemiah: Jerusalem wall circuit",
+    "summary": "Inspection and rebuilding circuit (Neh 2–3).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "exile-return"
+    ],
+    "books": [
+      "Nehemiah"
+    ],
+    "path": [
+      [
+        31.772,
+        35.234
+      ],
+      [
+        31.78,
+        35.22
+      ],
+      [
+        31.765,
+        35.24
+      ],
+      [
+        31.772,
+        35.234
+      ]
+    ],
+    "labels": [
+      "Valley gate",
+      "Sheep gate",
+      "Fish gate",
+      "Start"
+    ]
+  },
+  {
+    "id": "christophany-jacob-peniel",
+    "name": "Jacob: Jabbok ford at Peniel",
+    "summary": "Wrestling at the ford (Gen 32).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "patriarchs"
+    ],
+    "books": [
+      "Genesis"
+    ],
+    "path": [
+      [
+        32.2,
+        35.65
+      ],
+      [
+        32.2,
+        35.6
+      ]
+    ],
+    "labels": [
+      "Mahanaim",
+      "Peniel"
+    ]
+  },
+  {
+    "id": "balak-balaam-highlands",
+    "name": "Balak: Moab heights circuit",
+    "summary": "Altars on high places overlooking Israel (Num 22–24).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "exodus-conquest"
+    ],
+    "books": [
+      "Numbers"
+    ],
+    "path": [
+      [
+        31.8,
+        35.72
+      ],
+      [
+        31.5,
+        35.8
+      ],
+      [
+        31.6,
+        35.75
+      ]
+    ],
+    "labels": [
+      "Nebo view",
+      "Peor",
+      "Zophim"
+    ]
+  },
+  {
+    "id": "ruth-bethlehem-moab",
+    "name": "Ruth: Bethlehem ↔ Moab",
+    "summary": "Famine sojourn and return (Ruth 1).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "united-kingdom"
+    ],
+    "books": [
+      "Ruth"
+    ],
+    "path": [
+      [
+        31.7054,
+        35.2024
+      ],
+      [
+        31.5,
+        35.75
+      ],
+      [
+        31.7054,
+        35.2024
+      ]
+    ],
+    "labels": [
+      "Bethlehem",
+      "Moab plateau",
+      "Bethlehem"
+    ]
+  },
+  {
+    "id": "solomon-timber-lebanon",
+    "name": "Tyre ↔ Jerusalem (cedar trade)",
+    "summary": "Hiram’s logs for the Temple (1 Kgs 5).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "united-kingdom"
+    ],
+    "books": [
+      "1 Kings"
+    ],
+    "path": [
+      [
+        33.27,
+        35.195
+      ],
+      [
+        31.7683,
+        35.2137
+      ]
+    ],
+    "labels": [
+      "Tyre",
+      "Jerusalem"
+    ]
+  },
+  {
+    "id": "queen-sheba-jerusalem",
+    "name": "Sheba → Jerusalem (schematic)",
+    "summary": "Royal visit to Solomon (1 Kgs 10).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "united-kingdom"
+    ],
+    "books": [
+      "1 Kings"
+    ],
+    "path": [
+      [
+        14.5,
+        39
+      ],
+      [
+        31.7683,
+        35.2137
+      ]
+    ],
+    "labels": [
+      "South Arabia (schematic)",
+      "Jerusalem"
+    ]
+  },
+  {
+    "id": "hezekiah-sennacherib",
+    "name": "Assyrian approach to Jerusalem (schematic)",
+    "summary": "Sennacherib’s campaign and withdrawal (2 Kgs 18–19).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "divided-kingdom"
+    ],
+    "books": [
+      "2 Kings"
+    ],
+    "path": [
+      [
+        31.564,
+        34.85
+      ],
+      [
+        31.78,
+        35.2137
+      ]
+    ],
+    "labels": [
+      "Lachish",
+      "Jerusalem"
+    ]
+  },
+  {
+    "id": "jeremiah-egypt-tahpanhes",
+    "name": "Refugees: Judah toward Egypt",
+    "summary": "Flight after Gedaliah (Jer 41–43).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "divided-kingdom"
+    ],
+    "books": [
+      "Jeremiah"
+    ],
+    "path": [
+      [
+        31.7683,
+        35.2137
+      ],
+      [
+        31.05,
+        32.53
+      ]
+    ],
+    "labels": [
+      "Jerusalem",
+      "Tahpanhes region"
+    ]
+  },
+  {
+    "id": "ezra-return-caravan",
+    "name": "Babylon → Jerusalem (Ezra’s band)",
+    "summary": "Second return with Torah emphasis (Ezr 7–8).",
+    "testament": [
+      "OT"
+    ],
+    "eras": [
+      "exile-return"
+    ],
+    "books": [
+      "Ezra"
+    ],
+    "path": [
+      [
+        32.5355,
+        44.4275
+      ],
+      [
+        34.8,
+        39
+      ],
+      [
+        31.7683,
+        35.2137
+      ]
+    ],
+    "labels": [
+      "Babylon",
+      "Desert",
+      "Jerusalem"
+    ]
+  },
+  {
+    "id": "magi-return-home",
+    "name": "Magi: Bethlehem → east (schematic)",
+    "summary": "Warned in a dream not to return to Herod (Mt 2:12).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "jesus-ministry"
+    ],
+    "books": [
+      "Matthew"
+    ],
+    "path": [
+      [
+        31.7054,
+        35.2024
+      ],
+      [
+        35,
+        38
+      ]
+    ],
+    "labels": [
+      "Bethlehem",
+      "East (schematic)"
+    ]
+  },
+  {
+    "id": "jesus-tyre-sidon",
+    "name": "Jesus: Galilee toward Tyre and Sidon",
+    "summary": "Gentile daughter’s faith (Mk 7).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "jesus-ministry"
+    ],
+    "books": [
+      "Mark"
+    ],
+    "path": [
+      [
+        32.88,
+        35.5754
+      ],
+      [
+        33.27,
+        35.195
+      ],
+      [
+        33.563,
+        35.368
+      ]
+    ],
+    "labels": [
+      "Capernaum",
+      "Tyre",
+      "Sidon"
+    ]
+  },
+  {
+    "id": "paul-rome-spain-intent",
+    "name": "Paul: Rome westward horizon (schematic)",
+    "summary": "Romans 15:24 Spain intention.",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Romans"
+    ],
+    "path": [
+      [
+        41.9028,
+        12.4964
+      ],
+      [
+        41,
+        1.5
+      ]
+    ],
+    "labels": [
+      "Rome",
+      "Iberia (schematic)"
+    ]
+  },
+  {
+    "id": "apollos-alexandria-ephesus",
+    "name": "Apollos: Alexandria → Ephesus (schematic)",
+    "summary": "Learned Alexandrian in Ephesus (Acts 18).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Acts"
+    ],
+    "path": [
+      [
+        31.2,
+        29.92
+      ],
+      [
+        37.939,
+        27.341
+      ]
+    ],
+    "labels": [
+      "Alexandria",
+      "Ephesus"
+    ]
+  },
+  {
+    "id": "titus-crete-cities",
+    "name": "Titus: Crete church circuit (schematic)",
+    "summary": "Appoint elders in every town (Tit 1:5).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Titus"
+    ],
+    "path": [
+      [
+        35.068,
+        24.947
+      ],
+      [
+        35.2,
+        24.08
+      ],
+      [
+        34.92,
+        24.78
+      ]
+    ],
+    "labels": [
+      "Gortyn",
+      "Phoenix area",
+      "Fair Havens"
+    ]
+  },
+  {
+    "id": "john-patmos-deport",
+    "name": "John: Asia to Patmos",
+    "summary": "Exile on Patmos for the word (Rev 1:9).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Revelation"
+    ],
+    "path": [
+      [
+        37.939,
+        27.341
+      ],
+      [
+        37.309,
+        26.547
+      ]
+    ],
+    "labels": [
+      "Ephesus",
+      "Patmos"
+    ]
+  },
+  {
+    "id": "philip-samaria-gaza",
+    "name": "Philip: Samaria → Gaza road",
+    "summary": "Preaching in Samaria then the desert road (Acts 8).",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Acts"
+    ],
+    "path": [
+      [
+        32.2763,
+        35.1982
+      ],
+      [
+        31.5,
+        34.4667
+      ]
+    ],
+    "labels": [
+      "Samaria city",
+      "Gaza road"
+    ]
+  },
+  {
+    "id": "stephen-history-orbit",
+    "name": "Abraham to Moses arc (theological path)",
+    "summary": "Stephen’s speech geography (Acts 7) — thematic, not one journey.",
+    "testament": [
+      "NT"
+    ],
+    "eras": [
+      "early-church"
+    ],
+    "books": [
+      "Acts"
+    ],
+    "path": [
+      [
+        30.96,
+        46.1
+      ],
+      [
+        31.7683,
+        35.2137
+      ],
+      [
+        29.85,
+        31.25
+      ]
+    ],
+    "labels": [
+      "Mesopotamia",
+      "Land of Canaan",
+      "Egypt"
+    ]
+  }
+]
