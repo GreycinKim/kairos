@@ -1,27 +1,127 @@
 {
-  "source": "Describe your import pack",
+  "__readme__": "Kairos people import (Timeline → Import people). Required: top-level array \"people\". Optional: \"source\" (label only). You may delete __readme__ before importing; the importer only uses \"people\" and \"source\". Each row POSTs a timeline event (person or ruler) then saves a PersonProfile in the browser. CANONICAL SHAPE: slug, timeline_event, profile (see first example). FLAT SHAPE: slug, eventId, name, scope, and optional fields on the same object (see Jesse example); timeline_event is built for you. profile.scope: \"bible\" | \"church_history\" (\"OT\" / \"NT\" are accepted as bible). profile.figureKind: king | prophet | priest | disciple | apostle | angel | region | other. scriptureAppearances: { \"book\": \"Genesis\", \"chapter\": 1 } — book must match Kairos canon names. loreCards: { kind: item|clothing|place|event, title, body }. loreCallouts: { title, body }. atlasPin: { catalogMapId (workspace map id, e.g. ws-05-the-land-of-canaan), nx, ny } with nx/ny in 0–1 on the plate image. familyLinks (two styles): (1) On the row or nested profile: [{ \"type\": \"spouse|parent|childof|siblingof|ancestorof\", \"targetEventId\": \"slug\" }] where targetEventId matches another row's slug, eventId, or name (same pack, resolved after all rows import). (2) Inside profile only: [{ \"relation\": \"parent|child|spouse|sibling|other\", \"personEventId\": \"<existing timeline UUID>\" }]. imageDataUrl: full data URL string or omit/null. relatedEventIds: timeline event UUIDs already in your library.",
+  "source": "Example people pack — replace with your dataset name",
   "people": [
     {
-      "slug": "person-slug",
+      "slug": "king-david-example",
+      "eventId": "king-david-example",
       "timeline_event": {
-        "title": "Person name (timeline)",
-        "type": "person",
-        "start_year": null,
-        "end_year": null,
-        "description": null,
-        "color": "#5d7f9a",
-        "icon": "👤",
-        "era": "Bible timeline",
+        "title": "David",
+        "type": "ruler",
+        "start_year": -1020,
+        "end_year": -970,
+        "description": "King of united Israel; psalmist; covenant line.",
+        "color": "#7c5c8a",
+        "icon": "👑",
+        "era": "United monarchy",
         "author": null,
         "written_start_year": null,
         "written_end_year": null
       },
       "profile": {
-        "name": "Person name (timeline)",
+        "name": "David",
         "scope": "bible",
-        "title": "",
-        "biography": "",
-        "scriptureAppearances": []
+        "figureKind": "king",
+        "title": "King of Israel",
+        "biography": "Shepherd of Bethlehem; defeats Goliath; reigns from Hebron then Jerusalem.",
+        "diedYear": -970,
+        "ruledFromYear": -1010,
+        "ruledToYear": -970,
+        "hidden": false,
+        "scriptureAppearances": [
+          { "book": "1 Samuel", "chapter": 16 },
+          { "book": "1 Samuel", "chapter": 17 },
+          { "book": "2 Samuel", "chapter": 5 },
+          { "book": "2 Samuel", "chapter": 11 },
+          { "book": "Psalms", "chapter": 23 }
+        ],
+        "loreCards": [
+          { "kind": "item", "title": "Sling", "body": "Five smooth stones at the brook against Goliath." },
+          { "kind": "clothing", "title": "Linen ephod", "body": "Danced before the ark when the ark came to Jerusalem." },
+          { "kind": "place", "title": "Ziklag", "body": "Among the Philistines while fleeing Saul." },
+          { "kind": "event", "title": "Mourns Saul and Jonathan", "body": "Song of the bow; refuses to strike Saul." }
+        ],
+        "loreCallouts": [
+          { "title": "After God's own heart", "body": "Narrative arc from shepherd to king; repentance after Bathsheba." }
+        ],
+        "relatedEventIds": [],
+        "imageDataUrl": null,
+        "atlasPin": {
+          "catalogMapId": "ws-05-the-land-of-canaan",
+          "nx": 0.42,
+          "ny": 0.55
+        }
+      },
+      "familyLinks": [
+        { "type": "spouse", "targetEventId": "bathsheba-example" },
+        { "type": "childof", "targetEventId": "jesse-bethlehem-example" }
+      ]
+    },
+    {
+      "slug": "jesse-bethlehem-example",
+      "eventId": "jesse-bethlehem-example",
+      "name": "Jesse",
+      "scope": "bible",
+      "figureKind": "other",
+      "title": "Father of David",
+      "biography": "Ephrathite of Bethlehem; eight sons per 1 Samuel 16–17.",
+      "diedYear": null,
+      "ruledFromYear": null,
+      "ruledToYear": null,
+      "hidden": false,
+      "description": null,
+      "color": null,
+      "icon": "🌿",
+      "era": "Judges / early monarchy",
+      "author": null,
+      "written_start_year": null,
+      "written_end_year": null,
+      "scriptureAppearances": [{ "book": "1 Samuel", "chapter": 16 }, { "book": "1 Samuel", "chapter": 17 }],
+      "loreCards": [],
+      "loreCallouts": [],
+      "relatedEventIds": [],
+      "imageDataUrl": null,
+      "atlasPin": null
+    },
+    {
+      "slug": "bathsheba-example",
+      "eventId": "bathsheba-example",
+      "name": "Bathsheba",
+      "scope": "bible",
+      "figureKind": "other",
+      "title": "",
+      "biography": "",
+      "scriptureAppearances": [{ "book": "2 Samuel", "chapter": 11 }, { "book": "1 Kings", "chapter": 1 }]
+    },
+    {
+      "slug": "polycarp-church-history",
+      "eventId": "polycarp-church-history",
+      "timeline_event": {
+        "title": "Polycarp of Smyrna",
+        "type": "person",
+        "start_year": 69,
+        "end_year": 155,
+        "description": "Bishop; martyrdom at Smyrna recorded by the church.",
+        "color": "#5d7f9a",
+        "icon": "✝",
+        "era": "Apostolic Fathers",
+        "author": null,
+        "written_start_year": null,
+        "written_end_year": null
+      },
+      "profile": {
+        "name": "Polycarp of Smyrna",
+        "scope": "church_history",
+        "figureKind": "other",
+        "title": "Bishop of Smyrna",
+        "biography": "Disciple of John the apostle; burned at the stake c. 155.",
+        "diedYear": 155,
+        "ruledFromYear": null,
+        "ruledToYear": null,
+        "hidden": false,
+        "scriptureAppearances": [],
+        "loreCards": [],
+        "loreCallouts": []
       }
     }
   ]

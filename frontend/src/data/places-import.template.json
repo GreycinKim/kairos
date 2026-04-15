@@ -1,13 +1,54 @@
 {
-  "source": "Describe your import pack",
+  "__readme__": "Kairos places import (Places → Import). Required: \"places\" array; each item has \"slug\" (for logs) and \"place\" object. Optional top-level \"source\". Delete __readme__ if you want; importer only reads \"places\" and \"source\". Writes to browser localStorage (kairos-places-v1); no timeline events are created. place.name: required string. place.id: optional. If set to an existing place UUID, this row replaces that record (upsert). If omitted, a new id is generated. place.region: optional subtitle (e.g. Canaan). place.description: optional long text. place.scriptureAppearances: [{ \"book\": \"Joshua\", \"chapter\": 6 }] — same book names as People import; invalid rows are ignored in the UI. place.relatedTimelineEventIds: optional array of existing timeline event UUIDs from your library (links only; events are not created here). place.atlasPin: optional { catalogMapId, nx, ny } — catalogMapId is a workspace atlas id from bible-map (e.g. ws-05-the-land-of-canaan); nx/ny are 0–1 normalized position on that plate image. place.imageDataUrl: optional full data URL for a photo.",
+  "source": "Example places pack — replace with your dataset name",
   "places": [
     {
-      "slug": "place-slug",
+      "slug": "jericho-full-example",
       "place": {
-        "name": "Place name",
-        "description": "",
-        "scriptureAppearances": [{ "book": "Genesis", "chapter": 1 }],
-        "relatedTimelineEventIds": []
+        "name": "Jericho",
+        "region": "Jordan Valley / West Bank",
+        "description": "Ancient walled city; conquest narrative in Joshua; Zacchaeus and the road in the Gospels.",
+        "scriptureAppearances": [
+          { "book": "Joshua", "chapter": 2 },
+          { "book": "Joshua", "chapter": 6 },
+          { "book": "Luke", "chapter": 19 }
+        ],
+        "relatedTimelineEventIds": [],
+        "atlasPin": {
+          "catalogMapId": "ws-05-the-land-of-canaan",
+          "nx": 0.38,
+          "ny": 0.52
+        }
+      }
+    },
+    {
+      "slug": "bethlehem-minimal-example",
+      "place": {
+        "name": "Bethlehem",
+        "scriptureAppearances": [
+          { "book": "Micah", "chapter": 5 },
+          { "book": "Luke", "chapter": 2 },
+          { "book": "Matthew", "chapter": 2 }
+        ]
+      }
+    },
+    {
+      "slug": "shiloh-tabernacle-example",
+      "place": {
+        "name": "Shiloh",
+        "region": "Central hill country",
+        "description": "Location of the tabernacle in Judges and 1 Samuel.",
+        "scriptureAppearances": [
+          { "book": "Joshua", "chapter": 18 },
+          { "book": "1 Samuel", "chapter": 1 },
+          { "book": "1 Samuel", "chapter": 3 }
+        ],
+        "relatedTimelineEventIds": [],
+        "atlasPin": {
+          "catalogMapId": "ws-06-the-roadways-of-canaan",
+          "nx": 0.45,
+          "ny": 0.48
+        }
       }
     }
   ]
