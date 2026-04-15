@@ -103,7 +103,7 @@ export function PeoplePage() {
       const da = figureKindSortIndex(a.profile.figureKind);
       const db = figureKindSortIndex(b.profile.figureKind);
       if (da !== db) return da - db;
-      return (a.profile.name || a.event.title).localeCompare(b.profile.name || b.event.title);
+      return (a.profile.name || a.event.title || "").localeCompare(b.profile.name || b.event.title || "");
     });
   }, [events, profiles, peopleScopeFilter, search, scriptureBook, scriptureChapter]);
 

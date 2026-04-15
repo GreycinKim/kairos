@@ -4,7 +4,7 @@ import { GitBranch } from "lucide-react";
 
 import { ScriptureCrossLinksBlock } from "@/components/scripture/ScriptureCrossLinksBlock";
 import { PersonFamilyTreeModal } from "@/components/timeline/PersonFamilyTreeModal";
-import type { LoreCardKind, PersonProfile } from "@/lib/timelinePeople";
+import { normalizeScriptureAppearances, type LoreCardKind, type PersonProfile } from "@/lib/timelinePeople";
 import { ALL_BIBLE_BOOKS } from "@/lib/bibleCanon";
 import { toYearLabel } from "@/lib/timelinePeople";
 import type { TimelineEvent } from "@/types";
@@ -47,9 +47,9 @@ export function PersonLorePanel({
   const name = profile.name || event.title;
   const cards = profile.loreCards ?? [];
   const callouts = profile.loreCallouts ?? [];
-  const appearances = profile.scriptureAppearances ?? [];
+  const appearances = normalizeScriptureAppearances(profile.scriptureAppearances ?? []);
   const grouped = groupLoreCards(cards.length ? cards : []);
-  const uniqueBooks = [...new Set(appearances.map((a) => a.book))];
+  const uniqueBooks = [...new Set(appearances.map((a) => a.book).filter(Boolean))] as string[];
   uniqueBooks.sort((a, b) => {
     const ia = ALL_BIBLE_BOOKS.indexOf(a);
     const ib = ALL_BIBLE_BOOKS.indexOf(b);
@@ -168,7 +168,7 @@ export function PersonLorePanel({
                 </tr>
                 <tr className="bg-amber-50/40">
                   <td className="p-2 text-neutral-600">Scope</td>
-                  <td className="p-2 capitalize text-neutral-900">{profile.scope.replace("_", " ")}</td>
+                  <td className="p-2 capitalize text-neutral-900">{(profile.scope ?? "bible").replace("_", " ")}</td>
                 </tr>
               </tbody>
             </table>

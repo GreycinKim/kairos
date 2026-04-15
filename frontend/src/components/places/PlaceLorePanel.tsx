@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ScriptureCrossLinksBlock } from "@/components/scripture/ScriptureCrossLinksBlock";
 import { ALL_BIBLE_BOOKS } from "@/lib/bibleCanon";
 import type { PlaceRecord } from "@/lib/places";
-import { toYearLabel } from "@/lib/timelinePeople";
+import { normalizeScriptureAppearances, toYearLabel } from "@/lib/timelinePeople";
 import type { TimelineEvent } from "@/types";
 
 const ACCENT = "#0f766e";
@@ -18,8 +18,8 @@ export function PlaceLorePanel({
   relatedEvents: TimelineEvent[];
   className?: string;
 }) {
-  const appearances = place.scriptureAppearances ?? [];
-  const uniqueBooks = [...new Set(appearances.map((a) => a.book))];
+  const appearances = normalizeScriptureAppearances(place.scriptureAppearances ?? []);
+  const uniqueBooks = [...new Set(appearances.map((a) => a.book).filter(Boolean))] as string[];
   uniqueBooks.sort((a, b) => {
     const ia = ALL_BIBLE_BOOKS.indexOf(a);
     const ib = ALL_BIBLE_BOOKS.indexOf(b);

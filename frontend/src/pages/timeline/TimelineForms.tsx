@@ -14,7 +14,7 @@ import type {
   ScriptureAppearance,
 } from "@/lib/timelinePeople";
 import { clampAtlasCoord } from "@/lib/mapAtlasOverlays";
-import { PERSON_FIGURE_KIND_LABELS, PERSON_FIGURE_KINDS } from "@/lib/timelinePeople";
+import { normalizeScriptureAppearances, PERSON_FIGURE_KIND_LABELS, PERSON_FIGURE_KINDS } from "@/lib/timelinePeople";
 import type { TimelineEvent, TimelineEventType } from "@/types";
 
 export const EVENT_TYPES: TimelineEventType[] = [
@@ -156,7 +156,7 @@ export function TimelineEditPersonForm({
     setRuledTo(person.profile.ruledToYear != null ? String(person.profile.ruledToYear) : "");
     setHidden(Boolean(person.profile.hidden));
     setImageDataUrl(person.profile.imageDataUrl ?? null);
-    setScriptureAppearances([...(person.profile.scriptureAppearances ?? [])]);
+    setScriptureAppearances(normalizeScriptureAppearances(person.profile.scriptureAppearances ?? []));
     setLoreCards([...(person.profile.loreCards ?? [])]);
     setLoreCallouts([...(person.profile.loreCallouts ?? [])]);
     setFigureKind(person.profile.figureKind ?? "other");

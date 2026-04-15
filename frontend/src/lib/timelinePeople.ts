@@ -86,6 +86,41 @@ export type ScriptureAppearance = {
   chapter: number;
 };
 
+/**
+ * Coerces and drops invalid rows (missing book/chapter) so sorts and links never call
+ * `localeCompare` on undefined — common after hand-edited JSON or partial imports.
+ */
+export function normalizeScriptureAppearances(rows: readonly unknown[] | null | undefined): ScriptureAppearance[] {
+  if (!rows || !Array.isArray(rows)) return [];
+  const seen = new Set<string>();
+  const out: ScriptureAppearance[] = [];
+  for (const raw of rows) {
+    if (!raw || typeof raw !== "object") continue;
+    const o = raw as Record<string, unknown>;
+    const bookRaw = o.book;
+    const book =
+      typeof bookRaw === "string"
+        ? bookRaw.trim()
+        : typeof bookRaw === "number" && Number.isFinite(bookRaw)
+          ? String(bookRaw)
+          : "";
+    if (!book) continue;
+    const chRaw = o.chapter;
+    let chapter: number;
+    if (typeof chRaw === "number" && Number.isFinite(chRaw)) chapter = Math.max(1, Math.floor(chRaw));
+    else if (typeof chRaw === "string") {
+      const n = parseInt(chRaw.trim(), 10);
+      if (!Number.isFinite(n) || n < 1) continue;
+      chapter = n;
+    } else continue;
+    const key = `${book}\0${chapter}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push({ book, chapter });
+  }
+  return out;
+}
+
 export type PersonProfile = {
   eventId: string;
   name: string;

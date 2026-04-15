@@ -7,7 +7,7 @@ import { clampAtlasCoord } from "@/lib/mapAtlasOverlays";
 import { fetchWorkspaceMapCatalog } from "@/lib/workspaceMapCatalogFetch";
 import { ScriptureAppearanceRowForm } from "@/pages/timeline/TimelineForms";
 import { loadPlaces, newPlaceId, savePlaces, type PlaceRecord } from "@/lib/places";
-import type { ScriptureAppearance } from "@/lib/timelinePeople";
+import { normalizeScriptureAppearances, type ScriptureAppearance } from "@/lib/timelinePeople";
 import { useTimelineStore } from "@/store/timelineStore";
 
 export function PlaceEditPage() {
@@ -53,7 +53,7 @@ export function PlaceEditPage() {
     setRegion(p.region ?? "");
     setDescription(p.description ?? "");
     setImageDataUrl(p.imageDataUrl ?? null);
-    setScriptureAppearances([...(p.scriptureAppearances ?? [])]);
+    setScriptureAppearances(normalizeScriptureAppearances(p.scriptureAppearances ?? []));
     setRelatedIds([...(p.relatedTimelineEventIds ?? [])]);
     const pin = p.atlasPin;
     if (pin) {
