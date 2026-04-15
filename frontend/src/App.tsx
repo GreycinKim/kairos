@@ -31,6 +31,7 @@ import { WordStudyPage } from "@/pages/WordStudyPage";
 import { JbchHubPage } from "@/pages/JbchHubPage";
 import { ReadingHomePage } from "@/pages/ReadingHomePage";
 import { LoginPage } from "@/pages/LoginPage";
+import { LibraryDataHydrationHost } from "@/components/workspace/LibraryDataHydrationHost";
 import { WorkspaceRemoteSyncHost } from "@/components/workspace/WorkspaceRemoteSyncHost";
 
 function JbchHubLegacyRedirect() {
@@ -82,6 +83,7 @@ function AppShell() {
             <Sidebar className="h-4 w-4" strokeWidth={1.75} />
           </Button>
         ) : null}
+        <LibraryDataHydrationHost />
         <WorkspaceRemoteSyncHost />
         <Routes>
           <Route path="/" element={<JbchHubPage />} />

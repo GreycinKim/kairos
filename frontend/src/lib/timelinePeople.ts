@@ -1,6 +1,7 @@
+import { api } from "@/api/client";
 import type { AtlasMapPin } from "@/lib/mapAtlasTypes";
 import { ALL_BIBLE_BOOKS } from "@/lib/bibleCanon";
-import { notifyWorkspaceLocalChanged } from "@/lib/workspaceRemotePushSchedule";
+import { bumpWorkspaceEpoch } from "@/lib/workspaceRemoteSync";
 
 export type PeopleScope = "bible" | "church_history";
 
@@ -251,6 +252,8 @@ export type PersonProfile = {
 export const PEOPLE_PROFILES_STORAGE_KEY = "kairos-timeline-people-profiles-v1";
 const LS_KEY = PEOPLE_PROFILES_STORAGE_KEY;
 
+let profilesSaveTimer: ReturnType<typeof setTimeout> | null = null;
+
 export function profileAppearsInChapter(
   profile: PersonProfile,
   book: string,
@@ -279,14 +282,53 @@ export function loadPeopleProfiles(): Record<string, PersonProfile> {
   }
 }
 
-/** Persists profiles to localStorage. Returns false if quota is exceeded or storage throws. */
+/** Persists profiles to localStorage and debounced `PUT /library/person-profiles`. */
 export function savePeopleProfiles(data: Record<string, PersonProfile>): boolean {
   try {
     window.localStorage.setItem(LS_KEY, JSON.stringify(data));
-    notifyWorkspaceLocalChanged();
-    return true;
   } catch {
     return false;
+  }
+  if (profilesSaveTimer) clearTimeout(profilesSaveTimer);
+  profilesSaveTimer = setTimeout(() => {
+    profilesSaveTimer = null;
+    const latest = loadPeopleProfiles();
+    void api.put("/library/person-profiles", { profiles: latest }).catch(() => {
+      /* offline */
+    });
+  }, 900);
+  return true;
+}
+
+/** Push current localStorage snapshot immediately (e.g. tab hidden). */
+export function flushPeopleProfilesSaveNow(): void {
+  if (profilesSaveTimer) {
+    clearTimeout(profilesSaveTimer);
+    profilesSaveTimer = null;
+  }
+  const data = loadPeopleProfiles();
+  void api.put("/library/person-profiles", { profiles: data }).catch(() => {
+    /* offline */
+  });
+}
+
+/** Pull server profiles into localStorage (and bump UI listeners via workspace epoch). */
+export async function hydratePeopleProfilesFromServer(): Promise<void> {
+  try {
+    const { data } = await api.get<{ profiles: Record<string, PersonProfile> }>("/library/person-profiles");
+    const remote = data?.profiles ?? {};
+    if (Object.keys(remote).length > 0) {
+      window.localStorage.setItem(LS_KEY, JSON.stringify(remote));
+      bumpWorkspaceEpoch();
+      return;
+    }
+    const local = loadPeopleProfiles();
+    if (Object.keys(local).length > 0) {
+      await api.put("/library/person-profiles", { profiles: local });
+      bumpWorkspaceEpoch();
+    }
+  } catch {
+    /* offline */
   }
 }
 

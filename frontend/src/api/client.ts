@@ -1,5 +1,7 @@
 import axios from "axios";
 
+import { readAuthSession } from "@/lib/authSession";
+
 /**
  * API base path. Priority:
  * 1. `VITE_API_BASE_URL` (e.g. `https://api.example.com/api` or `http://127.0.0.1:8000/api`)
@@ -44,4 +46,15 @@ function resolveApiBaseURL(): string {
 export const api = axios.create({
   baseURL: resolveApiBaseURL(),
   headers: { "Content-Type": "application/json" },
+});
+
+/** Same browser login → same Postgres `workspace_client_state` row (cross-device). */
+api.interceptors.request.use((config) => {
+  const u = readAuthSession()?.username;
+  if (typeof u === "string" && u.trim()) {
+    const key = `u:${u.trim().slice(0, 160)}`;
+    config.headers = config.headers ?? {};
+    (config.headers as Record<string, string>)["X-Kairos-Workspace-Key"] = key;
+  }
+  return config;
 });

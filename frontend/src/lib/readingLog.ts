@@ -1,3 +1,4 @@
+import { api } from "@/api/client";
 import { CHAPTER_COUNT } from "@/lib/bibleCanon";
 
 export type ReadingLogEvent = {
@@ -10,15 +11,38 @@ export type ReadingLogEvent = {
 /** Bump when you want all clients to start from an empty log (localStorage key change). */
 export const READING_LOG_STORAGE_KEY = "kairos-reading-log-v2";
 
+/** Same-tab updates (API sync) — `storage` only fires across tabs. */
+export const READING_LOG_CHANGED_EVENT = "kairos-reading-log-changed";
+
 const STORAGE_KEY = READING_LOG_STORAGE_KEY;
+
+function emitReadingLogChanged(): void {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent(READING_LOG_CHANGED_EVENT));
+}
+
+function coerceAtToIso(at: unknown): string | null {
+  if (typeof at === "string" && at.length > 0) return at;
+  if (typeof at === "number" && Number.isFinite(at)) return new Date(at).toISOString();
+  if (at instanceof Date && !Number.isNaN(at.getTime())) return at.toISOString();
+  return null;
+}
+
+function parseReadingLogEvent(raw: unknown): ReadingLogEvent | null {
+  if (!raw || typeof raw !== "object") return null;
+  const o = raw as Record<string, unknown>;
+  if (typeof o.id !== "string" || typeof o.book !== "string") return null;
+  const chRaw = o.chapter;
+  if (typeof chRaw !== "number" || !Number.isFinite(chRaw)) return null;
+  const chapter = Math.max(1, Math.floor(chRaw));
+  const at = coerceAtToIso(o.at);
+  if (!at) return null;
+  return { id: o.id, book: o.book, chapter, at };
+}
 
 export const CANON_BOOK_ORDER = Object.keys(CHAPTER_COUNT) as (keyof typeof CHAPTER_COUNT)[];
 
 export const TOTAL_CANON_CHAPTERS = CANON_BOOK_ORDER.reduce((sum, b) => sum + (CHAPTER_COUNT[b] ?? 0), 0);
-
-function uid(): string {
-  return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-}
 
 export function loadReadingLog(): ReadingLogEvent[] {
   try {
@@ -43,21 +67,46 @@ export function loadReadingLog(): ReadingLogEvent[] {
 export function saveReadingLog(events: ReadingLogEvent[]): void {
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
+    emitReadingLogChanged();
   } catch {
     /* ignore */
   }
 }
 
-export function appendReading(book: string, chapter: number, at = new Date()): ReadingLogEvent[] {
-  const next: ReadingLogEvent = {
-    id: uid(),
+/** Load canonical log from the API into localStorage (offline cache). */
+export async function refreshReadingLogFromServer(): Promise<ReadingLogEvent[]> {
+  try {
+    const { data } = await api.get<unknown[]>("/reading-log");
+    const rows = Array.isArray(data) ? data : [];
+    const parsed = rows.map(parseReadingLogEvent).filter((x): x is ReadingLogEvent => Boolean(x));
+    saveReadingLog(parsed);
+    return parsed;
+  } catch {
+    return loadReadingLog();
+  }
+}
+
+/** One-time upload of legacy browser-only log rows (skipped if server already has entries). */
+export async function migrateReadingLogLocalToServer(): Promise<void> {
+  try {
+    const { data } = await api.get<unknown[]>("/reading-log");
+    if (Array.isArray(data) && data.length > 0) return;
+    const local = loadReadingLog();
+    if (local.length === 0) return;
+    await api.post("/reading-log/bulk", { events: local });
+    await refreshReadingLogFromServer();
+  } catch {
+    /* offline */
+  }
+}
+
+export async function appendReading(book: string, chapter: number, at = new Date()): Promise<ReadingLogEvent[]> {
+  await api.post("/reading-log", {
     book,
     chapter,
     at: at.toISOString(),
-  };
-  const all = [...loadReadingLog(), next];
-  saveReadingLog(all);
-  return all;
+  });
+  return refreshReadingLogFromServer();
 }
 
 function dayStart(d: Date): Date {

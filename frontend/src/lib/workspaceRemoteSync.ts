@@ -1,10 +1,10 @@
 import { api } from "@/api/client";
+import { readAuthSession } from "@/lib/authSession";
 import { EVENT_SCRIPTURE_STORAGE_KEY, loadEventScripture } from "@/lib/eventScripture";
 import { ATLAS_ROUTES_STORAGE_KEY, loadAtlasRoutes } from "@/lib/mapAtlasOverlays";
-import { PLACES_STORAGE_KEY, loadPlaces } from "@/lib/places";
 import { EVENT_DISPLAY_STORAGE_KEY, loadEventDisplay } from "@/lib/timelineEventDisplay";
-import { PEOPLE_PROFILES_STORAGE_KEY, loadPeopleProfiles } from "@/lib/timelinePeople";
 
+/** Workspace row now only syncs atlas routes + per-event reader display fields (people/places live in `/library`). */
 export type WorkspaceClientStatePayload = {
   workspace_key: string;
   people_profiles: Record<string, unknown>;
@@ -16,8 +16,13 @@ export type WorkspaceClientStatePayload = {
 };
 
 const POLL_MS = 5000;
+/** If the server row is still empty but this device has data, retry upload (handles failed first push). */
+const EMPTY_REMOTE_REPAIR_INTERVAL_MS = 25_000;
+/** Pre–per-user workspaces used a single `default` row in Postgres. */
+const LEGACY_DEFAULT_WORKSPACE_KEY = "default";
 
 let silencePushUntil = 0;
+let lastEmptyRemoteRepairPush = 0;
 
 /** After applying remote data, skip pushing the same snapshot back for a short window. */
 export function markRemoteWorkspaceApplied(): void {
@@ -47,12 +52,29 @@ let lastSeenRemoteUpdatedAt: string | null = null;
 
 function snapshotFromLocalStorage(): Omit<WorkspaceClientStatePayload, "workspace_key" | "updated_at"> {
   return {
-    people_profiles: loadPeopleProfiles() as Record<string, unknown>,
-    places: loadPlaces() as Record<string, unknown>,
+    people_profiles: {},
+    places: {},
     event_display: loadEventDisplay() as Record<string, unknown>,
     event_scripture: loadEventScripture() as Record<string, unknown>,
     atlas_routes: loadAtlasRoutes() as unknown[],
   };
+}
+
+function remoteSyncSliceEmpty(data: WorkspaceClientStatePayload): boolean {
+  return (
+    Object.keys(data.event_display ?? {}).length === 0 &&
+    Object.keys(data.event_scripture ?? {}).length === 0 &&
+    (data.atlas_routes?.length ?? 0) === 0
+  );
+}
+
+function localSyncSliceHasData(): boolean {
+  const s = snapshotFromLocalStorage();
+  return (
+    Object.keys(s.event_display).length > 0 ||
+    Object.keys(s.event_scripture).length > 0 ||
+    s.atlas_routes.length > 0
+  );
 }
 
 export async function pushFullWorkspaceToServer(): Promise<void> {
@@ -68,24 +90,11 @@ export async function pushFullWorkspaceToServer(): Promise<void> {
 }
 
 function isRemotePayloadEmpty(data: WorkspaceClientStatePayload): boolean {
-  return (
-    Object.keys(data.people_profiles ?? {}).length === 0 &&
-    Object.keys(data.places ?? {}).length === 0 &&
-    Object.keys(data.event_display ?? {}).length === 0 &&
-    Object.keys(data.event_scripture ?? {}).length === 0 &&
-    (data.atlas_routes?.length ?? 0) === 0
-  );
+  return remoteSyncSliceEmpty(data);
 }
 
 function localWorkspaceHasAnyData(): boolean {
-  const s = snapshotFromLocalStorage();
-  return (
-    Object.keys(s.people_profiles).length > 0 ||
-    Object.keys(s.places).length > 0 ||
-    Object.keys(s.event_display).length > 0 ||
-    Object.keys(s.event_scripture).length > 0 ||
-    s.atlas_routes.length > 0
-  );
+  return localSyncSliceHasData();
 }
 
 export async function pullWorkspaceFromServer(): Promise<boolean> {
@@ -96,12 +105,15 @@ export async function pullWorkspaceFromServer(): Promise<boolean> {
     if (data.updated_at === lastSeenRemoteUpdatedAt) return false;
 
     if (isRemotePayloadEmpty(data) && localWorkspaceHasAnyData()) {
+      const now = Date.now();
+      if (now - lastEmptyRemoteRepairPush >= EMPTY_REMOTE_REPAIR_INTERVAL_MS) {
+        lastEmptyRemoteRepairPush = now;
+        await pushFullWorkspaceToServer();
+      }
       return false;
     }
 
     try {
-      window.localStorage.setItem(PEOPLE_PROFILES_STORAGE_KEY, JSON.stringify(data.people_profiles ?? {}));
-      window.localStorage.setItem(PLACES_STORAGE_KEY, JSON.stringify(data.places ?? {}));
       window.localStorage.setItem(EVENT_DISPLAY_STORAGE_KEY, JSON.stringify(data.event_display ?? {}));
       window.localStorage.setItem(EVENT_SCRIPTURE_STORAGE_KEY, JSON.stringify(data.event_scripture ?? {}));
       window.localStorage.setItem(ATLAS_ROUTES_STORAGE_KEY, JSON.stringify(data.atlas_routes ?? []));
@@ -120,24 +132,46 @@ export async function pullWorkspaceFromServer(): Promise<boolean> {
   }
 }
 
-/** Initial upload if server row is empty but this device has local data (migration path). */
+/**
+ * After introducing per-login workspace keys, copy server data from the old singleton row into this
+ * account’s row when the new row is empty, this device has no local workspace yet, and `default` still has data.
+ */
+export async function hydrateFromLegacyDefaultWorkspaceRow(): Promise<void> {
+  const u = readAuthSession()?.username?.trim();
+  if (!u) return;
+  try {
+    const { data: keyed } = await api.get<WorkspaceClientStatePayload>("/workspace/client-state");
+    if (!keyed?.updated_at || !remoteSyncSliceEmpty(keyed)) return;
+    if (localSyncSliceHasData()) return;
+
+    const { data: legacy } = await api.get<WorkspaceClientStatePayload>("/workspace/client-state", {
+      headers: { "X-Kairos-Workspace-Key": LEGACY_DEFAULT_WORKSPACE_KEY },
+    });
+    if (!legacy?.updated_at || remoteSyncSliceEmpty(legacy)) return;
+
+    try {
+      window.localStorage.setItem(EVENT_DISPLAY_STORAGE_KEY, JSON.stringify(legacy.event_display ?? {}));
+      window.localStorage.setItem(EVENT_SCRIPTURE_STORAGE_KEY, JSON.stringify(legacy.event_scripture ?? {}));
+      window.localStorage.setItem(ATLAS_ROUTES_STORAGE_KEY, JSON.stringify(legacy.atlas_routes ?? []));
+    } catch (e) {
+      console.warn("[workspace sync] legacy hydrate could not write localStorage", e);
+      return;
+    }
+
+    bumpWorkspaceEpoch();
+    await pushFullWorkspaceToServer();
+  } catch {
+    /* offline or API missing */
+  }
+}
+
+/** Initial upload if server row is empty but this device has local sync-slice data (migration path). */
 export async function pushLocalToServerIfRemoteEmpty(): Promise<void> {
   try {
     const { data } = await api.get<WorkspaceClientStatePayload>("/workspace/client-state");
     if (!data) return;
-    const remoteEmpty =
-      Object.keys(data.people_profiles ?? {}).length === 0 &&
-      Object.keys(data.places ?? {}).length === 0 &&
-      Object.keys(data.event_display ?? {}).length === 0 &&
-      Object.keys(data.event_scripture ?? {}).length === 0 &&
-      (data.atlas_routes?.length ?? 0) === 0;
-    const local = snapshotFromLocalStorage();
-    const localHas =
-      Object.keys(local.people_profiles).length > 0 ||
-      Object.keys(local.places).length > 0 ||
-      Object.keys(local.event_display).length > 0 ||
-      Object.keys(local.event_scripture).length > 0 ||
-      local.atlas_routes.length > 0;
+    const remoteEmpty = remoteSyncSliceEmpty(data);
+    const localHas = localSyncSliceHasData();
     if (remoteEmpty && localHas) {
       await pushFullWorkspaceToServer();
     } else if (data.updated_at) {

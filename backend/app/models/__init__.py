@@ -9,6 +9,7 @@ from app.models.scripture_flow_folder import ScriptureFlowFolder
 from app.models.scripture_flow_map import ScriptureFlowMap
 from app.models.themes import Theme, ThemeTag
 from app.models.workspace_client_state import WorkspaceClientState
+from app.models.user_library import PersonProfileRow, PlaceRecordRow, ReadingLogEntry
 
 __all__ = [
     "TimelineEvent",
@@ -29,4 +30,7 @@ __all__ = [
     "Theme",
     "ThemeTag",
     "WorkspaceClientState",
+    "ReadingLogEntry",
+    "PersonProfileRow",
+    "PlaceRecordRow",
 ]

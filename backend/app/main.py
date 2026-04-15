@@ -2,7 +2,23 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import jbch_hub, journal, memory, milestones, notes, prayer, reader, scripture, search, themes, timeline, word_study, workspace
+from app.routers import (
+    jbch_hub,
+    journal,
+    memory,
+    milestones,
+    notes,
+    prayer,
+    reader,
+    reading_log,
+    scripture,
+    search,
+    themes,
+    timeline,
+    user_library,
+    word_study,
+    workspace,
+)
 
 app = FastAPI(title="Kairos API", version="0.1.0")
 
@@ -42,6 +58,8 @@ app.include_router(search.router, prefix="/api")
 app.include_router(jbch_hub.router, prefix="/api")
 app.include_router(reader.router, prefix="/api")
 app.include_router(workspace.router, prefix="/api")
+app.include_router(reading_log.router, prefix="/api")
+app.include_router(user_library.router, prefix="/api")
 
 
 @app.get("/api/health")

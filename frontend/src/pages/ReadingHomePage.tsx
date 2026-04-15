@@ -10,8 +10,10 @@ import {
   loadReadingLog,
   parseISODate,
   passagesByLocalDay,
+  READING_LOG_CHANGED_EVENT,
   READING_LOG_STORAGE_KEY,
   readingStreakDays,
+  refreshReadingLogFromServer,
   type ReadingLogEvent,
   TOTAL_CANON_CHAPTERS,
   uniqueChaptersInRange,
@@ -126,8 +128,8 @@ function StatusChartPanel({
   const pct = TOTAL_CANON_CHAPTERS > 0 ? (uniqueRead / TOTAL_CANON_CHAPTERS) * 100 : 0;
 
   const bumpChapter = useCallback(
-    (book: string, chapter: number) => {
-      appendReading(book, chapter);
+    async (book: string, chapter: number) => {
+      await appendReading(book, chapter);
       onLogRefresh();
     },
     [onLogRefresh],
@@ -212,7 +214,7 @@ function StatusChartPanel({
                           key={ch}
                           type="button"
                           title={`${book} ${ch} — ${c} in range (click to log)`}
-                          onClick={() => bumpChapter(book, ch)}
+                          onClick={() => void bumpChapter(book, ch)}
                           className={clsx(
                             "flex h-7 min-w-[1.75rem] items-center justify-center rounded-full px-1 text-[11px] font-medium transition hover:opacity-90",
                             tierClass(c),
@@ -390,15 +392,27 @@ export function ReadingHomePage() {
   }, []);
 
   useEffect(() => {
-    refresh();
+    let cancelled = false;
+    void (async () => {
+      await refreshReadingLogFromServer();
+      if (!cancelled) refresh();
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [refresh]);
 
   useEffect(() => {
+    const onCustom = () => refresh();
     const onStorage = (e: StorageEvent) => {
       if (e.key === READING_LOG_STORAGE_KEY) refresh();
     };
+    window.addEventListener(READING_LOG_CHANGED_EVENT, onCustom);
     window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
+    return () => {
+      window.removeEventListener(READING_LOG_CHANGED_EVENT, onCustom);
+      window.removeEventListener("storage", onStorage);
+    };
   }, [refresh]);
 
   const streak = useMemo(() => readingStreakDays(events), [events]);

@@ -1,6 +1,7 @@
+import { api } from "@/api/client";
 import type { AtlasMapPin } from "@/lib/mapAtlasTypes";
 import type { ScriptureAppearance } from "@/lib/timelinePeople";
-import { notifyWorkspaceLocalChanged } from "@/lib/workspaceRemotePushSchedule";
+import { bumpWorkspaceEpoch } from "@/lib/workspaceRemoteSync";
 
 export type PlaceRecord = {
   id: string;
@@ -20,6 +21,8 @@ export type PlaceRecord = {
 export const PLACES_STORAGE_KEY = "kairos-places-v1";
 const LS_KEY = PLACES_STORAGE_KEY;
 
+let placesSaveTimer: ReturnType<typeof setTimeout> | null = null;
+
 export function loadPlaces(): Record<string, PlaceRecord> {
   try {
     const raw = window.localStorage.getItem(LS_KEY);
@@ -35,9 +38,47 @@ export function loadPlaces(): Record<string, PlaceRecord> {
 export function savePlaces(data: Record<string, PlaceRecord>) {
   try {
     window.localStorage.setItem(LS_KEY, JSON.stringify(data));
-    notifyWorkspaceLocalChanged();
   } catch {
     /* ignore */
+    return;
+  }
+  if (placesSaveTimer) clearTimeout(placesSaveTimer);
+  placesSaveTimer = setTimeout(() => {
+    placesSaveTimer = null;
+    const latest = loadPlaces();
+    void api.put("/library/place-records", { places: latest }).catch(() => {
+      /* offline */
+    });
+  }, 900);
+}
+
+export function flushPlacesSaveNow(): void {
+  if (placesSaveTimer) {
+    clearTimeout(placesSaveTimer);
+    placesSaveTimer = null;
+  }
+  const data = loadPlaces();
+  void api.put("/library/place-records", { places: data }).catch(() => {
+    /* offline */
+  });
+}
+
+export async function hydratePlacesFromServer(): Promise<void> {
+  try {
+    const { data } = await api.get<{ places: Record<string, PlaceRecord> }>("/library/place-records");
+    const remote = data?.places ?? {};
+    if (Object.keys(remote).length > 0) {
+      window.localStorage.setItem(LS_KEY, JSON.stringify(remote));
+      bumpWorkspaceEpoch();
+      return;
+    }
+    const local = loadPlaces();
+    if (Object.keys(local).length > 0) {
+      await api.put("/library/place-records", { places: local });
+      bumpWorkspaceEpoch();
+    }
+  } catch {
+    /* offline */
   }
 }
 

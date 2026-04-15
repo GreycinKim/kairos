@@ -1,7 +1,11 @@
 import { useEffect } from "react";
 
 import { useAuth } from "@/contexts/AuthContext";
+import { flushPlacesSaveNow } from "@/lib/places";
+import { flushPeopleProfilesSaveNow } from "@/lib/timelinePeople";
+import { flushWorkspacePushNow } from "@/lib/workspaceRemotePushSchedule";
 import {
+  hydrateFromLegacyDefaultWorkspaceRow,
   pullWorkspaceFromServer,
   pushLocalToServerIfRemoteEmpty,
   startWorkspaceRemotePolling,
@@ -18,14 +22,35 @@ export function WorkspaceRemoteSyncHost() {
     if (!ready || !authed) return;
     let cancelled = false;
     void (async () => {
+      await hydrateFromLegacyDefaultWorkspaceRow();
+      if (cancelled) return;
       await pushLocalToServerIfRemoteEmpty();
       if (cancelled) return;
       await pullWorkspaceFromServer();
     })();
     const stopPoll = startWorkspaceRemotePolling();
+
+    const flushOnBackground = () => {
+      if (document.visibilityState === "hidden") {
+        flushWorkspacePushNow();
+        flushPeopleProfilesSaveNow();
+        flushPlacesSaveNow();
+      }
+    };
+    const flushOnLeave = () => {
+      flushWorkspacePushNow();
+      flushPeopleProfilesSaveNow();
+      flushPlacesSaveNow();
+    };
+    document.addEventListener("visibilitychange", flushOnBackground);
+    window.addEventListener("pagehide", flushOnLeave);
+
     return () => {
       cancelled = true;
       stopPoll();
+      document.removeEventListener("visibilitychange", flushOnBackground);
+      window.removeEventListener("pagehide", flushOnLeave);
+      flushWorkspacePushNow();
     };
   }, [ready, authed]);
 
