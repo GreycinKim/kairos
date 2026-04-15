@@ -32,7 +32,16 @@ class PersonProfilesRead(BaseModel):
 
 
 class PersonProfilesPut(BaseModel):
-    profiles: dict[str, Any]
+    """Replace the server’s person profile set with this map (upsert per id, remove rows missing from the map)."""
+
+    profiles: dict[str, Any] = Field(
+        ...,
+        description=(
+            "Map of timeline event id (UUID string) → profile object. Persisted verbatim as JSONB, including "
+            "`imageDataUrl` (profile photo) and `loreCards[].imageDataUrl` (lore images), plus biography, "
+            "loreCallouts, familyLinks, scriptureAppearances, atlasPin, etc. Send `{}` only to clear all profiles."
+        ),
+    )
 
 
 class PlaceRecordsRead(BaseModel):

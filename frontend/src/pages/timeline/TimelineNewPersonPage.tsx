@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import type { PersonProfile } from "@/lib/timelinePeople";
-import { loadPeopleProfiles, savePeopleProfiles } from "@/lib/timelinePeople";
+import { flushPeopleProfilesSaveNow, loadPeopleProfiles, savePeopleProfiles } from "@/lib/timelinePeople";
 import type { TimelineEvent } from "@/types";
 import { useTimelineStore } from "@/store/timelineStore";
 
@@ -39,6 +39,7 @@ export function TimelineNewPersonPage() {
           onCancel={() => navigate("/people")}
           onCreated={async (event: TimelineEvent, profile: Partial<PersonProfile>) => {
             if (!mergeProfile(event.id, profile)) return;
+            flushPeopleProfilesSaveNow();
             await fetchEvents();
             navigate(`/timeline/person/${event.id}`);
           }}

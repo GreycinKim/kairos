@@ -1,5 +1,6 @@
 import { api } from "@/api/client";
 import {
+  flushPeopleProfilesSaveNow,
   PERSON_FIGURE_KINDS,
   loadPeopleProfiles,
   savePeopleProfiles,
@@ -373,6 +374,10 @@ export async function importPeopleFromPack(
   }
 
   applyResolvedFamilyLinks(idMap, pendingFamily);
+
+  if (created.length > 0) {
+    flushPeopleProfilesSaveNow();
+  }
 
   return { created, failed };
 }

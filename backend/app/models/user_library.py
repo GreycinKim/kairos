@@ -19,7 +19,15 @@ class ReadingLogEntry(Base):
 
 
 class PersonProfileRow(Base):
-    """Extra fields for timeline person/ruler events (one row per event id)."""
+    """
+    One JSON document per person/ruler timeline event — the full “lore” payload the UI edits.
+
+    Typical keys (all optional except what the client sends): ``name``, ``scope``, ``figureKind``,
+    ``title`` (codex line), ``biography`` (chronicle), ``diedYear``, ``ruledFromYear``, ``ruledToYear``,
+    ``hidden``, ``imageDataUrl`` (portrait, usually a compressed data URL), ``scriptureAppearances``,
+    ``loreCards`` (each card may include ``imageDataUrl``), ``loreCallouts``, ``familyLinks``,
+    ``atlasPin``, ``relatedEventIds``. Stored as-is in JSONB so embedded images persist with the profile.
+    """
 
     __tablename__ = "person_profiles"
 

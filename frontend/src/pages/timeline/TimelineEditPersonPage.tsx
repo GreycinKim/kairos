@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useWorkspaceRemoteEpoch } from "@/hooks/useWorkspaceRemoteEpoch";
 import { fetchWorkspaceMapCatalog } from "@/lib/workspaceMapCatalogFetch";
 import type { PersonProfile } from "@/lib/timelinePeople";
-import { loadPeopleProfiles, savePeopleProfiles } from "@/lib/timelinePeople";
+import { flushPeopleProfilesSaveNow, loadPeopleProfiles, savePeopleProfiles } from "@/lib/timelinePeople";
 import { useTimelineStore } from "@/store/timelineStore";
 
 import { TimelineEditPersonForm } from "./TimelineForms";
@@ -139,6 +139,7 @@ export function TimelineEditPersonPage() {
               return;
             }
             if (!mergeProfile(id, patch)) return;
+            flushPeopleProfilesSaveNow();
             await fetchEvents();
             navigate(`/timeline/person/${id}`);
           }}

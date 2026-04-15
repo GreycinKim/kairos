@@ -282,7 +282,12 @@ export function loadPeopleProfiles(): Record<string, PersonProfile> {
   }
 }
 
-/** Persists profiles to localStorage and debounced `PUT /library/person-profiles`. */
+/**
+ * Persists the full people map to localStorage and debounced `PUT /library/person-profiles`.
+ * Each value is the entire lore document for that timeline id (name, biography, scriptureAppearances,
+ * loreCards with optional `imageDataUrl`, loreCallouts, familyLinks, `imageDataUrl` portrait, atlasPin, …)
+ * — sent verbatim to Postgres `person_profiles.profile` JSONB, including embedded images as data URLs.
+ */
 export function savePeopleProfiles(data: Record<string, PersonProfile>): boolean {
   try {
     window.localStorage.setItem(LS_KEY, JSON.stringify(data));
