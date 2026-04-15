@@ -253,6 +253,7 @@ export const PEOPLE_PROFILES_STORAGE_KEY = "kairos-timeline-people-profiles-v1";
 const LS_KEY = PEOPLE_PROFILES_STORAGE_KEY;
 
 let profilesSaveTimer: ReturnType<typeof setTimeout> | null = null;
+let peopleSyncReady = false;
 
 export function profileAppearsInChapter(
   profile: PersonProfile,
@@ -297,6 +298,7 @@ export function savePeopleProfiles(data: Record<string, PersonProfile>): boolean
   if (profilesSaveTimer) clearTimeout(profilesSaveTimer);
   profilesSaveTimer = setTimeout(() => {
     profilesSaveTimer = null;
+    if (!peopleSyncReady) return;
     const latest = loadPeopleProfiles();
     void api.put("/library/person-profiles", { profiles: latest }).catch(() => {
       /* offline */
@@ -311,6 +313,7 @@ export function flushPeopleProfilesSaveNow(): void {
     clearTimeout(profilesSaveTimer);
     profilesSaveTimer = null;
   }
+  if (!peopleSyncReady) return;
   const data = loadPeopleProfiles();
   void api.put("/library/person-profiles", { profiles: data }).catch(() => {
     /* offline */
@@ -334,6 +337,8 @@ export async function hydratePeopleProfilesFromServer(): Promise<void> {
     }
   } catch {
     /* offline */
+  } finally {
+    peopleSyncReady = true;
   }
 }
 

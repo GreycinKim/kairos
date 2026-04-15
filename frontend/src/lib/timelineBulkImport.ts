@@ -8,31 +8,9 @@ import {
   type PersonFigureKind,
   type PersonProfile,
 } from "@/lib/timelinePeople";
+import type { PeoplePackJson, PeoplePackProfile, PeoplePackTimelineEvent } from "@/types/peoplePack";
 import type { TimelineEvent } from "@/types";
-
-export type PeoplePackRow = {
-  slug: string;
-  timeline_event: {
-    title: string;
-    type: string;
-    start_year?: number | null;
-    end_year?: number | null;
-    description?: string | null;
-    color?: string | null;
-    icon?: string | null;
-    era?: string | null;
-    author?: string | null;
-    written_start_year?: number | null;
-    written_end_year?: number | null;
-  };
-  profile: Partial<PersonProfile> & { name: string; scope: PersonProfile["scope"] };
-};
-
-export type PeoplePackJson = {
-  source?: string;
-  /** Canonical `PeoplePackRow` or flat rows (`name`, `eventId`, optional `familyLinks` with `type` + `targetEventId`). */
-  people: PeoplePackRow[] | unknown[];
-};
+export type { PeoplePackJson };
 
 export type ImportOk = { slug: string; eventId: string; title: string };
 export type ImportFail = { slug: string; error: string };
@@ -48,7 +26,7 @@ function normalizePeopleScope(s: unknown): PersonProfile["scope"] | null {
   return null;
 }
 
-function buildProfile(eventId: string, p: PeoplePackRow["profile"]): PersonProfile {
+function buildProfile(eventId: string, p: PeoplePackProfile): PersonProfile {
   const scope = p.scope === "church_history" ? "church_history" : "bible";
   return {
     eventId,
@@ -93,6 +71,7 @@ function numOrNull(v: unknown): number | null {
 }
 
 type ExternalFamilyLink = { type: string; targetEventId: string };
+type PreparedPackRow = { slug: string; timeline_event: PeoplePackTimelineEvent; profile: PeoplePackProfile };
 
 function extractExternalFamilyLinks(raw: unknown): ExternalFamilyLink[] | undefined {
   if (!Array.isArray(raw) || raw.length === 0) return undefined;
@@ -140,7 +119,7 @@ function dedupeFamilyLinks(links: FamilyLink[]): FamilyLink[] {
 }
 
 type PreparedPeopleRow =
-  | { ok: true; slug: string; idKey: string; packRow: PeoplePackRow; externalFamilyLinks?: ExternalFamilyLink[] }
+  | { ok: true; slug: string; idKey: string; packRow: PreparedPackRow; externalFamilyLinks?: ExternalFamilyLink[] }
   | { ok: false; slug: string; error: string };
 
 /**
@@ -156,7 +135,7 @@ function preparePeopleRow(raw: unknown, index: number): PreparedPeopleRow {
   const nestedProfile = r.profile;
 
   if (nestedProfile && typeof nestedProfile === "object") {
-    const prof = nestedProfile as PeoplePackRow["profile"];
+    const prof = nestedProfile as PeoplePackProfile;
     const scopeNorm = normalizePeopleScope(prof.scope);
     if (!scopeNorm) {
       return {
@@ -169,8 +148,8 @@ function preparePeopleRow(raw: unknown, index: number): PreparedPeopleRow {
     const teRaw = r.timeline_event;
     const te =
       teRaw && typeof teRaw === "object"
-        ? (teRaw as PeoplePackRow["timeline_event"])
-        : ({} as Partial<PeoplePackRow["timeline_event"]> as PeoplePackRow["timeline_event"]);
+        ? (teRaw as PeoplePackTimelineEvent)
+        : ({} as Partial<PeoplePackTimelineEvent> as PeoplePackTimelineEvent);
 
     let title = (te.title ?? "").trim();
     if (!title && typeof prof.name === "string") title = prof.name.trim();
@@ -187,7 +166,7 @@ function preparePeopleRow(raw: unknown, index: number): PreparedPeopleRow {
 
     const ext =
       extractExternalFamilyLinks(r.familyLinks) ?? extractExternalFamilyLinks((prof as { familyLinks?: unknown }).familyLinks);
-    const profileForRow: PeoplePackRow["profile"] = {
+    const profileForRow: PeoplePackProfile = {
       ...prof,
       scope: scopeNorm,
       ...(ext ? { familyLinks: undefined } : {}),
@@ -202,7 +181,7 @@ function preparePeopleRow(raw: unknown, index: number): PreparedPeopleRow {
     const idKey =
       (typeof r.eventId === "string" && r.eventId.trim() ? r.eventId : prof.name).trim().toLowerCase();
 
-    const packRow: PeoplePackRow = {
+    const packRow = {
       slug,
       timeline_event: { ...te, title: title || prof.name },
       profile: profileForRow,
@@ -237,7 +216,7 @@ function preparePeopleRow(raw: unknown, index: number): PreparedPeopleRow {
 
   const ext = extractExternalFamilyLinks(r.familyLinks);
 
-  const profile: PeoplePackRow["profile"] = {
+  const profile: PeoplePackProfile = {
     name,
     scope,
     figureKind: coerceFigureKind(r.figureKind),
@@ -255,7 +234,7 @@ function preparePeopleRow(raw: unknown, index: number): PreparedPeopleRow {
     atlasPin: r.atlasPin && typeof r.atlasPin === "object" ? (r.atlasPin as PersonProfile["atlasPin"]) : undefined,
   };
 
-  const timeline_event: PeoplePackRow["timeline_event"] = {
+  const timeline_event: PeoplePackTimelineEvent = {
     title: name,
     type: "person",
     start_year: numOrNull(r.ruledFromYear),
@@ -269,7 +248,7 @@ function preparePeopleRow(raw: unknown, index: number): PreparedPeopleRow {
     written_end_year: numOrNull(r.written_end_year),
   };
 
-  const packRow: PeoplePackRow = { slug, timeline_event, profile };
+  const packRow = { slug, timeline_event, profile };
   return { ok: true, slug, idKey, packRow, externalFamilyLinks: ext };
 }
 

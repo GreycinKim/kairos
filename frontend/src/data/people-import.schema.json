@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kairos.local/schemas/people-import.schema.json",
+  "title": "Kairos People Import Pack",
+  "type": "object",
+  "required": ["people"],
+  "properties": {
+    "__readme__": { "type": "string" },
+    "source": { "type": "string" },
+    "people": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/canonicalRow" },
+          { "$ref": "#/$defs/flatRow" }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "scope": { "enum": ["bible", "church_history", "OT", "NT"] },
+    "figureKind": {
+      "enum": ["patriarch", "king", "prophet", "priest", "disciple", "apostle", "angel", "region", "other"]
+    },
+    "scriptureAppearance": {
+      "type": "object",
+      "required": ["book", "chapter"],
+      "properties": {
+        "book": { "type": "string" },
+        "chapter": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "atlasPin": {
+      "type": ["object", "null"],
+      "required": ["catalogMapId", "nx", "ny"],
+      "properties": {
+        "catalogMapId": { "type": "string" },
+        "nx": { "type": "number", "minimum": 0, "maximum": 1 },
+        "ny": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "loreCard": {
+      "type": "object",
+      "required": ["kind", "title", "body"],
+      "properties": {
+        "kind": { "enum": ["item", "clothing", "place", "event"] },
+        "title": { "type": "string" },
+        "body": { "type": "string" },
+        "imageDataUrl": { "type": ["string", "null"] }
+      }
+    },
+    "loreCallout": {
+      "type": "object",
+      "required": ["title", "body"],
+      "properties": {
+        "title": { "type": "string" },
+        "body": { "type": "string" }
+      }
+    },
+    "externalFamilyLink": {
+      "type": "object",
+      "required": ["type", "targetEventId"],
+      "properties": {
+        "type": { "type": "string" },
+        "targetEventId": { "type": "string" }
+      }
+    },
+    "internalFamilyLink": {
+      "type": "object",
+      "required": ["relation", "personEventId"],
+      "properties": {
+        "relation": {
+          "enum": [
+            "parent",
+            "step_parent",
+            "child",
+            "step_son",
+            "step_daughter",
+            "spouse",
+            "concubine",
+            "sibling",
+            "step_brother",
+            "step_sister",
+            "cousin",
+            "step_cousin",
+            "other"
+          ]
+        },
+        "personEventId": { "type": "string" }
+      }
+    },
+    "timelineEvent": {
+      "type": "object",
+      "required": ["title", "type"],
+      "properties": {
+        "title": { "type": "string" },
+        "type": { "type": "string" },
+        "start_year": { "type": ["integer", "null"] },
+        "end_year": { "type": ["integer", "null"] },
+        "description": { "type": ["string", "null"] },
+        "color": { "type": ["string", "null"] },
+        "icon": { "type": ["string", "null"] },
+        "era": { "type": ["string", "null"] },
+        "author": { "type": ["string", "null"] },
+        "written_start_year": { "type": ["integer", "null"] },
+        "written_end_year": { "type": ["integer", "null"] }
+      }
+    },
+    "profile": {
+      "type": "object",
+      "required": ["name", "scope"],
+      "properties": {
+        "name": { "type": "string" },
+        "scope": { "$ref": "#/$defs/scope" },
+        "figureKind": { "$ref": "#/$defs/figureKind" },
+        "title": { "type": "string" },
+        "biography": { "type": "string" },
+        "diedYear": { "type": ["integer", "null"] },
+        "ruledFromYear": { "type": ["integer", "null"] },
+        "ruledToYear": { "type": ["integer", "null"] },
+        "hidden": { "type": "boolean" },
+        "scriptureAppearances": { "type": "array", "items": { "$ref": "#/$defs/scriptureAppearance" } },
+        "loreCards": { "type": "array", "items": { "$ref": "#/$defs/loreCard" } },
+        "loreCallouts": { "type": "array", "items": { "$ref": "#/$defs/loreCallout" } },
+        "relatedEventIds": { "type": "array", "items": { "type": "string" } },
+        "imageDataUrl": { "type": ["string", "null"] },
+        "atlasPin": { "$ref": "#/$defs/atlasPin" },
+        "familyLinks": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "$ref": "#/$defs/externalFamilyLink" },
+              { "$ref": "#/$defs/internalFamilyLink" }
+            ]
+          }
+        }
+      }
+    },
+    "canonicalRow": {
+      "type": "object",
+      "required": ["slug", "timeline_event", "profile"],
+      "properties": {
+        "slug": { "type": "string" },
+        "eventId": { "type": "string" },
+        "timeline_event": { "$ref": "#/$defs/timelineEvent" },
+        "profile": { "$ref": "#/$defs/profile" },
+        "familyLinks": { "type": "array", "items": { "$ref": "#/$defs/externalFamilyLink" } }
+      }
+    },
+    "flatRow": {
+      "type": "object",
+      "required": ["eventId", "name"],
+      "properties": {
+        "slug": { "type": "string" },
+        "eventId": { "type": "string" },
+        "name": { "type": "string" },
+        "scope": { "$ref": "#/$defs/scope" },
+        "figureKind": { "$ref": "#/$defs/figureKind" },
+        "title": { "type": "string" },
+        "biography": { "type": "string" },
+        "diedYear": { "type": ["integer", "null"] },
+        "ruledFromYear": { "type": ["integer", "null"] },
+        "ruledToYear": { "type": ["integer", "null"] },
+        "hidden": { "type": "boolean" },
+        "description": { "type": ["string", "null"] },
+        "color": { "type": ["string", "null"] },
+        "icon": { "type": ["string", "null"] },
+        "era": { "type": ["string", "null"] },
+        "author": { "type": ["string", "null"] },
+        "written_start_year": { "type": ["integer", "null"] },
+        "written_end_year": { "type": ["integer", "null"] },
+        "scriptureAppearances": { "type": "array", "items": { "$ref": "#/$defs/scriptureAppearance" } },
+        "loreCards": { "type": "array", "items": { "$ref": "#/$defs/loreCard" } },
+        "loreCallouts": { "type": "array", "items": { "$ref": "#/$defs/loreCallout" } },
+        "relatedEventIds": { "type": "array", "items": { "type": "string" } },
+        "imageDataUrl": { "type": ["string", "null"] },
+        "atlasPin": { "$ref": "#/$defs/atlasPin" },
+        "familyLinks": { "type": "array", "items": { "$ref": "#/$defs/externalFamilyLink" } }
+      }
+    }
+  }
+}

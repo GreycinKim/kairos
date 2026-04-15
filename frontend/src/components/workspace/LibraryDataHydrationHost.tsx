@@ -16,7 +16,7 @@ export function LibraryDataHydrationHost() {
   useEffect(() => {
     if (!ready || !authed) return;
     let cancelled = false;
-    void (async () => {
+    const runSync = async () => {
       await Promise.all([hydratePeopleProfilesFromServer(), hydratePlacesFromServer()]);
       if (cancelled) return;
       await refreshReadingLogFromServer();
@@ -24,9 +24,21 @@ export function LibraryDataHydrationHost() {
       await migrateReadingLogLocalToServer();
       if (cancelled) return;
       bumpWorkspaceEpoch();
-    })();
+    };
+    void runSync();
+    const pollId = window.setInterval(() => {
+      if (document.visibilityState !== "visible") return;
+      void runSync();
+    }, 15000);
+    const onVisibility = () => {
+      if (document.visibilityState !== "visible") return;
+      void runSync();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
     return () => {
       cancelled = true;
+      window.clearInterval(pollId);
+      document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [ready, authed]);
 

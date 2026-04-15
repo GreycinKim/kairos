@@ -22,6 +22,7 @@ export const PLACES_STORAGE_KEY = "kairos-places-v1";
 const LS_KEY = PLACES_STORAGE_KEY;
 
 let placesSaveTimer: ReturnType<typeof setTimeout> | null = null;
+let placesSyncReady = false;
 
 export function loadPlaces(): Record<string, PlaceRecord> {
   try {
@@ -45,6 +46,7 @@ export function savePlaces(data: Record<string, PlaceRecord>) {
   if (placesSaveTimer) clearTimeout(placesSaveTimer);
   placesSaveTimer = setTimeout(() => {
     placesSaveTimer = null;
+    if (!placesSyncReady) return;
     const latest = loadPlaces();
     void api.put("/library/place-records", { places: latest }).catch(() => {
       /* offline */
@@ -57,6 +59,7 @@ export function flushPlacesSaveNow(): void {
     clearTimeout(placesSaveTimer);
     placesSaveTimer = null;
   }
+  if (!placesSyncReady) return;
   const data = loadPlaces();
   void api.put("/library/place-records", { places: data }).catch(() => {
     /* offline */
@@ -79,6 +82,8 @@ export async function hydratePlacesFromServer(): Promise<void> {
     }
   } catch {
     /* offline */
+  } finally {
+    placesSyncReady = true;
   }
 }
 
