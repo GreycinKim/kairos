@@ -1,4 +1,5 @@
 import type { AtlasMapPin } from "@/lib/mapAtlasTypes";
+import { ALL_BIBLE_BOOKS } from "@/lib/bibleCanon";
 
 export type PeopleScope = "bible" | "church_history";
 
@@ -69,6 +70,8 @@ export type LoreCard = {
   kind: LoreCardKind;
   title: string;
   body: string;
+  /** Optional illustration (e.g. data URL from Edit person). */
+  imageDataUrl?: string | null;
 };
 
 export type LoreCallout = {
@@ -77,12 +80,59 @@ export type LoreCallout = {
 };
 
 /** Optional family graph edges from this person to other people (timeline person/ruler ids). */
-export type FamilyLinkRelation = "parent" | "child" | "spouse" | "sibling" | "other";
+export type FamilyLinkRelation =
+  | "parent"
+  | "step_parent"
+  | "child"
+  | "step_son"
+  | "step_daughter"
+  | "spouse"
+  | "concubine"
+  | "sibling"
+  | "step_brother"
+  | "step_sister"
+  | "cousin"
+  | "step_cousin"
+  | "other";
 
 export type FamilyLink = {
   relation: FamilyLinkRelation;
   personEventId: string;
 };
+
+/** Human-readable labels for UI and the family tree modal. */
+export const FAMILY_RELATION_LABEL: Record<FamilyLinkRelation, string> = {
+  parent: "Parent",
+  step_parent: "Step-parent",
+  child: "Child",
+  step_son: "Step-son",
+  step_daughter: "Step-daughter",
+  spouse: "Spouse",
+  concubine: "Concubine",
+  sibling: "Sibling",
+  step_brother: "Step-brother",
+  step_sister: "Step-sister",
+  cousin: "Cousin",
+  step_cousin: "Step-cousin",
+  other: "Related",
+};
+
+/** Select / form order: nuclear first, then step & extended. */
+export const FAMILY_LINK_RELATION_OPTIONS: { value: FamilyLinkRelation; label: string }[] = [
+  { value: "parent", label: FAMILY_RELATION_LABEL.parent },
+  { value: "step_parent", label: FAMILY_RELATION_LABEL.step_parent },
+  { value: "child", label: FAMILY_RELATION_LABEL.child },
+  { value: "step_son", label: FAMILY_RELATION_LABEL.step_son },
+  { value: "step_daughter", label: FAMILY_RELATION_LABEL.step_daughter },
+  { value: "spouse", label: FAMILY_RELATION_LABEL.spouse },
+  { value: "concubine", label: FAMILY_RELATION_LABEL.concubine },
+  { value: "sibling", label: FAMILY_RELATION_LABEL.sibling },
+  { value: "step_brother", label: FAMILY_RELATION_LABEL.step_brother },
+  { value: "step_sister", label: FAMILY_RELATION_LABEL.step_sister },
+  { value: "cousin", label: FAMILY_RELATION_LABEL.cousin },
+  { value: "step_cousin", label: FAMILY_RELATION_LABEL.step_cousin },
+  { value: "other", label: FAMILY_RELATION_LABEL.other },
+];
 
 /** Where this person appears in scripture (for reader + People filters). */
 export type ScriptureAppearance = {
@@ -121,6 +171,55 @@ export function normalizeScriptureAppearances(rows: readonly unknown[] | null | 
     if (seen.has(key)) continue;
     seen.add(key);
     out.push({ book, chapter });
+  }
+  return out;
+}
+
+/**
+ * Collapses consecutive chapters per book for display (e.g. 1 Samuel 15–20).
+ * Underlying `ScriptureAppearance[]` stays one row per chapter for the reader and filters.
+ */
+export type ScriptureFootprintDisplayRange = {
+  book: string;
+  /** Single chapter ("7") or inclusive range ("15–20"). */
+  chapterDisplay: string;
+  chapters: number[];
+};
+
+export function groupScriptureAppearancesForDisplay(rows: readonly ScriptureAppearance[]): ScriptureFootprintDisplayRange[] {
+  const normalized = [...rows].sort((a, b) => a.book.localeCompare(b.book) || a.chapter - b.chapter);
+  if (!normalized.length) return [];
+  const byBook = new Map<string, number[]>();
+  for (const r of normalized) {
+    const arr = byBook.get(r.book) ?? [];
+    arr.push(r.chapter);
+    byBook.set(r.book, arr);
+  }
+  const bookKeys = [...byBook.keys()].sort((a, b) => {
+    const ia = ALL_BIBLE_BOOKS.indexOf(a);
+    const ib = ALL_BIBLE_BOOKS.indexOf(b);
+    if (ia === -1 && ib === -1) return a.localeCompare(b);
+    if (ia === -1) return 1;
+    if (ib === -1) return -1;
+    return ia - ib;
+  });
+  const out: ScriptureFootprintDisplayRange[] = [];
+  for (const book of bookKeys) {
+    const chs = [...new Set(byBook.get(book) ?? [])].sort((x, y) => x - y);
+    let i = 0;
+    while (i < chs.length) {
+      const start = chs[i]!;
+      let j = i;
+      while (j + 1 < chs.length && chs[j + 1]! === chs[j]! + 1) j++;
+      const end = chs[j]!;
+      const slice = chs.slice(i, j + 1);
+      out.push({
+        book,
+        chapterDisplay: start === end ? String(start) : `${start}\u2013${end}`,
+        chapters: slice,
+      });
+      i = j + 1;
+    }
   }
   return out;
 }

@@ -111,11 +111,19 @@ function extractExternalFamilyLinks(raw: unknown): ExternalFamilyLink[] | undefi
  * `parent` here means “this person is parent of target” → stored as `child` to target.
  */
 function mapExternalFamilyEdge(type: string, targetUuid: string): FamilyLink | null {
-  const t = type.trim().toLowerCase();
+  const t = type.trim().toLowerCase().replace(/-/g, "_");
   if (t === "spouse") return { relation: "spouse", personEventId: targetUuid };
+  if (t === "concubine") return { relation: "concubine", personEventId: targetUuid };
   if (t === "parent") return { relation: "child", personEventId: targetUuid };
   if (t === "childof") return { relation: "parent", personEventId: targetUuid };
-  if (t === "siblingof") return { relation: "sibling", personEventId: targetUuid };
+  if (t === "step_parent" || t === "stepparent") return { relation: "step_parent", personEventId: targetUuid };
+  if (t === "step_son" || t === "stepson") return { relation: "step_son", personEventId: targetUuid };
+  if (t === "step_daughter" || t === "stepdaughter") return { relation: "step_daughter", personEventId: targetUuid };
+  if (t === "step_brother" || t === "stepbrother") return { relation: "step_brother", personEventId: targetUuid };
+  if (t === "step_sister" || t === "stepsister") return { relation: "step_sister", personEventId: targetUuid };
+  if (t === "cousin") return { relation: "cousin", personEventId: targetUuid };
+  if (t === "step_cousin" || t === "stepcousin") return { relation: "step_cousin", personEventId: targetUuid };
+  if (t === "siblingof" || t === "sibling") return { relation: "sibling", personEventId: targetUuid };
   if (t === "ancestorof") return { relation: "other", personEventId: targetUuid };
   return null;
 }

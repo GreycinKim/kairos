@@ -221,8 +221,8 @@ export function TimelineEventPage() {
                 </ul>
               )}
               <ScriptureAppearanceRowForm
-                onAdd={(row) => {
-                  setScriptureDraft((a) => [...a, row]);
+                onAddPassages={(rows) => {
+                  setScriptureDraft((a) => [...a, ...rows]);
                 }}
               />
               <Button type="button" size="sm" variant="secondary" className="mt-2" onClick={persistScriptureDraft}>

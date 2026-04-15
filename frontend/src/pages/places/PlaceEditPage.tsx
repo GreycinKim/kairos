@@ -181,10 +181,14 @@ export function PlaceEditPage() {
               )}
             </div>
             <ScriptureAppearanceRowForm
-              onAdd={(row) =>
+              onAddPassages={(rows) =>
                 setScriptureAppearances((a) => {
-                  if (a.some((x) => x.book === row.book && x.chapter === row.chapter)) return a;
-                  return [...a, row];
+                  let next = [...a];
+                  for (const row of rows) {
+                    if (next.some((x) => x.book === row.book && x.chapter === row.chapter)) continue;
+                    next.push(row);
+                  }
+                  return next;
                 })
               }
             />

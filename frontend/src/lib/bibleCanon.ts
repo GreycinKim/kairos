@@ -141,3 +141,21 @@ export const ALL_BIBLE_BOOKS: string[] = [
 export function chapterCountFor(book: string): number {
   return CHAPTER_COUNT[book] ?? 50;
 }
+
+/** Inclusive chapter range for one book; clamps to 1..chapterCountFor(book). If from > to, swaps. */
+export function expandScriptureChapterRange(
+  book: string,
+  chapterFrom: number,
+  chapterTo: number,
+): { book: string; chapter: number }[] {
+  const max = chapterCountFor(book);
+  if (!Number.isFinite(chapterFrom) || !Number.isFinite(chapterTo) || max < 1) return [];
+  let lo = Math.floor(Math.min(chapterFrom, chapterTo));
+  let hi = Math.floor(Math.max(chapterFrom, chapterTo));
+  lo = Math.max(1, lo);
+  hi = Math.min(max, hi);
+  if (lo > hi) return [];
+  const out: { book: string; chapter: number }[] = [];
+  for (let c = lo; c <= hi; c++) out.push({ book, chapter: c });
+  return out;
+}

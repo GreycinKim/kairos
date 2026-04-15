@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { GitBranch } from "lucide-react";
 
 import { ScriptureCrossLinksBlock } from "@/components/scripture/ScriptureCrossLinksBlock";
 import { PersonFamilyTreeModal } from "@/components/timeline/PersonFamilyTreeModal";
-import { normalizeScriptureAppearances, type LoreCardKind, type PersonProfile } from "@/lib/timelinePeople";
+import {
+  groupScriptureAppearancesForDisplay,
+  normalizeScriptureAppearances,
+  type LoreCardKind,
+  type PersonProfile,
+} from "@/lib/timelinePeople";
 import { ALL_BIBLE_BOOKS } from "@/lib/bibleCanon";
 import { toYearLabel } from "@/lib/timelinePeople";
 import type { TimelineEvent } from "@/types";
@@ -51,6 +56,7 @@ export function PersonLorePanel({
   const cards = profile.loreCards ?? [];
   const callouts = profile.loreCallouts ?? [];
   const appearances = normalizeScriptureAppearances(profile.scriptureAppearances ?? []);
+  const footprintDisplay = useMemo(() => groupScriptureAppearancesForDisplay(appearances), [appearances]);
   const grouped = groupLoreCards(cards.length ? cards : []);
   const uniqueBooks = [...new Set(appearances.map((a) => a.book).filter(Boolean))] as string[];
   uniqueBooks.sort((a, b) => {
@@ -62,6 +68,7 @@ export function PersonLorePanel({
     return ia - ib;
   });
   const timelineBooksQs = uniqueBooks.map((b) => `book=${encodeURIComponent(b)}`).join("&");
+  const hasLoreGroups = grouped.length > 0;
 
   return (
     <div className={`font-serif text-neutral-900 ${className}`}>
@@ -104,7 +111,7 @@ export function PersonLorePanel({
 
       <div className="w-full px-4 py-8 sm:px-10 lg:px-16 xl:px-20">
         <div className="mx-auto flex w-full max-w-none flex-col gap-10 xl:grid xl:grid-cols-12 xl:items-start xl:gap-12">
-          <div className="space-y-4 xl:col-span-4">
+          <div className={`min-w-0 space-y-4 ${hasLoreGroups ? "xl:col-span-5" : "xl:col-span-12"}`}>
             <div className="text-center xl:text-left">
               <h2 className="font-serif text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl">{name}</h2>
             </div>
@@ -125,7 +132,7 @@ export function PersonLorePanel({
             ) : null}
 
             <div
-              className={`overflow-hidden rounded-xl border border-rose-900/10 bg-black shadow-lg xl:sticky xl:top-4 ${
+              className={`overflow-hidden rounded-xl border border-rose-900/10 bg-black shadow-lg ${
                 standalonePage ? "mx-auto w-full max-w-[240px] sm:max-w-[260px] xl:max-w-[280px]" : ""
               }`}
             >
@@ -151,104 +158,130 @@ export function PersonLorePanel({
                 </div>
               )}
             </div>
-          </div>
 
-          <div className="min-w-0 space-y-8 text-[15px] leading-relaxed xl:col-span-8">
-          {profile.biography ? (
-            <section>
-              <h3 className="mb-2 border-b border-rose-900/20 pb-1 text-lg font-semibold" style={{ color: ACCENT }}>
-                Chronicle
-              </h3>
-              <p className="text-justify text-neutral-800">{profile.biography}</p>
-            </section>
-          ) : (
-            <p className="text-sm italic text-neutral-500">No biography yet — use Edit profile to add one.</p>
-          )}
+            <div className="min-w-0 space-y-8 text-[15px] leading-relaxed">
+              {profile.biography ? (
+                <section>
+                  <h3 className="mb-2 border-b border-rose-900/20 pb-1 text-lg font-semibold" style={{ color: ACCENT }}>
+                    Chronicle
+                  </h3>
+                  <p className="text-justify text-neutral-800">{profile.biography}</p>
+                </section>
+              ) : (
+                <p className="text-sm italic text-neutral-500">No biography yet — use Edit profile to add one.</p>
+              )}
 
-          <section className="rounded-lg border border-rose-900/10 bg-white/80 p-3">
-            <h3 className="mb-2 text-sm font-semibold" style={{ color: ACCENT }}>
-              Quick facts
-            </h3>
-            <table className="w-full border-collapse text-left text-xs">
-              <tbody>
-                <tr className="border-b border-neutral-200 bg-neutral-100/80">
-                  <th className="p-2 font-semibold">Field</th>
-                  <th className="p-2 font-semibold">Detail</th>
-                </tr>
-                <tr className="border-b border-neutral-100 bg-amber-50/40">
-                  <td className="p-2 text-neutral-600">Died</td>
-                  <td className="p-2 text-neutral-900">{toYearLabel(profile.diedYear)}</td>
-                </tr>
-                <tr className="border-b border-neutral-100">
-                  <td className="p-2 text-neutral-600">Ruled</td>
-                  <td className="p-2 text-neutral-900">
-                    {profile.ruledFromYear != null ? toYearLabel(profile.ruledFromYear) : "—"} —{" "}
-                    {profile.ruledToYear != null ? toYearLabel(profile.ruledToYear) : "—"}
-                  </td>
-                </tr>
-                <tr className="bg-amber-50/40">
-                  <td className="p-2 text-neutral-600">Scope</td>
-                  <td className="p-2 capitalize text-neutral-900">{(profile.scope ?? "bible").replace("_", " ")}</td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-
-          {appearances.length ? (
-            <section>
-              <h3 className="mb-2 border-b border-rose-900/20 pb-1 text-lg font-semibold" style={{ color: ACCENT }}>
-                Scripture footprint
-              </h3>
-              <div className="max-h-[min(60vh,640px)] overflow-y-auto rounded-lg border border-neutral-200 bg-white/90">
+              <section className="rounded-lg border border-rose-900/10 bg-white/80 p-3">
+                <h3 className="mb-2 text-sm font-semibold" style={{ color: ACCENT }}>
+                  Quick facts
+                </h3>
                 <table className="w-full border-collapse text-left text-xs">
-                  <thead>
-                    <tr className="bg-neutral-200/80">
-                      <th className="p-2 font-semibold">Book</th>
-                      <th className="p-2 font-semibold">Chapter</th>
-                    </tr>
-                  </thead>
                   <tbody>
-                    {[...appearances]
-                      .sort((a, b) => a.book.localeCompare(b.book) || a.chapter - b.chapter)
-                      .map((r, i) => (
-                        <tr key={`${r.book}-${r.chapter}-${i}`} className={i % 2 ? "bg-amber-50/50" : "bg-white"}>
-                          <td className="p-2">{r.book}</td>
-                          <td className="p-2">{r.chapter}</td>
-                        </tr>
-                      ))}
+                    <tr className="border-b border-neutral-200 bg-neutral-100/80">
+                      <th className="p-2 font-semibold">Field</th>
+                      <th className="p-2 font-semibold">Detail</th>
+                    </tr>
+                    <tr className="border-b border-neutral-100 bg-amber-50/40">
+                      <td className="p-2 text-neutral-600">Died</td>
+                      <td className="p-2 text-neutral-900">{toYearLabel(profile.diedYear)}</td>
+                    </tr>
+                    <tr className="border-b border-neutral-100">
+                      <td className="p-2 text-neutral-600">Ruled</td>
+                      <td className="p-2 text-neutral-900">
+                        {profile.ruledFromYear != null ? toYearLabel(profile.ruledFromYear) : "—"} —{" "}
+                        {profile.ruledToYear != null ? toYearLabel(profile.ruledToYear) : "—"}
+                      </td>
+                    </tr>
+                    <tr className="bg-amber-50/40">
+                      <td className="p-2 text-neutral-600">Scope</td>
+                      <td className="p-2 capitalize text-neutral-900">{(profile.scope ?? "bible").replace("_", " ")}</td>
+                    </tr>
                   </tbody>
                 </table>
-              </div>
-              <ScriptureCrossLinksBlock
-                className="mt-6 text-neutral-800 [&_h3]:border-rose-900/20 [&_h3]:text-rose-900"
-                passages={appearances}
-                excludeEventId={event.id}
-                title="Also tagged to these passages"
-                description="Places and timeline events in your library that reference the same book and chapter."
-              />
-            </section>
-          ) : null}
+              </section>
 
-          {grouped.map(({ kind, items }) => (
-            <section key={kind}>
-              <h3 className="mb-2 border-b border-rose-900/20 pb-1 text-lg font-semibold" style={{ color: ACCENT }}>
-                {KIND_LABEL[kind]}
-              </h3>
-              <div className="space-y-3">
-                {items.map((card, i) => (
-                  <article
-                    key={`${kind}-${i}`}
-                    className="rounded-lg border border-rose-900/10 bg-white/90 p-3 shadow-sm"
-                    style={{ boxShadow: `0 2px 12px ${ACCENT_SOFT}` }}
-                  >
-                    <h4 className="font-semibold text-neutral-900">{card.title}</h4>
-                    <p className="mt-1.5 text-sm leading-relaxed text-neutral-700">{card.body}</p>
-                  </article>
-                ))}
-              </div>
-            </section>
-          ))}
+              {appearances.length ? (
+                <section>
+                  <h3 className="mb-2 border-b border-rose-900/20 pb-1 text-lg font-semibold" style={{ color: ACCENT }}>
+                    Scripture footprint
+                  </h3>
+                  <div className="max-h-[min(60vh,640px)] overflow-y-auto rounded-lg border border-neutral-200 bg-white/90">
+                    <table className="w-full border-collapse text-left text-xs">
+                      <thead>
+                        <tr className="bg-neutral-200/80">
+                          <th className="p-2 font-semibold">Book</th>
+                          <th className="p-2 font-semibold">Chapter(s)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {footprintDisplay.map((r, i) => (
+                          <tr key={`${r.book}-${r.chapterDisplay}-${i}`} className={i % 2 ? "bg-amber-50/50" : "bg-white"}>
+                            <td className="p-2">{r.book}</td>
+                            <td className="p-2 tabular-nums">{r.chapterDisplay}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <ScriptureCrossLinksBlock
+                    className="mt-6 text-neutral-800 [&_h3]:border-rose-900/20 [&_h3]:text-rose-900"
+                    passages={appearances}
+                    excludeEventId={event.id}
+                    title="Also tagged to these passages"
+                    description="Places and timeline events in your library that reference the same book and chapter."
+                  />
+                </section>
+              ) : null}
+            </div>
           </div>
+
+          {hasLoreGroups ? (
+            <div className="min-w-0 space-y-8 text-[15px] leading-relaxed xl:col-span-7">
+              {grouped.map(({ kind, items }) => (
+                <section key={kind}>
+                  <h3 className="mb-2 border-b border-rose-900/20 pb-1 text-lg font-semibold" style={{ color: ACCENT }}>
+                    {KIND_LABEL[kind]}
+                  </h3>
+                  <div className="space-y-3">
+                    {items.map((card, i) => (
+                      <article
+                        key={`${kind}-${i}`}
+                        className="flex gap-3 rounded-lg border border-rose-900/10 bg-white/90 p-3 shadow-sm"
+                        style={{ boxShadow: `0 2px 12px ${ACCENT_SOFT}` }}
+                      >
+                        <div className="shrink-0">
+                          {card.imageDataUrl ? (
+                            <img
+                              src={card.imageDataUrl}
+                              alt=""
+                              className="h-14 w-14 rounded-full border border-rose-900/15 object-cover object-center sm:h-16 sm:w-16"
+                            />
+                          ) : profile.imageDataUrl ? (
+                            <img
+                              src={profile.imageDataUrl}
+                              alt=""
+                              className="h-14 w-14 rounded-full border border-rose-900/15 object-cover object-top sm:h-16 sm:w-16"
+                            />
+                          ) : (
+                            <div
+                              className="flex h-14 w-14 items-center justify-center rounded-full border border-rose-900/15 bg-neutral-100 text-xl text-neutral-600 sm:h-16 sm:w-16 sm:text-2xl"
+                              aria-hidden
+                            >
+                              {event.icon ?? "◆"}
+                            </div>
+                          )}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <h4 className="font-semibold text-neutral-900">{card.title}</h4>
+                          <p className="mt-1.5 text-sm leading-relaxed text-neutral-700">{card.body}</p>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

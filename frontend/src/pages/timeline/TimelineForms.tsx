@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { api } from "@/api/client";
-import { ALL_BIBLE_BOOKS } from "@/lib/bibleCanon";
+import { ALL_BIBLE_BOOKS, expandScriptureChapterRange } from "@/lib/bibleCanon";
 import type {
   FamilyLink,
   FamilyLinkRelation,
@@ -21,7 +21,13 @@ export type PersonTimelineSavePatch = {
   title: string;
 };
 import { clampAtlasCoord } from "@/lib/mapAtlasOverlays";
-import { normalizeScriptureAppearances, PERSON_FIGURE_KIND_LABELS, PERSON_FIGURE_KINDS } from "@/lib/timelinePeople";
+import {
+  FAMILY_LINK_RELATION_OPTIONS,
+  FAMILY_RELATION_LABEL,
+  normalizeScriptureAppearances,
+  PERSON_FIGURE_KIND_LABELS,
+  PERSON_FIGURE_KINDS,
+} from "@/lib/timelinePeople";
 import type { TimelineEvent, TimelineEventType } from "@/types";
 
 export const EVENT_TYPES: TimelineEventType[] = [
@@ -33,30 +39,74 @@ export const EVENT_TYPES: TimelineEventType[] = [
   "milestone",
 ];
 
-export function ScriptureAppearanceRowForm({ onAdd }: { onAdd: (row: ScriptureAppearance) => void }) {
+export function ScriptureAppearanceRowForm({
+  onAddPassages,
+}: {
+  /** One or more book+chapter rows (single chapter or expanded range). */
+  onAddPassages: (rows: ScriptureAppearance[]) => void;
+}) {
   const [book, setBook] = useState(ALL_BIBLE_BOOKS[0] ?? "Genesis");
   const [chapter, setChapter] = useState("1");
+  const [rangeFrom, setRangeFrom] = useState("1");
+  const [rangeTo, setRangeTo] = useState("1");
+
   return (
-    <div className="mt-2 flex flex-wrap items-end gap-2">
-      <select value={book} onChange={(e) => setBook(e.target.value)} className="apple-field h-9 text-xs">
-        {ALL_BIBLE_BOOKS.map((b) => (
-          <option key={b} value={b}>
-            {b}
-          </option>
-        ))}
-      </select>
-      <Input value={chapter} onChange={(e) => setChapter(e.target.value)} className="h-9 w-20 text-xs" inputMode="numeric" />
-      <Button
-        type="button"
-        size="sm"
-        variant="secondary"
-        onClick={() => {
-          const ch = Math.max(1, parseInt(chapter, 10) || 1);
-          onAdd({ book, chapter: ch });
-        }}
-      >
-        Add passage
-      </Button>
+    <div className="mt-2 space-y-3 rounded border border-dashed border-border p-2">
+      <div>
+        <label className="mb-1 block text-[10px] font-medium text-muted-foreground">Book</label>
+        <select value={book} onChange={(e) => setBook(e.target.value)} className="apple-field h-9 w-full max-w-xs text-xs">
+          {ALL_BIBLE_BOOKS.map((b) => (
+            <option key={b} value={b}>
+              {b}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="flex flex-wrap items-end gap-2">
+        <div>
+          <label className="mb-1 block text-[10px] font-medium text-muted-foreground">Single chapter</label>
+          <div className="flex flex-wrap items-center gap-2">
+            <Input value={chapter} onChange={(e) => setChapter(e.target.value)} className="h-9 w-20 text-xs" inputMode="numeric" />
+            <Button
+              type="button"
+              size="sm"
+              variant="secondary"
+              onClick={() => {
+                const ch = Math.max(1, parseInt(chapter, 10) || 1);
+                onAddPassages([{ book, chapter: ch }]);
+              }}
+            >
+              Add chapter
+            </Button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <label className="mb-1 block text-[10px] font-medium text-muted-foreground">Chapter range (inclusive)</label>
+        <div className="flex flex-wrap items-end gap-2">
+          <span className="pb-2 text-[11px] text-muted-foreground">From</span>
+          <Input value={rangeFrom} onChange={(e) => setRangeFrom(e.target.value)} className="h-9 w-20 text-xs" inputMode="numeric" />
+          <span className="pb-2 text-[11px] text-muted-foreground">to</span>
+          <Input value={rangeTo} onChange={(e) => setRangeTo(e.target.value)} className="h-9 w-20 text-xs" inputMode="numeric" />
+          <Button
+            type="button"
+            size="sm"
+            variant="secondary"
+            onClick={() => {
+              const from = parseInt(rangeFrom, 10);
+              const to = parseInt(rangeTo, 10);
+              if (!Number.isFinite(from) || !Number.isFinite(to)) return;
+              const rows = expandScriptureChapterRange(book, from, to);
+              if (rows.length) onAddPassages(rows as ScriptureAppearance[]);
+            }}
+          >
+            Add range
+          </Button>
+        </div>
+        <p className="mt-1 text-[10px] text-muted-foreground">
+          Chapters are capped to the known chapter count for that book in Kairos. Reversed from/to is OK.
+        </p>
+      </div>
     </div>
   );
 }
@@ -65,6 +115,7 @@ export function LoreCardRowForm({ onAdd }: { onAdd: (c: LoreCard) => void }) {
   const [kind, setKind] = useState<LoreCard["kind"]>("event");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
+  const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   return (
     <div className="mt-2 space-y-2 rounded border border-dashed border-border p-2">
       <div className="flex flex-wrap gap-2">
@@ -77,15 +128,46 @@ export function LoreCardRowForm({ onAdd }: { onAdd: (c: LoreCard) => void }) {
         <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" className="h-9 flex-1 text-xs" />
       </div>
       <textarea className="apple-field min-h-[60px] text-xs" value={body} onChange={(e) => setBody(e.target.value)} placeholder="Description…" />
+      <div>
+        <label className="mb-1 block text-[10px] font-medium text-muted-foreground">Optional image</label>
+        <div className="flex flex-wrap items-center gap-2">
+          {imageDataUrl ? (
+            <img src={imageDataUrl} alt="" className="h-14 w-14 rounded border border-border object-cover" />
+          ) : null}
+          <input
+            type="file"
+            accept="image/*"
+            className="max-w-[min(100%,220px)] text-[11px] text-muted-foreground file:mr-2 file:rounded file:border file:border-border file:bg-muted file:px-2 file:py-1"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              const fr = new FileReader();
+              fr.onload = () => setImageDataUrl(typeof fr.result === "string" ? fr.result : null);
+              fr.readAsDataURL(file);
+            }}
+          />
+          {imageDataUrl ? (
+            <Button type="button" size="sm" variant="outline" className="h-8 text-xs" onClick={() => setImageDataUrl(null)}>
+              Clear image
+            </Button>
+          ) : null}
+        </div>
+      </div>
       <Button
         type="button"
         size="sm"
         variant="secondary"
         disabled={!title.trim()}
         onClick={() => {
-          onAdd({ kind, title: title.trim(), body: body.trim() || " " });
+          onAdd({
+            kind,
+            title: title.trim(),
+            body: body.trim() || " ",
+            imageDataUrl: imageDataUrl ?? undefined,
+          });
           setTitle("");
           setBody("");
+          setImageDataUrl(null);
         }}
       >
         Add lore card
@@ -352,10 +434,14 @@ export function TimelineEditPersonForm({
           )}
         </div>
         <ScriptureAppearanceRowForm
-          onAdd={(row) =>
+          onAddPassages={(rows) =>
             setScriptureAppearances((a) => {
-              if (a.some((x) => x.book === row.book && x.chapter === row.chapter)) return a;
-              return [...a, row];
+              let next = [...a];
+              for (const row of rows) {
+                if (next.some((x) => x.book === row.book && x.chapter === row.chapter)) continue;
+                next.push(row);
+              }
+              return next;
             })
           }
         />
@@ -393,17 +479,85 @@ export function TimelineEditPersonForm({
 
       <div className="border-t border-border pt-4">
         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Lore cards</p>
-        <div className="max-h-48 space-y-2 overflow-y-auto">
+        <p className="mb-2 text-[11px] text-muted-foreground">Edit fields inline; use Replace image or Clear to change the card photo.</p>
+        <div className="max-h-[min(70vh,28rem)] space-y-3 overflow-y-auto pr-1">
           {loreCards.map((c, i) => (
-            <div key={`lc-${i}`} className="rounded border border-border bg-muted/20 p-2 text-xs">
-              <div className="flex items-center justify-between gap-2">
-                <span className="font-medium capitalize">{c.kind}</span>
-                <button type="button" className="text-destructive" onClick={() => setLoreCards((a) => a.filter((_, j) => j !== i))}>
-                  Remove
+            <div key={`lc-${i}`} className="rounded border border-border bg-muted/20 p-3 text-xs">
+              <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                <select
+                  value={c.kind}
+                  onChange={(e) =>
+                    setLoreCards((a) =>
+                      a.map((x, j) => (j === i ? { ...x, kind: e.target.value as LoreCard["kind"] } : x)),
+                    )
+                  }
+                  className="apple-field h-9 max-w-[10rem] text-xs"
+                >
+                  <option value="item">Item</option>
+                  <option value="clothing">Clothing</option>
+                  <option value="place">Place</option>
+                  <option value="event">Event</option>
+                </select>
+                <button type="button" className="text-destructive hover:underline" onClick={() => setLoreCards((a) => a.filter((_, j) => j !== i))}>
+                  Remove card
                 </button>
               </div>
-              <p className="mt-1 font-semibold text-foreground">{c.title}</p>
-              <p className="mt-0.5 text-muted-foreground">{c.body}</p>
+              <Input
+                value={c.title}
+                onChange={(e) =>
+                  setLoreCards((a) => a.map((x, j) => (j === i ? { ...x, title: e.target.value } : x)))
+                }
+                placeholder="Title"
+                className="mb-2 h-9 text-xs"
+              />
+              <textarea
+                className="apple-field mb-2 min-h-[72px] text-xs"
+                value={c.body}
+                onChange={(e) =>
+                  setLoreCards((a) => a.map((x, j) => (j === i ? { ...x, body: e.target.value } : x)))
+                }
+                placeholder="Description…"
+              />
+              <div className="flex flex-wrap items-center gap-2">
+                {c.imageDataUrl ? (
+                  <img src={c.imageDataUrl} alt="" className="h-14 w-14 shrink-0 rounded-full border border-border object-cover" />
+                ) : (
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-dashed border-border bg-background text-[10px] text-muted-foreground">
+                    No image
+                  </div>
+                )}
+                <label className="cursor-pointer text-[11px] font-medium text-primary hover:underline">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="sr-only"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      e.target.value = "";
+                      if (!file) return;
+                      const fr = new FileReader();
+                      fr.onload = () => {
+                        const url = typeof fr.result === "string" ? fr.result : null;
+                        if (url)
+                          setLoreCards((a) => a.map((x, j) => (j === i ? { ...x, imageDataUrl: url } : x)));
+                      };
+                      fr.readAsDataURL(file);
+                    }}
+                  />
+                  Replace image
+                </label>
+                {c.imageDataUrl ? (
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    className="h-8 text-xs"
+                    onClick={() => setLoreCards((a) => a.map((x, j) => (j === i ? { ...x, imageDataUrl: undefined } : x)))}
+                  >
+                    Clear image
+                  </Button>
+                ) : null}
+              </div>
             </div>
           ))}
         </div>
@@ -413,7 +567,8 @@ export function TimelineEditPersonForm({
       <div className="border-t border-border pt-4">
         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Family links</p>
         <p className="mb-2 text-[11px] text-muted-foreground">
-          Used for the <span className="font-medium">Family tree</span> on the lore page (parents above you, children below, spouses beside).
+          Used for the <span className="font-medium">Family tree</span> on the lore page: parents and partners side by side, then you, extended
+          kin, and children rows.
         </p>
         <div className="max-h-32 space-y-1 overflow-y-auto rounded border border-border p-2">
           {familyLinks.length === 0 ? (
@@ -422,7 +577,7 @@ export function TimelineEditPersonForm({
             familyLinks.map((l, i) => (
               <div key={`${l.personEventId}-${i}`} className="flex items-center justify-between gap-2 text-xs">
                 <span className="min-w-0 truncate">
-                  <span className="font-medium capitalize">{l.relation}</span>
+                  <span className="font-medium">{FAMILY_RELATION_LABEL[l.relation] ?? l.relation}</span>
                   {" → "}
                   {peopleOptions.find((o) => o.eventId === l.personEventId)?.label ?? l.personEventId}
                 </span>
@@ -439,13 +594,13 @@ export function TimelineEditPersonForm({
             <select
               value={familyRelation}
               onChange={(e) => setFamilyRelation(e.target.value as FamilyLinkRelation)}
-              className="apple-field h-9 text-xs"
+              className="apple-field h-9 max-w-[11rem] text-xs"
             >
-              <option value="parent">Parent</option>
-              <option value="child">Child</option>
-              <option value="spouse">Spouse</option>
-              <option value="sibling">Sibling</option>
-              <option value="other">Other</option>
+              {FAMILY_LINK_RELATION_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
             </select>
           </div>
           <div className="min-w-[12rem] flex-1">

@@ -1,9 +1,10 @@
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import { ScriptureCrossLinksBlock } from "@/components/scripture/ScriptureCrossLinksBlock";
 import { ALL_BIBLE_BOOKS } from "@/lib/bibleCanon";
 import type { PlaceRecord } from "@/lib/places";
-import { normalizeScriptureAppearances, toYearLabel } from "@/lib/timelinePeople";
+import { groupScriptureAppearancesForDisplay, normalizeScriptureAppearances, toYearLabel } from "@/lib/timelinePeople";
 import type { TimelineEvent } from "@/types";
 
 const ACCENT = "#0f766e";
@@ -19,6 +20,7 @@ export function PlaceLorePanel({
   className?: string;
 }) {
   const appearances = normalizeScriptureAppearances(place.scriptureAppearances ?? []);
+  const footprintDisplay = useMemo(() => groupScriptureAppearancesForDisplay(appearances), [appearances]);
   const uniqueBooks = [...new Set(appearances.map((a) => a.book).filter(Boolean))] as string[];
   uniqueBooks.sort((a, b) => {
     const ia = ALL_BIBLE_BOOKS.indexOf(a);
@@ -48,27 +50,14 @@ export function PlaceLorePanel({
 
       <div className="w-full px-4 py-8 sm:px-10 lg:px-16 xl:px-20">
         <div className="mx-auto flex w-full max-w-none flex-col gap-10 xl:grid xl:grid-cols-12 xl:items-start xl:gap-12">
-          <div className="space-y-4 xl:col-span-4">
-            <div className="overflow-hidden rounded-xl border border-teal-900/15 bg-black shadow-lg xl:sticky xl:top-4">
+          <div className="min-w-0 space-y-8 text-[15px] leading-relaxed xl:col-span-7">
+            <div className="overflow-hidden rounded-xl border border-teal-900/15 bg-black shadow-lg">
               {place.imageDataUrl ? (
                 <img src={place.imageDataUrl} alt="" className="aspect-[4/3] w-full max-h-[min(72vh,920px)] object-cover object-center xl:max-h-none" />
               ) : (
                 <div className="flex aspect-[4/3] min-h-[220px] w-full items-center justify-center bg-neutral-900 text-6xl text-white/80">📍</div>
               )}
             </div>
-          </div>
-
-          <div className="min-w-0 space-y-8 text-[15px] leading-relaxed xl:col-span-8">
-            {place.description ? (
-              <section>
-                <h3 className="mb-2 border-b border-teal-900/20 pb-1 text-lg font-semibold" style={{ color: ACCENT }}>
-                  About
-                </h3>
-                <p className="text-justify text-neutral-800">{place.description}</p>
-              </section>
-            ) : (
-              <p className="text-sm italic text-neutral-500">No description yet — use Edit to add one.</p>
-            )}
 
             {appearances.length > 0 ? (
               <section>
@@ -80,18 +69,16 @@ export function PlaceLorePanel({
                     <thead>
                       <tr className="bg-neutral-200/80">
                         <th className="p-2 font-semibold">Book</th>
-                        <th className="p-2 font-semibold">Chapter</th>
+                        <th className="p-2 font-semibold">Chapter(s)</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {[...appearances]
-                        .sort((a, b) => a.book.localeCompare(b.book) || a.chapter - b.chapter)
-                        .map((r, i) => (
-                          <tr key={`${r.book}-${r.chapter}-${i}`} className={i % 2 ? "bg-teal-50/50" : "bg-white"}>
-                            <td className="p-2">{r.book}</td>
-                            <td className="p-2">{r.chapter}</td>
-                          </tr>
-                        ))}
+                      {footprintDisplay.map((r, i) => (
+                        <tr key={`${r.book}-${r.chapterDisplay}-${i}`} className={i % 2 ? "bg-teal-50/50" : "bg-white"}>
+                          <td className="p-2">{r.book}</td>
+                          <td className="p-2 tabular-nums">{r.chapterDisplay}</td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -141,6 +128,19 @@ export function PlaceLorePanel({
                 </ul>
               )}
             </section>
+          </div>
+
+          <div className="min-w-0 space-y-8 text-[15px] leading-relaxed xl:col-span-5">
+            {place.description ? (
+              <section>
+                <h3 className="mb-2 border-b border-teal-900/20 pb-1 text-lg font-semibold" style={{ color: ACCENT }}>
+                  About
+                </h3>
+                <p className="text-justify text-neutral-800">{place.description}</p>
+              </section>
+            ) : (
+              <p className="text-sm italic text-neutral-500">No description yet — use Edit to add one.</p>
+            )}
           </div>
         </div>
       </div>
