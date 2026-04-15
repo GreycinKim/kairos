@@ -14,6 +14,7 @@ Monorepo layout: **`frontend/`** (Vite SPA), **`backend/`** (FastAPI + Postgres)
 
 **Notes**
 
+- **Python version:** Render defaults new services to **3.14**. This repo pins **3.12** (`render.yaml` → `PYTHON_VERSION`, repo-root `.python-version`) so packages like `pydantic-core` install from **wheels** instead of compiling with Rust.
 - The first request after idle can be slow on the **Starter** web plan (cold start).
 - `DATABASE_URL` from Render is normalized in `backend/app/config.py` for **asyncpg**; if `SYNC_DATABASE_URL` still pointed at localhost, it is derived from `DATABASE_URL` for Alembic.
 - Migrations run at **process start** (`alembic upgrade head && uvicorn …`) because Render **free** web services do not support `preDeployCommand`. On a paid tier you can switch to `preDeployCommand` for migrations-only-on-deploy.

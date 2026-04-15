@@ -18,6 +18,9 @@ services:
     startCommand: alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/health
     envVars:
+      # Default Render Python is 3.14; pydantic-core then builds from source (Rust) and fails on read-only Cargo paths.
+      - key: PYTHON_VERSION
+        value: 3.12.11
       - key: DATABASE_URL
         fromDatabase:
           name: kairos-db
