@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,7 @@ export type PersonTimelineSavePatch = {
   end_year: number | null;
   title: string;
 };
+import { compressImageFileToDataUrlPreferSmall } from "@/lib/imageDataUrlCompress";
 import { clampAtlasCoord } from "@/lib/mapAtlasOverlays";
 import {
   FAMILY_LINK_RELATION_OPTIONS,
@@ -141,9 +142,11 @@ export function LoreCardRowForm({ onAdd }: { onAdd: (c: LoreCard) => void }) {
             onChange={(e) => {
               const file = e.target.files?.[0];
               if (!file) return;
-              const fr = new FileReader();
-              fr.onload = () => setImageDataUrl(typeof fr.result === "string" ? fr.result : null);
-              fr.readAsDataURL(file);
+              void (async () => {
+                const url = await compressImageFileToDataUrlPreferSmall(file);
+                if (url) setImageDataUrl(url);
+                else window.alert("Could not read that image.");
+              })();
             }}
           />
           {imageDataUrl ? (
@@ -199,6 +202,84 @@ export function LoreCalloutRowForm({ onAdd }: { onAdd: (c: LoreCallout) => void 
     </div>
   );
 }
+
+type LoreCardEditorRowProps = {
+  index: number;
+  card: LoreCard;
+  updateLoreCard: (index: number, partial: Partial<LoreCard>) => void;
+  removeLoreCard: (index: number) => void;
+};
+
+const LoreCardEditorRow = memo(function LoreCardEditorRow({
+  index,
+  card,
+  updateLoreCard,
+  removeLoreCard,
+}: LoreCardEditorRowProps) {
+  return (
+    <div className="rounded border border-border bg-muted/20 p-3 text-xs">
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+        <select
+          value={card.kind}
+          onChange={(e) => updateLoreCard(index, { kind: e.target.value as LoreCard["kind"] })}
+          className="apple-field h-9 max-w-[10rem] text-xs"
+        >
+          <option value="item">Item</option>
+          <option value="clothing">Clothing</option>
+          <option value="place">Place</option>
+          <option value="event">Event</option>
+        </select>
+        <button type="button" className="text-destructive hover:underline" onClick={() => removeLoreCard(index)}>
+          Remove card
+        </button>
+      </div>
+      <Input
+        value={card.title}
+        onChange={(e) => updateLoreCard(index, { title: e.target.value })}
+        placeholder="Title"
+        className="mb-2 h-9 text-xs"
+      />
+      <textarea
+        className="apple-field mb-2 min-h-[72px] text-xs"
+        value={card.body}
+        onChange={(e) => updateLoreCard(index, { body: e.target.value })}
+        placeholder="Description…"
+      />
+      <div className="flex flex-wrap items-center gap-2">
+        {card.imageDataUrl ? (
+          <img src={card.imageDataUrl} alt="" className="h-14 w-14 shrink-0 rounded-full border border-border object-cover" />
+        ) : (
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-dashed border-border bg-background text-[10px] text-muted-foreground">
+            No image
+          </div>
+        )}
+        <label className="cursor-pointer text-[11px] font-medium text-primary hover:underline">
+          <input
+            type="file"
+            accept="image/*"
+            className="sr-only"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              e.target.value = "";
+              if (!file) return;
+              void (async () => {
+                const url = await compressImageFileToDataUrlPreferSmall(file);
+                if (url) updateLoreCard(index, { imageDataUrl: url });
+                else window.alert("Could not read that image.");
+              })();
+            }}
+          />
+          Replace image
+        </label>
+        {card.imageDataUrl ? (
+          <Button type="button" size="sm" variant="outline" className="h-8 text-xs" onClick={() => updateLoreCard(index, { imageDataUrl: undefined })}>
+            Clear image
+          </Button>
+        ) : null}
+      </div>
+    </div>
+  );
+});
 
 export function TimelineEditPersonForm({
   person,
@@ -265,6 +346,13 @@ export function TimelineEditPersonForm({
       setAtlasNy("0.5");
     }
   }, [person]);
+
+  const updateLoreCard = useCallback((i: number, partial: Partial<LoreCard>) => {
+    setLoreCards((a) => a.map((x, j) => (j === i ? { ...x, ...partial } : x)));
+  }, []);
+  const removeLoreCard = useCallback((i: number) => {
+    setLoreCards((a) => a.filter((_, j) => j !== i));
+  }, []);
 
   return (
     <form
@@ -397,9 +485,11 @@ export function TimelineEditPersonForm({
             onChange={(e) => {
               const file = e.target.files?.[0];
               if (!file) return;
-              const fr = new FileReader();
-              fr.onload = () => setImageDataUrl(typeof fr.result === "string" ? fr.result : null);
-              fr.readAsDataURL(file);
+              void (async () => {
+                const url = await compressImageFileToDataUrlPreferSmall(file);
+                if (url) setImageDataUrl(url);
+                else window.alert("Could not read that image.");
+              })();
             }}
           />
           {imageDataUrl ? (
@@ -482,83 +572,13 @@ export function TimelineEditPersonForm({
         <p className="mb-2 text-[11px] text-muted-foreground">Edit fields inline; use Replace image or Clear to change the card photo.</p>
         <div className="max-h-[min(70vh,28rem)] space-y-3 overflow-y-auto pr-1">
           {loreCards.map((c, i) => (
-            <div key={`lc-${i}`} className="rounded border border-border bg-muted/20 p-3 text-xs">
-              <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-                <select
-                  value={c.kind}
-                  onChange={(e) =>
-                    setLoreCards((a) =>
-                      a.map((x, j) => (j === i ? { ...x, kind: e.target.value as LoreCard["kind"] } : x)),
-                    )
-                  }
-                  className="apple-field h-9 max-w-[10rem] text-xs"
-                >
-                  <option value="item">Item</option>
-                  <option value="clothing">Clothing</option>
-                  <option value="place">Place</option>
-                  <option value="event">Event</option>
-                </select>
-                <button type="button" className="text-destructive hover:underline" onClick={() => setLoreCards((a) => a.filter((_, j) => j !== i))}>
-                  Remove card
-                </button>
-              </div>
-              <Input
-                value={c.title}
-                onChange={(e) =>
-                  setLoreCards((a) => a.map((x, j) => (j === i ? { ...x, title: e.target.value } : x)))
-                }
-                placeholder="Title"
-                className="mb-2 h-9 text-xs"
-              />
-              <textarea
-                className="apple-field mb-2 min-h-[72px] text-xs"
-                value={c.body}
-                onChange={(e) =>
-                  setLoreCards((a) => a.map((x, j) => (j === i ? { ...x, body: e.target.value } : x)))
-                }
-                placeholder="Description…"
-              />
-              <div className="flex flex-wrap items-center gap-2">
-                {c.imageDataUrl ? (
-                  <img src={c.imageDataUrl} alt="" className="h-14 w-14 shrink-0 rounded-full border border-border object-cover" />
-                ) : (
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-dashed border-border bg-background text-[10px] text-muted-foreground">
-                    No image
-                  </div>
-                )}
-                <label className="cursor-pointer text-[11px] font-medium text-primary hover:underline">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="sr-only"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      e.target.value = "";
-                      if (!file) return;
-                      const fr = new FileReader();
-                      fr.onload = () => {
-                        const url = typeof fr.result === "string" ? fr.result : null;
-                        if (url)
-                          setLoreCards((a) => a.map((x, j) => (j === i ? { ...x, imageDataUrl: url } : x)));
-                      };
-                      fr.readAsDataURL(file);
-                    }}
-                  />
-                  Replace image
-                </label>
-                {c.imageDataUrl ? (
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="outline"
-                    className="h-8 text-xs"
-                    onClick={() => setLoreCards((a) => a.map((x, j) => (j === i ? { ...x, imageDataUrl: undefined } : x)))}
-                  >
-                    Clear image
-                  </Button>
-                ) : null}
-              </div>
-            </div>
+            <LoreCardEditorRow
+              key={`lc-${i}`}
+              index={i}
+              card={c}
+              updateLoreCard={updateLoreCard}
+              removeLoreCard={removeLoreCard}
+            />
           ))}
         </div>
         <LoreCardRowForm onAdd={(c) => setLoreCards((a) => [...a, c])} />
@@ -775,9 +795,11 @@ export function TimelineAddPersonForm({
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (!file) return;
-            const fr = new FileReader();
-            fr.onload = () => setImageDataUrl(typeof fr.result === "string" ? fr.result : null);
-            fr.readAsDataURL(file);
+            void (async () => {
+              const url = await compressImageFileToDataUrlPreferSmall(file);
+              if (url) setImageDataUrl(url);
+              else window.alert("Could not read that image.");
+            })();
           }}
         />
       </div>

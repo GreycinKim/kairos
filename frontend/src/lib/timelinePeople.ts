@@ -277,11 +277,13 @@ export function loadPeopleProfiles(): Record<string, PersonProfile> {
   }
 }
 
-export function savePeopleProfiles(data: Record<string, PersonProfile>) {
+/** Persists profiles to localStorage. Returns false if quota is exceeded or storage throws. */
+export function savePeopleProfiles(data: Record<string, PersonProfile>): boolean {
   try {
     window.localStorage.setItem(LS_KEY, JSON.stringify(data));
+    return true;
   } catch {
-    /* ignore */
+    return false;
   }
 }
 

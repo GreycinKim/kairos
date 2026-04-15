@@ -15,7 +15,13 @@ export function TimelineEditPersonPage() {
   const { eventId } = useParams<{ eventId: string }>();
   const navigate = useNavigate();
   const events = useTimelineStore((s) => s.events);
+  const loading = useTimelineStore((s) => s.loading);
+  const eventsHydrated = useTimelineStore((s) => s.eventsHydrated);
   const fetchEvents = useTimelineStore((s) => s.fetchEvents);
+
+  useEffect(() => {
+    void fetchEvents();
+  }, [fetchEvents]);
 
   const [profiles, setProfiles] = useState<Record<string, PersonProfile>>(() =>
     typeof window !== "undefined" ? loadPeopleProfiles() : {},
@@ -55,13 +61,22 @@ export function TimelineEditPersonPage() {
     return { event: ev, profile };
   }, [eventId, events, profiles]);
 
-  const mergeProfile = (id: string, patch: Partial<PersonProfile>) => {
+  const mergeProfile = (id: string, patch: Partial<PersonProfile>): boolean => {
+    let ok = true;
     setProfiles((prev) => {
       const existing = prev[id] ?? { eventId: id, name: patch.name ?? "Unknown", scope: "bible" as const };
       const next = { ...prev, [id]: { ...existing, ...patch } };
-      savePeopleProfiles(next);
+      ok = savePeopleProfiles(next);
+      if (!ok) {
+        queueMicrotask(() =>
+          window.alert(
+            "Could not save this profile in browser storage (storage may be full). Remove or replace large images, then try Save again.",
+          ),
+        );
+      }
       return next;
     });
+    return ok;
   };
 
   if (!eventId) {
@@ -76,9 +91,16 @@ export function TimelineEditPersonPage() {
   }
 
   if (!person) {
+    if (!eventsHydrated || loading) {
+      return (
+        <div className="p-8">
+          <p className="text-sm text-muted-foreground">Loading timeline…</p>
+        </div>
+      );
+    }
     return (
       <div className="p-8">
-        <p className="text-sm text-muted-foreground">Person not found or still loading.</p>
+        <p className="text-sm text-muted-foreground">Person not found.</p>
         <Button type="button" variant="link" className="mt-2 px-0" asChild>
           <Link to="/people">Back to people</Link>
         </Button>
@@ -110,7 +132,7 @@ export function TimelineEditPersonPage() {
               window.alert(msg);
               return;
             }
-            mergeProfile(id, patch);
+            if (!mergeProfile(id, patch)) return;
             await fetchEvents();
             navigate(`/timeline/person/${id}`);
           }}

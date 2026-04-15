@@ -12,10 +12,16 @@ export function TimelineNewPersonPage() {
   const navigate = useNavigate();
   const fetchEvents = useTimelineStore((s) => s.fetchEvents);
 
-  const mergeProfile = (eventId: string, patch: Partial<PersonProfile>) => {
+  const mergeProfile = (eventId: string, patch: Partial<PersonProfile>): boolean => {
     const prev = loadPeopleProfiles();
     const existing = prev[eventId] ?? { eventId, name: patch.name ?? "Unknown", scope: "bible" as const };
-    savePeopleProfiles({ ...prev, [eventId]: { ...existing, ...patch } });
+    const ok = savePeopleProfiles({ ...prev, [eventId]: { ...existing, ...patch } });
+    if (!ok) {
+      window.alert(
+        "Could not save this profile in browser storage (storage may be full). Remove or replace large images, then try again.",
+      );
+    }
+    return ok;
   };
 
   return (
@@ -32,7 +38,7 @@ export function TimelineNewPersonPage() {
         <TimelineAddPersonForm
           onCancel={() => navigate("/people")}
           onCreated={async (event: TimelineEvent, profile: Partial<PersonProfile>) => {
-            mergeProfile(event.id, profile);
+            if (!mergeProfile(event.id, profile)) return;
             await fetchEvents();
             navigate(`/timeline/person/${event.id}`);
           }}

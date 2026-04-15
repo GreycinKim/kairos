@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { PersonLorePanel } from "@/components/timeline/PersonLorePanel";
@@ -10,6 +10,13 @@ import { useTimelineStore } from "@/store/timelineStore";
 export function TimelinePersonPage() {
   const { eventId } = useParams<{ eventId: string }>();
   const events = useTimelineStore((s) => s.events);
+  const loading = useTimelineStore((s) => s.loading);
+  const eventsHydrated = useTimelineStore((s) => s.eventsHydrated);
+  const fetchEvents = useTimelineStore((s) => s.fetchEvents);
+
+  useEffect(() => {
+    void fetchEvents();
+  }, [fetchEvents]);
 
   const data = useMemo(() => {
     if (!eventId) return null;
@@ -38,6 +45,13 @@ export function TimelinePersonPage() {
   }
 
   if (!data) {
+    if (!eventsHydrated || loading) {
+      return (
+        <div className="p-8">
+          <p className="text-sm text-muted-foreground">Loading timeline…</p>
+        </div>
+      );
+    }
     return (
       <div className="p-8">
         <p className="text-sm text-muted-foreground">Person not found.</p>

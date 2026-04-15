@@ -78,7 +78,13 @@ export function TimelineEventPage() {
       setProfiles((prev) => {
         const existing = prev[id] ?? { eventId: id, name: ev.title, scope: "bible" as const };
         const next = { ...prev, [id]: { ...existing, imageDataUrl: dataUrl ?? undefined } };
-        savePeopleProfiles(next);
+        if (!savePeopleProfiles(next)) {
+          queueMicrotask(() =>
+            window.alert(
+              "Could not save the photo in browser storage (it may be full). Use a smaller image or clear space and try again.",
+            ),
+          );
+        }
         return next;
       });
       setEventDisplay((prev) => {
@@ -110,7 +116,11 @@ export function TimelineEventPage() {
           next[k] = { ...cur, relatedEventIds: rel.filter((x) => x !== id) };
         }
       }
-      savePeopleProfiles(next);
+      if (!savePeopleProfiles(next)) {
+        queueMicrotask(() =>
+          window.alert("Could not update stored profiles after deleting this event (browser storage may be full)."),
+        );
+      }
       return next;
     });
     setEventDisplay((prev) => {

@@ -38,6 +38,8 @@ export type LayerKey = "showBible" | "showWorld" | "showPersonal";
 interface TimelineState {
   events: TimelineEvent[];
   loading: boolean;
+  /** Set true after the first `fetchEvents` attempt finishes (success or error). */
+  eventsHydrated: boolean;
   error: string | null;
   zoom: ZoomLevel;
   pxPerYear: number;
@@ -61,6 +63,7 @@ interface TimelineState {
 export const useTimelineStore = create<TimelineState>((set, get) => ({
   events: [],
   loading: false,
+  eventsHydrated: false,
   error: null,
   zoom: "century",
   pxPerYear: ZOOM_PX.century,
@@ -73,10 +76,11 @@ export const useTimelineStore = create<TimelineState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const { data } = await api.get<TimelineEvent[]>("/timeline/events");
-      set({ events: data, loading: false });
+      set({ events: data, loading: false, eventsHydrated: true });
     } catch (e) {
       set({
         loading: false,
+        eventsHydrated: true,
         error: e instanceof Error ? e.message : "Failed to load timeline",
       });
     }
