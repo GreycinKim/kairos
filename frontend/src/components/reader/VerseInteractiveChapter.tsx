@@ -55,6 +55,14 @@ function hasFlowMapInfo(row: FlowMapVerseRollup | undefined): boolean {
   return row.in_maps.length > 0 || row.leads_to.length > 0 || row.led_from.length > 0;
 }
 
+function flowHoverLabel(row: FlowMapVerseRollup): string {
+  const to = row.leads_to.slice(0, 3).map((x) => x.ref_label);
+  const from = row.led_from.slice(0, 3).map((x) => x.ref_label);
+  const toText = to.length ? `Leads to: ${to.join(", ")}` : "Leads to: none";
+  const fromText = from.length ? `Led from: ${from.join(", ")}` : "Led from: none";
+  return `${toText}\n${fromText}`;
+}
+
 function selectionOffsetsIn(container: HTMLElement | null): { start: number; end: number; text: string } | null {
   if (!container) return null;
   const sel = window.getSelection();
@@ -437,18 +445,26 @@ export function VerseInteractiveChapter({
               <div className="flex w-7 shrink-0 flex-col items-end gap-0.5 pt-0.5">
                 <span className="text-right text-xs font-medium text-neutral-400">{row.verse}</span>
                 {hasFlowInfo && fm && onToggleSermonMapForVerse ? (
-                  <button
-                    type="button"
-                    className="inline-flex rounded p-0.5 text-amber-800/80 hover:bg-amber-100"
-                    aria-label="Toggle sermon map panel for this verse"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      onToggleSermonMapForVerse(row.verse, fm);
-                    }}
-                  >
-                    <GitBranch className="h-3.5 w-3.5 shrink-0" aria-hidden />
-                  </button>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      className="inline-flex rounded p-0.5 text-amber-800/80 hover:bg-amber-100"
+                      aria-label="Toggle sermon map panel for this verse"
+                      title={flowHoverLabel(fm)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onToggleSermonMapForVerse(row.verse, fm);
+                      }}
+                    >
+                      <GitBranch className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                    </button>
+                    <div className="pointer-events-none absolute left-6 top-0 z-20 hidden w-56 rounded-md border border-amber-200 bg-white px-2 py-1.5 text-[10px] text-neutral-700 shadow-md group-hover:block">
+                      <p className="font-semibold text-neutral-900">Verse flow</p>
+                      <p className="mt-0.5 truncate">To: {fm.leads_to.length ? fm.leads_to.map((x) => x.ref_label).join(", ") : "none"}</p>
+                      <p className="truncate">From: {fm.led_from.length ? fm.led_from.map((x) => x.ref_label).join(", ") : "none"}</p>
+                    </div>
+                  </div>
                 ) : null}
               </div>
               <div className="min-w-0 flex-1">

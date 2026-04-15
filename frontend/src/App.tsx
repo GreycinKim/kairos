@@ -13,6 +13,7 @@ import { BibleMapPage } from "@/pages/BibleMapPage";
 import { FeastsOfferingsStudyPage } from "@/pages/FeastsOfferingsStudyPage";
 import { FourGospelsStudyPage } from "@/pages/FourGospelsStudyPage";
 import { ParallelGospelsPage } from "@/pages/ParallelGospelsPage";
+import { RoyalBurialsPage } from "@/pages/RoyalBurialsPage";
 import { ScriptureFlowStudioPage } from "@/pages/ScriptureFlowStudioPage";
 import { SearchPage } from "@/pages/SearchPage";
 import { TimelineImportPage } from "@/pages/timeline/TimelineImportPage";
@@ -112,6 +113,7 @@ function AppShell() {
           <Route path="/prayer" element={<PrayerPage />} />
           <Route path="/notes/gospels-guide" element={<FourGospelsStudyPage />} />
           <Route path="/notes/feasts-offerings-guide" element={<FeastsOfferingsStudyPage />} />
+          <Route path="/notes/royal-burials" element={<RoyalBurialsPage />} />
           <Route path="/reader/parallel-gospels" element={<ParallelGospelsPage />} />
           <Route path="/themes" element={<Navigate to="/timeline" replace />} />
           <Route path="/notes" element={<NotesPage />} />

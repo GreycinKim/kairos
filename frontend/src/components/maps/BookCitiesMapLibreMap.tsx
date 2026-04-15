@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Layer, Map as MapLibreMap, NavigationControl, Popup, Source } from "react-map-gl/maplibre";
+import { Layer, Map as MapLibreMap, Marker, NavigationControl, Source } from "react-map-gl/maplibre";
 import type { MapLayerMouseEvent, MapRef } from "react-map-gl/maplibre";
 import { MapboxOverlay } from "@deck.gl/mapbox";
 import type { Feature, FeatureCollection } from "geojson";
@@ -201,8 +201,7 @@ export function BookCitiesMapLibreMap({
   const mapRef = useRef<MapRef>(null);
   const [mapReady, setMapReady] = useState(false);
   const [arrowImageReady, setArrowImageReady] = useState(false);
-  const [selectedPlace, setSelectedPlace] = useState<BibleMapLocationJson | null>(null);
-  const [profileExpanded, setProfileExpanded] = useState(false);
+  const [openPlaceIds, setOpenPlaceIds] = useState<Set<string>>(new Set());
 
   const placesById = useMemo(() => {
     const m = new Map<string, BibleMapLocationJson>();
@@ -220,7 +219,7 @@ export function BookCitiesMapLibreMap({
 
   const routeEndpointsFc = useMemo(() => routeEndpointsGeoJson(routeLines ?? null), [routeLines]);
 
-  const paulArcList = paulArcs ?? [];
+  const paulArcList = useMemo(() => paulArcs ?? [], [paulArcs]);
 
   const mapStyle = panelTone === "dark" ? BOOK_CITIES_BASEMAP_DARK : BOOK_CITIES_BASEMAP_LIGHT;
 
@@ -304,24 +303,23 @@ export function BookCitiesMapLibreMap({
     };
   }, [mapReady, paulArcList]);
 
-  useEffect(() => {
-    setProfileExpanded(false);
-  }, [selectedPlace?.id]);
-
   const onClick = useCallback(
     (e: MapLayerMouseEvent) => {
       const f = e.features?.[0];
       if (!f || f.geometry?.type !== "Point") {
-        setSelectedPlace(null);
         return;
       }
       const id = String((f.properties as { id?: string }).id ?? "");
       const pl = placesById.get(id);
       if (!pl) {
-        setSelectedPlace(null);
         return;
       }
-      setSelectedPlace((prev) => (prev?.id === pl.id ? null : pl));
+      setOpenPlaceIds((prev) => {
+        const next = new Set(prev);
+        if (next.has(pl.id)) next.delete(pl.id);
+        else next.add(pl.id);
+        return next;
+      });
     },
     [placesById],
   );
@@ -341,9 +339,6 @@ export function BookCitiesMapLibreMap({
     { width: 12, opacity: 0.16, blur: 6 },
     { width: 5, opacity: 0.22, blur: 2.5 },
   ];
-
-  const desc = selectedPlace?.description?.trim() ?? "";
-  const descShort = desc.length > 120 ? `${desc.slice(0, 120)}…` : desc;
 
   return (
     <div className={`relative min-h-0 min-w-0 flex-1 ${className}`}>
@@ -484,48 +479,28 @@ export function BookCitiesMapLibreMap({
           />
         </Source>
 
-        {selectedPlace ? (
-          <Popup
-            longitude={selectedPlace.lng}
-            latitude={selectedPlace.lat}
-            anchor="top"
-            offset={10}
-            onClose={() => setSelectedPlace(null)}
-            closeButton
-            closeOnClick={false}
-            maxWidth="280px"
-            className="kairos-book-city-popup"
-            style={{ color: "#171717" }}
-          >
-            {/* MapLibre popup defaults to a light shell; dark panelTone used to set pale text here, which reads as blank. */}
-            <div className="max-w-[260px] space-y-2 rounded-md bg-white px-2 py-2 text-neutral-950 shadow-sm">
-              <div className="flex items-start gap-2">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-lg text-neutral-900">
-                  {placeTypeIcon(selectedPlace.type)}
-                </span>
-                <div className="min-w-0 flex-1 text-neutral-950">
-                  <p className="font-semibold leading-tight text-black">{selectedPlace.name}</p>
-                  {desc ? (
-                    <p className="mt-1 text-[11px] leading-snug text-neutral-800">
-                      {profileExpanded ? desc : descShort}
-                    </p>
-                  ) : (
-                    <p className="mt-1 text-[11px] text-neutral-600">No description in catalog.</p>
-                  )}
-                </div>
-              </div>
-              {desc.length > 120 ? (
-                <button
-                  type="button"
-                  className="text-[11px] font-medium text-amber-900 underline hover:text-amber-950"
-                  onClick={() => setProfileExpanded((v) => !v)}
-                >
-                  {profileExpanded ? "Show less" : "View full profile"}
-                </button>
-              ) : null}
-            </div>
-          </Popup>
-        ) : null}
+        {places
+          .filter((p) => openPlaceIds.has(p.id))
+          .map((p) => (
+            <Marker key={`open-label-${p.id}`} longitude={p.lng} latitude={p.lat} anchor="top" offset={[0, -8]}>
+              <button
+                type="button"
+                className="rounded-md border border-neutral-200 bg-white/95 px-2 py-1 text-[11px] font-medium text-neutral-800 shadow-sm"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setOpenPlaceIds((prev) => {
+                    const next = new Set(prev);
+                    next.delete(p.id);
+                    return next;
+                  });
+                }}
+              >
+                <span className="mr-1">{placeTypeIcon(p.type)}</span>
+                {p.name}
+              </button>
+            </Marker>
+          ))}
       </MapLibreMap>
 
       {paulArcList.length || routeFc ? (

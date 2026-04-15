@@ -102,6 +102,15 @@ export function StudySectionsExplorer() {
                 </Button>
               </div>
             ) : null}
+
+            {topic.id === "conquest-kings-exile-return" ? (
+              <div>
+                <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Deep Study</p>
+                <Button asChild size="sm">
+                  <Link to="/notes/royal-burials">Open "Royal Burials of Ancient Israel"</Link>
+                </Button>
+              </div>
+            ) : null}
           </div>
         </Modal>
       ) : null}
