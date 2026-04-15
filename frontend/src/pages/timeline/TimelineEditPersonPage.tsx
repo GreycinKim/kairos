@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
+import { api } from "@/api/client";
 import { Button } from "@/components/ui/button";
 import { fetchWorkspaceMapCatalog } from "@/lib/workspaceMapCatalogFetch";
 import type { PersonProfile } from "@/lib/timelinePeople";
@@ -8,6 +9,7 @@ import { loadPeopleProfiles, savePeopleProfiles } from "@/lib/timelinePeople";
 import { useTimelineStore } from "@/store/timelineStore";
 
 import { TimelineEditPersonForm } from "./TimelineForms";
+import type { PersonTimelineSavePatch } from "./TimelineForms";
 
 export function TimelineEditPersonPage() {
   const { eventId } = useParams<{ eventId: string }>();
@@ -100,9 +102,16 @@ export function TimelineEditPersonPage() {
           peopleOptions={peopleOptions}
           mapCatalogEntries={mapCatalogEntries}
           onCancel={() => navigate(`/timeline/person/${eventId}`)}
-          onSave={(id, patch) => {
+          onSave={async (id, patch, timeline: PersonTimelineSavePatch) => {
+            try {
+              await api.patch(`/timeline/events/${id}`, timeline);
+            } catch (e) {
+              const msg = e instanceof Error ? e.message : "Could not update timeline";
+              window.alert(msg);
+              return;
+            }
             mergeProfile(id, patch);
-            void fetchEvents();
+            await fetchEvents();
             navigate(`/timeline/person/${id}`);
           }}
         />

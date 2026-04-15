@@ -13,6 +13,13 @@ import type {
   PersonProfile,
   ScriptureAppearance,
 } from "@/lib/timelinePeople";
+
+/** Sent with profile patch so the timeline bar and title stay in sync with the API. */
+export type PersonTimelineSavePatch = {
+  start_year: number | null;
+  end_year: number | null;
+  title: string;
+};
 import { clampAtlasCoord } from "@/lib/mapAtlasOverlays";
 import { normalizeScriptureAppearances, PERSON_FIGURE_KIND_LABELS, PERSON_FIGURE_KINDS } from "@/lib/timelinePeople";
 import type { TimelineEvent, TimelineEventType } from "@/types";
@@ -124,12 +131,14 @@ export function TimelineEditPersonForm({
   /** Workspace atlas plates (id + title) for optional map pin. */
   mapCatalogEntries?: { id: string; title: string }[];
   onCancel: () => void;
-  onSave: (eventId: string, patch: Partial<PersonProfile>) => void;
+  onSave: (eventId: string, patch: Partial<PersonProfile>, timeline: PersonTimelineSavePatch) => void | Promise<void>;
 }) {
   const [name, setName] = useState("");
   const [scope, setScope] = useState<"bible" | "church_history">("bible");
   const [title, setTitle] = useState("");
   const [bio, setBio] = useState("");
+  const [timelineStartYear, setTimelineStartYear] = useState("");
+  const [timelineEndYear, setTimelineEndYear] = useState("");
   const [diedYear, setDiedYear] = useState("");
   const [ruledFrom, setRuledFrom] = useState("");
   const [ruledTo, setRuledTo] = useState("");
@@ -151,6 +160,8 @@ export function TimelineEditPersonForm({
     setScope(person.profile.scope ?? "bible");
     setTitle(person.profile.title ?? "");
     setBio(person.profile.biography ?? "");
+    setTimelineStartYear(person.event.start_year != null ? String(person.event.start_year) : "");
+    setTimelineEndYear(person.event.end_year != null ? String(person.event.end_year) : "");
     setDiedYear(person.profile.diedYear != null ? String(person.profile.diedYear) : "");
     setRuledFrom(person.profile.ruledFromYear != null ? String(person.profile.ruledFromYear) : "");
     setRuledTo(person.profile.ruledToYear != null ? String(person.profile.ruledToYear) : "");
@@ -178,6 +189,13 @@ export function TimelineEditPersonForm({
       className="space-y-4"
       onSubmit={(e) => {
         e.preventDefault();
+        const parseTimelineYear = (s: string): number | null => {
+          const t = s.trim();
+          if (!t) return null;
+          const n = parseInt(t, 10);
+          return Number.isFinite(n) ? n : null;
+        };
+        const timelineTitle = name.trim() || person.event.title;
         onSave(person.event.id, {
           name,
           scope,
@@ -201,6 +219,10 @@ export function TimelineEditPersonForm({
                   ny: clampAtlasCoord(parseFloat(atlasNy) || 0),
                 }
               : undefined,
+        }, {
+          start_year: parseTimelineYear(timelineStartYear),
+          end_year: parseTimelineYear(timelineEndYear),
+          title: timelineTitle,
         });
       }}
     >
@@ -217,9 +239,40 @@ export function TimelineEditPersonForm({
           </select>
         </div>
       </div>
+      <div className="rounded-md border border-border bg-muted/30 p-3">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Timeline bar</p>
+        <p className="mb-3 text-[11px] text-muted-foreground">
+          Start / end year set where this person appears on the main timeline (independent of “Ruled” / “Died” in Quick facts).
+        </p>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="mb-1.5 block text-xs font-medium text-muted-foreground">Started (year)</label>
+            <Input
+              value={timelineStartYear}
+              onChange={(e) => setTimelineStartYear(e.target.value)}
+              placeholder="e.g. -1800 or 5"
+              className="font-mono text-xs"
+              inputMode="numeric"
+            />
+          </div>
+          <div>
+            <label className="mb-1.5 block text-xs font-medium text-muted-foreground">Until (year)</label>
+            <Input
+              value={timelineEndYear}
+              onChange={(e) => setTimelineEndYear(e.target.value)}
+              placeholder="Leave empty for ongoing"
+              className="font-mono text-xs"
+              inputMode="numeric"
+            />
+          </div>
+        </div>
+      </div>
+
       <div>
         <label className="mb-1.5 block text-xs font-medium text-muted-foreground">Figure category</label>
-        <p className="mb-1.5 text-[11px] text-muted-foreground">Sort order on the People tab: King → Prophet → Priest → Disciple → Apostle → Angel → Region.</p>
+        <p className="mb-1.5 text-[11px] text-muted-foreground">
+          Sort order on the People tab: Patriarch → King → Prophet → Priest → Disciple → Apostle → Angel → Region.
+        </p>
         <select value={figureKind} onChange={(e) => setFigureKind(e.target.value as PersonFigureKind)} className="apple-field max-w-md">
           {PERSON_FIGURE_KINDS.map((k) => (
             <option key={k} value={k}>

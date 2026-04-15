@@ -67,7 +67,7 @@ export function TimelinePersonPage() {
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
         <div className="min-h-min w-full border-x border-rose-900/10 bg-[#faf7f2] shadow-sm">
-          <PersonLorePanel event={data.event} profile={data.profile} />
+          <PersonLorePanel event={data.event} profile={data.profile} standalonePage />
         </div>
       </div>
     </div>

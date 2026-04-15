@@ -4,6 +4,7 @@ export type PeopleScope = "bible" | "church_history";
 
 /** Used for People tab ordering and grouping (edit on each person). */
 export type PersonFigureKind =
+  | "patriarch"
   | "king"
   | "prophet"
   | "priest"
@@ -14,6 +15,7 @@ export type PersonFigureKind =
   | "other";
 
 export const PERSON_FIGURE_KINDS: PersonFigureKind[] = [
+  "patriarch",
   "king",
   "prophet",
   "priest",
@@ -25,6 +27,7 @@ export const PERSON_FIGURE_KINDS: PersonFigureKind[] = [
 ];
 
 export const PERSON_FIGURE_KIND_LABELS: Record<PersonFigureKind, string> = {
+  patriarch: "Patriarch",
   king: "King",
   prophet: "Prophet",
   priest: "Priest",
@@ -36,6 +39,7 @@ export const PERSON_FIGURE_KIND_LABELS: Record<PersonFigureKind, string> = {
 };
 
 const FIGURE_ORDER: PersonFigureKind[] = [
+  "patriarch",
   "king",
   "prophet",
   "priest",

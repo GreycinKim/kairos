@@ -36,12 +36,15 @@ export function PersonLorePanel({
   profile,
   onNavigateAway,
   className = "",
+  /** Full-route lore page (`/timeline/person/…`); slightly narrower portrait. Reader modal omits this. */
+  standalonePage = false,
 }: {
   event: TimelineEvent;
   profile: PersonProfile;
   /** Called when following an in-panel navigation link (e.g. modal close). */
   onNavigateAway?: () => void;
   className?: string;
+  standalonePage?: boolean;
 }) {
   const [familyTreeOpen, setFamilyTreeOpen] = useState(false);
   const name = profile.name || event.title;
@@ -102,20 +105,9 @@ export function PersonLorePanel({
       <div className="w-full px-4 py-8 sm:px-10 lg:px-16 xl:px-20">
         <div className="mx-auto flex w-full max-w-none flex-col gap-10 xl:grid xl:grid-cols-12 xl:items-start xl:gap-12">
           <div className="space-y-4 xl:col-span-4">
-            <div className="overflow-hidden rounded-xl border border-rose-900/10 bg-black shadow-lg xl:sticky xl:top-4">
-              {profile.imageDataUrl ? (
-                <img
-                  src={profile.imageDataUrl}
-                  alt=""
-                  className="aspect-[3/4] w-full max-h-[min(72vh,920px)] object-cover object-top sm:aspect-[4/5] xl:max-h-none xl:aspect-[3/4]"
-                />
-              ) : (
-                <div className="flex aspect-[3/4] min-h-[280px] w-full items-center justify-center bg-neutral-900 text-7xl text-white/90 sm:min-h-[360px]">
-                  {event.icon ?? "◆"}
-                </div>
-              )}
+            <div className="text-center xl:text-left">
+              <h2 className="font-serif text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl">{name}</h2>
             </div>
-            <p className="text-center text-sm text-neutral-500 xl:text-left">{name}</p>
 
             {callouts.length ? (
               <div className="space-y-2">
@@ -131,6 +123,34 @@ export function PersonLorePanel({
                 ))}
               </div>
             ) : null}
+
+            <div
+              className={`overflow-hidden rounded-xl border border-rose-900/10 bg-black shadow-lg xl:sticky xl:top-4 ${
+                standalonePage ? "mx-auto w-full max-w-[240px] sm:max-w-[260px] xl:max-w-[280px]" : ""
+              }`}
+            >
+              {profile.imageDataUrl ? (
+                <img
+                  src={profile.imageDataUrl}
+                  alt=""
+                  className={
+                    standalonePage
+                      ? "aspect-[3/4] w-full max-h-[min(52vh,560px)] object-cover object-top sm:aspect-[4/5] xl:max-h-[min(70vh,640px)] xl:aspect-[3/4]"
+                      : "aspect-[3/4] w-full max-h-[min(72vh,920px)] object-cover object-top sm:aspect-[4/5] xl:max-h-none xl:aspect-[3/4]"
+                  }
+                />
+              ) : (
+                <div
+                  className={
+                    standalonePage
+                      ? "flex aspect-[3/4] min-h-[200px] w-full items-center justify-center bg-neutral-900 text-5xl text-white/90 sm:min-h-[240px] sm:text-6xl"
+                      : "flex aspect-[3/4] min-h-[280px] w-full items-center justify-center bg-neutral-900 text-7xl text-white/90 sm:min-h-[360px]"
+                  }
+                >
+                  {event.icon ?? "◆"}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="min-w-0 space-y-8 text-[15px] leading-relaxed xl:col-span-8">
