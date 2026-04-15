@@ -24,10 +24,12 @@ import {
   type PersonProfile,
   type ScriptureAppearance,
 } from "@/lib/timelinePeople";
+import { useWorkspaceRemoteEpoch } from "@/hooks/useWorkspaceRemoteEpoch";
 import { ScriptureAppearanceRowForm } from "@/pages/timeline/TimelineForms";
 import { useTimelineStore } from "@/store/timelineStore";
 
 export function TimelineEventPage() {
+  const workspaceEpoch = useWorkspaceRemoteEpoch();
   const { eventId } = useParams<{ eventId: string }>();
   const navigate = useNavigate();
   const events = useTimelineStore((s) => s.events);
@@ -42,6 +44,12 @@ export function TimelineEventPage() {
   );
   const [eventScripture, setEventScripture] = useState(() => (typeof window !== "undefined" ? loadEventScripture() : {}));
   const [scriptureDraft, setScriptureDraft] = useState<ScriptureAppearance[]>([]);
+
+  useEffect(() => {
+    setProfiles(loadPeopleProfiles());
+    setEventDisplay(loadEventDisplay());
+    setEventScripture(loadEventScripture());
+  }, [workspaceEpoch]);
 
   useEffect(() => {
     savePeopleProfiles(profiles);

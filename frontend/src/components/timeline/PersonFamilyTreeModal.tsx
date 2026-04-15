@@ -1,8 +1,9 @@
-import { Fragment } from "react";
+import { Fragment, useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import { Modal } from "@/components/shared/Modal";
 import type { FamilyLinkRelation, PersonProfile } from "@/lib/timelinePeople";
+import { useWorkspaceRemoteEpoch } from "@/hooks/useWorkspaceRemoteEpoch";
 import { FAMILY_RELATION_LABEL, loadPeopleProfiles } from "@/lib/timelinePeople";
 import type { TimelineEvent } from "@/types";
 import { useTimelineStore } from "@/store/timelineStore";
@@ -81,9 +82,13 @@ export function PersonFamilyTreeModal({
   centerEvent: TimelineEvent;
   centerProfile: PersonProfile;
 }) {
+  const workspaceEpoch = useWorkspaceRemoteEpoch();
   const events = useTimelineStore((s) => s.events);
   const links = centerProfile.familyLinks ?? [];
-  const profiles = typeof window !== "undefined" ? loadPeopleProfiles() : {};
+  const profiles = useMemo(
+    () => (typeof window !== "undefined" ? loadPeopleProfiles() : {}),
+    [workspaceEpoch, open],
+  );
 
   const resolve = (id: string) => {
     const ev = events.find((e) => e.id === id && (e.type === "person" || e.type === "ruler"));

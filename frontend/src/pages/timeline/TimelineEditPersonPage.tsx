@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { api } from "@/api/client";
 import { Button } from "@/components/ui/button";
+import { useWorkspaceRemoteEpoch } from "@/hooks/useWorkspaceRemoteEpoch";
 import { fetchWorkspaceMapCatalog } from "@/lib/workspaceMapCatalogFetch";
 import type { PersonProfile } from "@/lib/timelinePeople";
 import { loadPeopleProfiles, savePeopleProfiles } from "@/lib/timelinePeople";
@@ -12,6 +13,7 @@ import { TimelineEditPersonForm } from "./TimelineForms";
 import type { PersonTimelineSavePatch } from "./TimelineForms";
 
 export function TimelineEditPersonPage() {
+  const workspaceEpoch = useWorkspaceRemoteEpoch();
   const { eventId } = useParams<{ eventId: string }>();
   const navigate = useNavigate();
   const events = useTimelineStore((s) => s.events);
@@ -27,6 +29,10 @@ export function TimelineEditPersonPage() {
     typeof window !== "undefined" ? loadPeopleProfiles() : {},
   );
   const [mapCatalogEntries, setMapCatalogEntries] = useState<{ id: string; title: string }[]>([]);
+
+  useEffect(() => {
+    setProfiles(typeof window !== "undefined" ? loadPeopleProfiles() : {});
+  }, [workspaceEpoch]);
 
   useEffect(() => {
     let cancelled = false;

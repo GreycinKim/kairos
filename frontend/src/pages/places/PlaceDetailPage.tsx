@@ -3,10 +3,12 @@ import { Link, useParams } from "react-router-dom";
 
 import { PlaceLorePanel } from "@/components/places/PlaceLorePanel";
 import { Button } from "@/components/ui/button";
+import { useWorkspaceRemoteEpoch } from "@/hooks/useWorkspaceRemoteEpoch";
 import { loadPlaces, type PlaceRecord } from "@/lib/places";
 import { useTimelineStore } from "@/store/timelineStore";
 
 export function PlaceDetailPage() {
+  const workspaceEpoch = useWorkspaceRemoteEpoch();
   const { placeId } = useParams<{ placeId: string }>();
   const events = useTimelineStore((s) => s.events);
   const fetchEvents = useTimelineStore((s) => s.fetchEvents);
@@ -23,7 +25,7 @@ export function PlaceDetailPage() {
     }
     const all = loadPlaces();
     setPlace(all[placeId] ?? null);
-  }, [placeId]);
+  }, [placeId, workspaceEpoch]);
 
   const relatedEvents = useMemo(() => {
     if (!place?.relatedTimelineEventIds?.length) return [];

@@ -9,10 +9,12 @@ import { TimelineFilters } from "@/components/timeline/TimelineFilters";
 import { TimelineSearchChrome } from "@/components/timeline/TimelineSearchChrome";
 import { ALL_BIBLE_BOOKS } from "@/lib/bibleCanon";
 import { loadEventDisplay } from "@/lib/timelineEventDisplay";
+import { useWorkspaceRemoteEpoch } from "@/hooks/useWorkspaceRemoteEpoch";
 import { loadPeopleProfiles, profileAppearsInAnyBookSet, savePeopleProfiles, type PersonProfile } from "@/lib/timelinePeople";
 import { useTimelineStore } from "@/store/timelineStore";
 
 export function TimelinePage() {
+  const workspaceEpoch = useWorkspaceRemoteEpoch();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const events = useTimelineStore((s) => s.events);
@@ -31,7 +33,7 @@ export function TimelinePage() {
 
   useEffect(() => {
     setProfiles(loadPeopleProfiles());
-  }, [events]);
+  }, [events, workspaceEpoch]);
 
   useEffect(() => {
     if (searchParams.get("tab") === "people") {

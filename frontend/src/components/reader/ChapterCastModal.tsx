@@ -8,6 +8,7 @@ import { loadPlaces } from "@/lib/places";
 import { collectCrossLinksForChapter } from "@/lib/scriptureConnections";
 import { loadPeopleProfiles, type PersonProfile } from "@/lib/timelinePeople";
 import type { TimelineEvent } from "@/types";
+import { useWorkspaceRemoteEpoch } from "@/hooks/useWorkspaceRemoteEpoch";
 import { useTimelineStore } from "@/store/timelineStore";
 
 export function ChapterCastModal({
@@ -23,6 +24,7 @@ export function ChapterCastModal({
   chapter: number;
   onPickPerson: (event: TimelineEvent, profile: PersonProfile) => void;
 }) {
+  const workspaceEpoch = useWorkspaceRemoteEpoch();
   const events = useTimelineStore((s) => s.events);
   const fetchEvents = useTimelineStore((s) => s.fetchEvents);
 
@@ -33,7 +35,7 @@ export function ChapterCastModal({
   const rows = useMemo(() => {
     const profiles = loadPeopleProfiles();
     return listProfilesInChapter(events, profiles, book, chapter);
-  }, [events, book, chapter, open]);
+  }, [events, book, chapter, open, workspaceEpoch]);
 
   const { placeLinks, eventLinks } = useMemo(() => {
     const profiles = loadPeopleProfiles();
@@ -44,7 +46,7 @@ export function ChapterCastModal({
       placeLinks: all.filter((l) => l.kind === "place"),
       eventLinks: all.filter((l) => l.kind === "timeline_event"),
     };
-  }, [events, book, chapter, open]);
+  }, [events, book, chapter, open, workspaceEpoch]);
 
   return (
     <Modal open={open} title={`This chapter — ${book} ${chapter}`} onClose={onClose} wide>

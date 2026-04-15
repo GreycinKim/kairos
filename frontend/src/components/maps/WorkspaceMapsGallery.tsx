@@ -16,6 +16,7 @@ import {
   orderedSectionKeys,
   type WorkspaceMapCatalogEntry,
 } from "@/lib/workspaceMapSections";
+import { useWorkspaceRemoteEpoch } from "@/hooks/useWorkspaceRemoteEpoch";
 import { publicAssetUrl } from "@/lib/publicAssetUrl";
 import clsx from "clsx";
 
@@ -44,6 +45,7 @@ export function WorkspaceMapsGallery({
   matchChapter = 1,
   matchVerse,
 }: WorkspaceMapsGalleryProps) {
+  const workspaceEpoch = useWorkspaceRemoteEpoch();
   const [catalog, setCatalog] = useState<WorkspaceMapCatalog | null>(null);
   const [catalogErr, setCatalogErr] = useState<string | null>(null);
   const [q, setQ] = useState("");
@@ -120,7 +122,7 @@ export function WorkspaceMapsGallery({
       profiles: loadPeopleProfiles(),
       places: loadPlaces(),
     });
-  }, [readerEntry?.id, events]);
+  }, [readerEntry?.id, events, workspaceEpoch]);
 
   const readerAtlasRoutes = useMemo(() => {
     if (!readerEntry) return [];
@@ -129,7 +131,7 @@ export function WorkspaceMapsGallery({
       points: r.points.map((p) => ({ nx: p.nx, ny: p.ny })),
       color: "#ea580c",
     }));
-  }, [readerEntry?.id]);
+  }, [readerEntry?.id, workspaceEpoch]);
 
   const previewAtlasMarkers = useMemo(() => {
     if (!preview) return [];
@@ -138,7 +140,7 @@ export function WorkspaceMapsGallery({
       profiles: loadPeopleProfiles(),
       places: loadPlaces(),
     });
-  }, [preview?.id, events]);
+  }, [preview?.id, events, workspaceEpoch]);
 
   const previewAtlasRoutes = useMemo(() => {
     if (!preview) return [];
@@ -147,7 +149,7 @@ export function WorkspaceMapsGallery({
       points: r.points.map((p) => ({ nx: p.nx, ny: p.ny })),
       color: "#fb923c",
     }));
-  }, [preview?.id]);
+  }, [preview?.id, workspaceEpoch]);
 
   const filtered = useMemo(() => {
     const entries = catalog?.entries ?? [];

@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
+import { useWorkspaceRemoteEpoch } from "@/hooks/useWorkspaceRemoteEpoch";
 import { loadEventScripture } from "@/lib/eventScripture";
 import { loadPlaces } from "@/lib/places";
 import { collectCrossLinksForPassages, type ScriptureCrossLink } from "@/lib/scriptureConnections";
@@ -56,6 +57,7 @@ export function ScriptureCrossLinksBlock({
   description?: string;
   className?: string;
 }) {
+  const workspaceEpoch = useWorkspaceRemoteEpoch();
   const events = useTimelineStore((s) => s.events);
   const links = useMemo(() => {
     if (!passages.length) return [];
@@ -70,7 +72,7 @@ export function ScriptureCrossLinksBlock({
       excludeEventId,
       excludePlaceId,
     });
-  }, [passages, events, excludeEventId, excludePlaceId]);
+  }, [passages, events, excludeEventId, excludePlaceId, workspaceEpoch]);
 
   if (!passages.length) return null;
   if (!links.length) return null;

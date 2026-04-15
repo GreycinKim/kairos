@@ -1,5 +1,6 @@
 import type { AtlasMapPin } from "@/lib/mapAtlasTypes";
 import type { ScriptureAppearance } from "@/lib/timelinePeople";
+import { notifyWorkspaceLocalChanged } from "@/lib/workspaceRemotePushSchedule";
 
 export type PlaceRecord = {
   id: string;
@@ -16,7 +17,8 @@ export type PlaceRecord = {
   relatedTimelineEventIds?: string[];
 };
 
-const LS_KEY = "kairos-places-v1";
+export const PLACES_STORAGE_KEY = "kairos-places-v1";
+const LS_KEY = PLACES_STORAGE_KEY;
 
 export function loadPlaces(): Record<string, PlaceRecord> {
   try {
@@ -33,6 +35,7 @@ export function loadPlaces(): Record<string, PlaceRecord> {
 export function savePlaces(data: Record<string, PlaceRecord>) {
   try {
     window.localStorage.setItem(LS_KEY, JSON.stringify(data));
+    notifyWorkspaceLocalChanged();
   } catch {
     /* ignore */
   }

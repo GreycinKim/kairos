@@ -6,11 +6,13 @@ import { Input } from "@/components/ui/input";
 import { clampAtlasCoord } from "@/lib/mapAtlasOverlays";
 import { fetchWorkspaceMapCatalog } from "@/lib/workspaceMapCatalogFetch";
 import { ScriptureAppearanceRowForm } from "@/pages/timeline/TimelineForms";
+import { useWorkspaceRemoteEpoch } from "@/hooks/useWorkspaceRemoteEpoch";
 import { loadPlaces, newPlaceId, savePlaces, type PlaceRecord } from "@/lib/places";
 import { normalizeScriptureAppearances, type ScriptureAppearance } from "@/lib/timelinePeople";
 import { useTimelineStore } from "@/store/timelineStore";
 
 export function PlaceEditPage() {
+  const workspaceEpoch = useWorkspaceRemoteEpoch();
   const { placeId } = useParams<{ placeId: string }>();
   const location = useLocation();
   const navigate = useNavigate();
@@ -65,7 +67,7 @@ export function PlaceEditPage() {
       setAtlasNx("0.5");
       setAtlasNy("0.5");
     }
-  }, [placeId, isNew]);
+  }, [placeId, isNew, workspaceEpoch]);
 
   const toggleRelated = (id: string) => {
     setRelatedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));

@@ -15,6 +15,7 @@ import {
   toYearLabel,
   type PersonProfile,
 } from "@/lib/timelinePeople";
+import { useWorkspaceRemoteEpoch } from "@/hooks/useWorkspaceRemoteEpoch";
 import { useTimelineStore } from "@/store/timelineStore";
 
 function pruneProfilesAfterEventDeletes(
@@ -44,6 +45,7 @@ function pruneProfilesAfterEventDeletes(
 }
 
 export function PeoplePage() {
+  const workspaceEpoch = useWorkspaceRemoteEpoch();
   const events = useTimelineStore((s) => s.events);
   const loading = useTimelineStore((s) => s.loading);
   const error = useTimelineStore((s) => s.error);
@@ -63,6 +65,10 @@ export function PeoplePage() {
   useEffect(() => {
     void fetchEvents();
   }, [fetchEvents]);
+
+  useEffect(() => {
+    setProfiles(loadPeopleProfiles());
+  }, [workspaceEpoch]);
 
   useEffect(() => {
     savePeopleProfiles(profiles);

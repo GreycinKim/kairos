@@ -31,6 +31,7 @@ import { WordStudyPage } from "@/pages/WordStudyPage";
 import { JbchHubPage } from "@/pages/JbchHubPage";
 import { ReadingHomePage } from "@/pages/ReadingHomePage";
 import { LoginPage } from "@/pages/LoginPage";
+import { WorkspaceRemoteSyncHost } from "@/components/workspace/WorkspaceRemoteSyncHost";
 
 function JbchHubLegacyRedirect() {
   const { search } = useLocation();
@@ -81,6 +82,7 @@ function AppShell() {
             <Sidebar className="h-4 w-4" strokeWidth={1.75} />
           </Button>
         ) : null}
+        <WorkspaceRemoteSyncHost />
         <Routes>
           <Route path="/" element={<JbchHubPage />} />
           <Route path="/home" element={<ReadingHomePage />} />

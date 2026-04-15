@@ -41,6 +41,7 @@ import type {
 } from "@/types";
 import { useTimelineStore } from "@/store/timelineStore";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useWorkspaceRemoteEpoch } from "@/hooks/useWorkspaceRemoteEpoch";
 import clsx from "clsx";
 import { Panel, PanelGroup } from "react-resizable-panels";
 
@@ -567,6 +568,7 @@ function IndexExperience({
   onBookChapter: (book: string, chapter: number, verse?: number) => void;
   error: string | null;
 }) {
+  const workspaceEpoch = useWorkspaceRemoteEpoch();
   const books = useMemo(() => {
     const seen = new Set<string>();
     const out: string[] = [];
@@ -776,7 +778,7 @@ function IndexExperience({
 
   const chapterCastRows = useMemo(
     () => listProfilesInChapter(timelineEvents, loadPeopleProfiles(), book, chapter),
-    [timelineEvents, book, chapter],
+    [timelineEvents, book, chapter, workspaceEpoch],
   );
 
   const passageVerseForMap = scrollFocusVerse ?? verseFromUrl ?? undefined;

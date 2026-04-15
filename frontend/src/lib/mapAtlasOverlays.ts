@@ -1,6 +1,7 @@
 import type { PlaceRecord } from "@/lib/places";
 import type { PersonProfile } from "@/lib/timelinePeople";
 import type { TimelineEvent } from "@/types";
+import { notifyWorkspaceLocalChanged } from "@/lib/workspaceRemotePushSchedule";
 
 export type AtlasRoutePoint = { nx: number; ny: number };
 
@@ -12,7 +13,8 @@ export type AtlasRoute = {
   points: AtlasRoutePoint[];
 };
 
-const ROUTES_LS = "kairos-atlas-routes-v1";
+export const ATLAS_ROUTES_STORAGE_KEY = "kairos-atlas-routes-v1";
+const ROUTES_LS = ATLAS_ROUTES_STORAGE_KEY;
 
 export function clampAtlasCoord(n: number): number {
   if (!Number.isFinite(n)) return 0;
@@ -41,6 +43,7 @@ export function loadAtlasRoutes(): AtlasRoute[] {
 export function saveAtlasRoutes(routes: AtlasRoute[]) {
   try {
     window.localStorage.setItem(ROUTES_LS, JSON.stringify(routes));
+    notifyWorkspaceLocalChanged();
   } catch {
     /* ignore */
   }

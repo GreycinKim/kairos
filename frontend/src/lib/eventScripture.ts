@@ -1,7 +1,9 @@
 import type { PersonProfile, ScriptureAppearance } from "@/lib/timelinePeople";
 import type { TimelineEvent } from "@/types";
+import { notifyWorkspaceLocalChanged } from "@/lib/workspaceRemotePushSchedule";
 
-const LS_KEY = "kairos-timeline-event-scripture-v1";
+export const EVENT_SCRIPTURE_STORAGE_KEY = "kairos-timeline-event-scripture-v1";
+const LS_KEY = EVENT_SCRIPTURE_STORAGE_KEY;
 
 export type EventScriptureMap = Record<string, ScriptureAppearance[]>;
 
@@ -20,6 +22,7 @@ export function loadEventScripture(): EventScriptureMap {
 export function saveEventScripture(data: EventScriptureMap) {
   try {
     window.localStorage.setItem(LS_KEY, JSON.stringify(data));
+    notifyWorkspaceLocalChanged();
   } catch {
     /* ignore */
   }

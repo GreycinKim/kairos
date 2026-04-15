@@ -8,6 +8,7 @@ from app.models.scripture import ScriptureLink
 from app.models.scripture_flow_folder import ScriptureFlowFolder
 from app.models.scripture_flow_map import ScriptureFlowMap
 from app.models.themes import Theme, ThemeTag
+from app.models.workspace_client_state import WorkspaceClientState
 
 __all__ = [
     "TimelineEvent",
@@ -27,4 +28,5 @@ __all__ = [
     "ScriptureLink",
     "Theme",
     "ThemeTag",
+    "WorkspaceClientState",
 ]

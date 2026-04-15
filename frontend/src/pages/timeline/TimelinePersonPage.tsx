@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 
+import { useWorkspaceRemoteEpoch } from "@/hooks/useWorkspaceRemoteEpoch";
 import { PersonLorePanel } from "@/components/timeline/PersonLorePanel";
 import { Button } from "@/components/ui/button";
 import type { PersonProfile } from "@/lib/timelinePeople";
@@ -8,6 +9,7 @@ import { loadPeopleProfiles } from "@/lib/timelinePeople";
 import { useTimelineStore } from "@/store/timelineStore";
 
 export function TimelinePersonPage() {
+  const workspaceEpoch = useWorkspaceRemoteEpoch();
   const { eventId } = useParams<{ eventId: string }>();
   const events = useTimelineStore((s) => s.events);
   const loading = useTimelineStore((s) => s.loading);
@@ -31,7 +33,7 @@ export function TimelinePersonPage() {
         scope: "bible" as const,
       } satisfies PersonProfile);
     return { event: ev, profile };
-  }, [eventId, events]);
+  }, [eventId, events, workspaceEpoch]);
 
   if (!eventId) {
     return (

@@ -4,12 +4,14 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ALL_BIBLE_BOOKS } from "@/lib/bibleCanon";
+import { useWorkspaceRemoteEpoch } from "@/hooks/useWorkspaceRemoteEpoch";
 import { loadPlaces, placeScriptureMentionsBook, placeScriptureMentionsChapter, savePlaces, type PlaceRecord } from "@/lib/places";
 
 type LinkFilter = "all" | "linked" | "none";
 type ImageFilter = "all" | "with" | "without";
 
 export function PlacesPage() {
+  const workspaceEpoch = useWorkspaceRemoteEpoch();
   const location = useLocation();
   const [places, setPlaces] = useState<Record<string, PlaceRecord>>(() =>
     typeof window !== "undefined" ? loadPlaces() : {},
@@ -24,7 +26,7 @@ export function PlacesPage() {
 
   useEffect(() => {
     setPlaces(loadPlaces());
-  }, [location.key]);
+  }, [location.key, workspaceEpoch]);
 
   const regionOptions = useMemo(() => {
     const s = new Set<string>();

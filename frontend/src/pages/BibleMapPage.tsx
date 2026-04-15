@@ -11,6 +11,7 @@ import { addAtlasRoute, loadAtlasRoutes, removeAtlasRoute, routesForCatalogMapId
 import { loadPlaces } from "@/lib/places";
 import type { WorkspaceMapCatalog } from "@/lib/workspaceMapCatalogFetch";
 import { fetchWorkspaceMapCatalog } from "@/lib/workspaceMapCatalogFetch";
+import { useWorkspaceRemoteEpoch } from "@/hooks/useWorkspaceRemoteEpoch";
 import { pickReaderWorkspaceMap } from "@/lib/workspaceMapReaderMatch";
 
 const CANON_BOOKS = Object.keys(CHAPTER_COUNT) as (keyof typeof CHAPTER_COUNT)[];
@@ -18,6 +19,7 @@ const CANON_BOOKS = Object.keys(CHAPTER_COUNT) as (keyof typeof CHAPTER_COUNT)[]
 type AtlasMainView = "workspace" | "book-cities";
 
 export function BibleMapPage() {
+  const workspaceEpoch = useWorkspaceRemoteEpoch();
   const [searchParams, setSearchParams] = useSearchParams();
   const [mainView, setMainView] = useState<AtlasMainView>("workspace");
   const [catalog, setCatalog] = useState<WorkspaceMapCatalog | null>(null);
@@ -50,12 +52,12 @@ export function BibleMapPage() {
   const pinnedPlacesOnPlate = useMemo(() => {
     if (!currentPlate) return [];
     return Object.values(loadPlaces()).filter((p) => p.atlasPin?.catalogMapId === currentPlate.id);
-  }, [currentPlate?.id, routesVersion, placesRefresh]);
+  }, [currentPlate?.id, routesVersion, placesRefresh, workspaceEpoch]);
 
   const plateRoutes = useMemo(() => {
     if (!currentPlate) return [];
     return routesForCatalogMapId(loadAtlasRoutes(), currentPlate.id);
-  }, [currentPlate?.id, routesVersion]);
+  }, [currentPlate?.id, routesVersion, workspaceEpoch]);
 
   const setBookChapter = (nextBook: string, nextChapter: number) => {
     const nextParams = new URLSearchParams(searchParams);

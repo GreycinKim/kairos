@@ -1,10 +1,13 @@
 /** Client-side portrait / icon overrides for any timeline event (people, milestones, books, etc.). */
 
+import { notifyWorkspaceLocalChanged } from "@/lib/workspaceRemotePushSchedule";
+
 export type EventDisplayOverride = {
   imageDataUrl?: string | null;
 };
 
-const LS_KEY = "kairos-timeline-event-display-v1";
+export const EVENT_DISPLAY_STORAGE_KEY = "kairos-timeline-event-display-v1";
+const LS_KEY = EVENT_DISPLAY_STORAGE_KEY;
 
 export function loadEventDisplay(): Record<string, EventDisplayOverride> {
   try {
@@ -21,6 +24,7 @@ export function loadEventDisplay(): Record<string, EventDisplayOverride> {
 export function saveEventDisplay(data: Record<string, EventDisplayOverride>) {
   try {
     window.localStorage.setItem(LS_KEY, JSON.stringify(data));
+    notifyWorkspaceLocalChanged();
   } catch {
     /* ignore */
   }

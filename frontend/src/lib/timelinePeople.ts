@@ -1,5 +1,6 @@
 import type { AtlasMapPin } from "@/lib/mapAtlasTypes";
 import { ALL_BIBLE_BOOKS } from "@/lib/bibleCanon";
+import { notifyWorkspaceLocalChanged } from "@/lib/workspaceRemotePushSchedule";
 
 export type PeopleScope = "bible" | "church_history";
 
@@ -247,7 +248,8 @@ export type PersonProfile = {
   atlasPin?: AtlasMapPin;
 };
 
-const LS_KEY = "kairos-timeline-people-profiles-v1";
+export const PEOPLE_PROFILES_STORAGE_KEY = "kairos-timeline-people-profiles-v1";
+const LS_KEY = PEOPLE_PROFILES_STORAGE_KEY;
 
 export function profileAppearsInChapter(
   profile: PersonProfile,
@@ -281,6 +283,7 @@ export function loadPeopleProfiles(): Record<string, PersonProfile> {
 export function savePeopleProfiles(data: Record<string, PersonProfile>): boolean {
   try {
     window.localStorage.setItem(LS_KEY, JSON.stringify(data));
+    notifyWorkspaceLocalChanged();
     return true;
   } catch {
     return false;
