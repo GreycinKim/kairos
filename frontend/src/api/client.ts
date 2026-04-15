@@ -6,10 +6,30 @@ import axios from "axios";
  * 2. When the UI is served from this machine (`localhost` / `127.0.0.1`), talk straight to FastAPI
  *    so chapter loads work even if the Vite proxy is bypassed (preview, IDE webview, odd ports).
  * 3. Same-origin `/api` (production behind nginx, or LAN IP with a working proxy).
+ *
+ * If `VITE_API_BASE_URL` is an absolute URL with only a root path (e.g. `https://…onrender.com`),
+ * `/api` is appended — FastAPI mounts all routes under `/api`, and omitting it yields 404s like
+ * `GET …/jbch-hub` instead of `GET …/api/jbch-hub`.
  */
+function normalizeEnvApiBaseIfRootOnly(url: string): string {
+  const trimmed = url.replace(/\/$/, "");
+  if (!/^https?:\/\//i.test(trimmed)) return trimmed;
+  try {
+    const u = new URL(trimmed);
+    const path = u.pathname.replace(/\/$/, "") || "/";
+    if (path === "/") {
+      u.pathname = "/api";
+      return u.href.replace(/\/$/, "");
+    }
+  } catch {
+    /* ignore */
+  }
+  return trimmed;
+}
+
 function resolveApiBaseURL(): string {
   const fromEnv = import.meta.env.VITE_API_BASE_URL?.trim();
-  if (fromEnv) return fromEnv.replace(/\/$/, "");
+  if (fromEnv) return normalizeEnvApiBaseIfRootOnly(fromEnv);
 
   if (typeof window !== "undefined") {
     const h = window.location.hostname;
