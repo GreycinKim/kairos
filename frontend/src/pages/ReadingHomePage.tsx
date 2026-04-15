@@ -26,6 +26,7 @@ import clsx from "clsx";
 const JBCH_ORANGE = "#ff8c00";
 
 type HomeView = "chart" | "attendance";
+type ChapterGridScope = "all" | "ot" | "nt" | "single";
 
 const TABS: { id: HomeView; label: string }[] = [
   { id: "chart", label: "Reading Status Chart" },
@@ -119,6 +120,9 @@ function StatusChartPanel({
   const { from: defFrom, to: defTo } = defaultRange();
   const [fromStr, setFromStr] = useState(defFrom);
   const [toStr, setToStr] = useState(defTo);
+  const [gridScope, setGridScope] = useState<ChapterGridScope>("all");
+  const [singleBook, setSingleBook] = useState<string>(CANON_BOOK_ORDER[0] ?? "Genesis");
+  const [singleBookQuery, setSingleBookQuery] = useState<string>(CANON_BOOK_ORDER[0] ?? "Genesis");
 
   const fromD = parseISODate(fromStr) ?? new Date(defFrom);
   const toD = parseISODate(toStr) ?? new Date(defTo);
@@ -134,6 +138,19 @@ function StatusChartPanel({
     },
     [onLogRefresh],
   );
+
+  const visibleBooks = useMemo(() => {
+    if (gridScope === "single") return CANON_BOOK_ORDER.filter((b) => b === singleBook);
+    if (gridScope === "ot") return CANON_BOOK_ORDER.slice(0, 39);
+    if (gridScope === "nt") return CANON_BOOK_ORDER.slice(39);
+    return CANON_BOOK_ORDER;
+  }, [gridScope, singleBook]);
+
+  const singleBookMatches = useMemo(() => {
+    const q = singleBookQuery.trim().toLowerCase();
+    if (!q) return CANON_BOOK_ORDER;
+    return CANON_BOOK_ORDER.filter((b) => b.toLowerCase().includes(q));
+  }, [singleBookQuery]);
 
   return (
     <div className="space-y-6 px-4 pb-16 pt-2 sm:px-6">
@@ -189,8 +206,87 @@ function StatusChartPanel({
         <div className="border-b border-neutral-100 bg-neutral-50 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-neutral-500">
           Chapter grid
         </div>
+        <div className="flex flex-wrap items-center gap-2 border-b border-neutral-100 bg-white px-3 py-2">
+          {(
+            [
+              ["all", "All books"],
+              ["ot", "Old Testament"],
+              ["nt", "New Testament"],
+              ["single", "Single book"],
+            ] as const
+          ).map(([id, label]) => {
+            const active = gridScope === id;
+            return (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setGridScope(id)}
+                className={clsx(
+                  "rounded-full px-3 py-1 text-xs font-medium transition-colors",
+                  active ? "text-white" : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200",
+                )}
+                style={active ? { backgroundColor: JBCH_ORANGE } : undefined}
+              >
+                {label}
+              </button>
+            );
+          })}
+          {gridScope === "single" ? (
+            <>
+              <input
+                type="search"
+                value={singleBookQuery}
+                onChange={(e) => setSingleBookQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key !== "Enter") return;
+                  e.preventDefault();
+                  const q = singleBookQuery.trim().toLowerCase();
+                  const exact = CANON_BOOK_ORDER.find((b) => b.toLowerCase() === q);
+                  const first = exact ?? singleBookMatches[0];
+                  if (!first) return;
+                  setSingleBook(first);
+                  setSingleBookQuery(first);
+                }}
+                placeholder="Search book (e.g. Revelation)"
+                className="min-w-[14rem] rounded-lg border border-neutral-200 bg-white px-2 py-1.5 text-xs text-neutral-700"
+                list="single-book-options"
+                aria-label="Search for a single book"
+              />
+              <datalist id="single-book-options">
+                {singleBookMatches.map((book) => (
+                  <option key={`single-book-opt-${book}`} value={book} />
+                ))}
+              </datalist>
+              <button
+                type="button"
+                className="rounded-md border border-neutral-200 bg-white px-2.5 py-1 text-xs text-neutral-600 hover:bg-neutral-50"
+                onClick={() => {
+                  const q = singleBookQuery.trim().toLowerCase();
+                  const exact = CANON_BOOK_ORDER.find((b) => b.toLowerCase() === q);
+                  const first = exact ?? singleBookMatches[0];
+                  if (!first) return;
+                  setSingleBook(first);
+                  setSingleBookQuery(first);
+                }}
+              >
+                Apply
+              </button>
+            </>
+          ) : null}
+          <button
+            type="button"
+            className="ml-auto rounded-md border border-neutral-200 bg-white px-2.5 py-1 text-xs text-neutral-600 hover:bg-neutral-50"
+            onClick={() => {
+              setGridScope("single");
+              setSingleBook("Revelation");
+              setSingleBookQuery("Revelation");
+            }}
+          >
+            Jump to Revelation
+          </button>
+        </div>
         <div className="max-h-[min(70vh,720px)] overflow-y-auto">
-          {CANON_BOOK_ORDER.map((book, idx) => {
+          {visibleBooks.map((book, idx) => {
             const n = CHAPTER_COUNT[book] ?? 0;
             const bookMap = counts.get(book);
             return (
