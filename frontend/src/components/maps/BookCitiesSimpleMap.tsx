@@ -13,7 +13,11 @@ import {
   type BiblicalRoutesFile,
   type RouteLineFeature,
 } from "@/lib/biblicalRoutesCatalog";
-import { type BibleMapLocationJson, locationMentionsBook } from "@/lib/bookCitiesFromLocations";
+import {
+  bibleMapLocationsFromUserPlaces,
+  type BibleMapLocationJson,
+  locationMentionsBook,
+} from "@/lib/bookCitiesFromLocations";
 import {
   fetchOverlayGeoJson,
   loadHistoricalOverlaysManifest,
@@ -27,6 +31,8 @@ import {
   type BiblicalRouteListScope,
 } from "@/lib/biblicalRouteReaderMatch";
 import { publicAssetUrl } from "@/lib/publicAssetUrl";
+import { loadPlaces } from "@/lib/places";
+import { useWorkspaceRemoteEpoch } from "@/hooks/useWorkspaceRemoteEpoch";
 
 const BookCitiesMapLibreMap = lazy(async () => {
   const m = await import("@/components/maps/BookCitiesMapLibreMap");
@@ -88,6 +94,7 @@ export function BookCitiesSimpleMap({
   className = "",
   panelTone = "light",
 }: BookCitiesSimpleMapProps) {
+  const workspaceEpoch = useWorkspaceRemoteEpoch();
   const [locations, setLocations] = useState<BibleMapLocationJson[] | null>(null);
   const [routesFile, setRoutesFile] = useState<BiblicalRoutesFile | null>(null);
   const [overlaysManifest, setOverlaysManifest] = useState<HistoricalOverlaysFile | null>(null);
@@ -210,6 +217,8 @@ export function BookCitiesSimpleMap({
 
   const byIdAll = useMemo(() => (locations ? locationIndexById(locations) : null), [locations]);
 
+  const userMapPlaces = useMemo(() => bibleMapLocationsFromUserPlaces(loadPlaces()), [locations, workspaceEpoch]);
+
   const segmentedSelected = useMemo(() => selectedRoutes.filter((r) => routeHasDeckSegments(r)), [selectedRoutes]);
 
   const paulArcs = useMemo(() => {
@@ -238,14 +247,26 @@ export function BookCitiesSimpleMap({
     return ids;
   }, [selectedRoutes]);
 
-  /** Book + era markers, plus any route stop not already included (so paths stay readable). */
+  /** Book + era markers, user Places with lat/lng (always), plus route stops not already included. */
   const placesOnMap = useMemo(() => {
     if (!locations || !byIdAll) return [];
     const base = placesForBook;
-    if (!selectedRoutes.length) return base;
-    const extra = locations.filter((loc) => routePlaceIds.has(loc.id) && !base.some((b) => b.id === loc.id));
-    return [...base, ...extra];
-  }, [locations, byIdAll, placesForBook, selectedRoutes, routePlaceIds]);
+    const merged: BibleMapLocationJson[] = [...base];
+    const seen = new Set(merged.map((x) => x.id));
+    for (const u of userMapPlaces) {
+      if (!seen.has(u.id)) {
+        merged.push(u);
+        seen.add(u.id);
+      }
+    }
+    if (!selectedRoutes.length) return merged;
+    const extra = locations.filter((loc) => routePlaceIds.has(loc.id) && !seen.has(loc.id));
+    for (const e of extra) {
+      merged.push(e);
+      seen.add(e.id);
+    }
+    return merged;
+  }, [locations, byIdAll, placesForBook, selectedRoutes, routePlaceIds, userMapPlaces]);
 
   const shell =
     panelTone === "dark"
@@ -457,6 +478,9 @@ export function BookCitiesSimpleMap({
           <div className={`shrink-0 border-t px-2 py-1.5 ${bar}`}>
             <p className={`text-center text-[10px] ${footSub}`}>
               {placesForBook.length} in-book marker{placesForBook.length === 1 ? "" : "s"}
+              {userMapPlaces.length
+                ? ` · ${userMapPlaces.length} from Places`
+                : ""}
               {selectedRoutes.length
                 ? ` · ${selectedRoutes.length} journey${selectedRoutes.length === 1 ? "" : "s"}: ${selectedRoutes.map((r) => r.label).join(" · ")}`
                 : ""}

@@ -1,10 +1,21 @@
 import { RotateCcw, ZoomIn, ZoomOut } from "lucide-react";
-import { useCallback, useEffect, useReducer, useRef, type PointerEvent as ReactPointerEvent } from "react";
-import { Link } from "react-router-dom";
+import { useCallback, useEffect, useReducer, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import type { AtlasMapMarkerView } from "@/lib/mapAtlasOverlays";
 import clsx from "clsx";
+
+/** Drag-and-drop payload for placing a timeline person on the atlas (reader sidebar list → map). */
+export const KAIROS_PERSON_DRAG_MIME = "application/kairos-person-id";
+
+function clientToNormalizedOnEl(el: HTMLElement, clientX: number, clientY: number): { nx: number; ny: number } | null {
+  const rect = el.getBoundingClientRect();
+  if (rect.width <= 0 || rect.height <= 0) return null;
+  const nx = (clientX - rect.left) / rect.width;
+  const ny = (clientY - rect.top) / rect.height;
+  return { nx: Math.min(1, Math.max(0, nx)), ny: Math.min(1, Math.max(0, ny)) };
+}
 
 type Transform = { x: number; y: number; k: number };
 
@@ -67,6 +78,9 @@ type PanZoomImageProps = {
   atlasRoutes?: PanZoomAtlasRoute[];
   /** Stronger double-tap / double-click zoom (e.g. Life of Jesus plates). */
   doubleTapZoom?: boolean;
+  /** When set, person markers can be dragged; map accepts drops from the reader people list. */
+  editablePersonPins?: boolean;
+  onPersonPinCommit?: (personEventId: string, nx: number, ny: number) => void;
 };
 
 type Pt = { x: number; y: number };
@@ -93,8 +107,14 @@ export function PanZoomImage({
   atlasMarkers,
   atlasRoutes,
   doubleTapZoom = false,
+  editablePersonPins = false,
+  onPersonPinCommit,
 }: PanZoomImageProps) {
+  const navigate = useNavigate();
   const vpRef = useRef<HTMLDivElement>(null);
+  const imageLayerRef = useRef<HTMLDivElement>(null);
+  const [personDragPreview, setPersonDragPreview] = useState<{ id: string; nx: number; ny: number } | null>(null);
+  const personMarkerDragRef = useRef<{ id: string; startX: number; startY: number; moved: boolean } | null>(null);
   const [t, dispatch] = useReducer(reduceTransform, { x: 0, y: 0, k: 1 });
   const tRef = useRef(t);
   tRef.current = t;
@@ -224,6 +244,69 @@ export function PanZoomImage({
     [doubleTapZoom],
   );
 
+  const commitPersonPin = onPersonPinCommit;
+
+  const onPersonMarkerPointerDown = useCallback(
+    (e: ReactPointerEvent, m: AtlasMapMarkerView) => {
+      if (!editablePersonPins || !commitPersonPin || m.kind !== "person" || !m.entityId) return;
+      e.stopPropagation();
+      e.preventDefault();
+      const personId = m.entityId;
+      const href = m.href;
+      personMarkerDragRef.current = { id: personId, startX: e.clientX, startY: e.clientY, moved: false };
+      const onMove = (ev: PointerEvent) => {
+        const el = imageLayerRef.current;
+        if (!el || !personMarkerDragRef.current) return;
+        const n = clientToNormalizedOnEl(el, ev.clientX, ev.clientY);
+        if (!n) return;
+        if (Math.hypot(ev.clientX - personMarkerDragRef.current.startX, ev.clientY - personMarkerDragRef.current.startY) > 6) {
+          personMarkerDragRef.current.moved = true;
+        }
+        setPersonDragPreview({ id: personId, nx: n.nx, ny: n.ny });
+      };
+      const onUp = (ev: PointerEvent) => {
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        const ref = personMarkerDragRef.current;
+        personMarkerDragRef.current = null;
+        setPersonDragPreview(null);
+        if (!ref || !commitPersonPin) return;
+        const el = imageLayerRef.current;
+        if (!el) return;
+        const n = clientToNormalizedOnEl(el, ev.clientX, ev.clientY);
+        if (!n) return;
+        if (ref.moved) {
+          commitPersonPin(ref.id, n.nx, n.ny);
+        } else if (href) {
+          navigate(href);
+        }
+      };
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+    },
+    [commitPersonPin, editablePersonPins, navigate],
+  );
+
+  const onMapDragOver = useCallback((e: React.DragEvent) => {
+    if (!editablePersonPins || !commitPersonPin) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+  }, [commitPersonPin, editablePersonPins]);
+
+  const onMapDrop = useCallback(
+    (e: React.DragEvent) => {
+      if (!editablePersonPins || !commitPersonPin) return;
+      e.preventDefault();
+      const personId = e.dataTransfer.getData(KAIROS_PERSON_DRAG_MIME);
+      if (!personId.trim()) return;
+      const el = imageLayerRef.current;
+      if (!el) return;
+      const n = clientToNormalizedOnEl(el, e.clientX, e.clientY);
+      if (n) commitPersonPin(personId.trim(), n.nx, n.ny);
+    },
+    [commitPersonPin, editablePersonPins],
+  );
+
   const onDoubleClickZoom = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       if (!doubleTapZoom) return;
@@ -291,6 +374,8 @@ export function PanZoomImage({
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
         onDoubleClick={onDoubleClickZoom}
+        onDragOver={onMapDragOver}
+        onDrop={onMapDrop}
       >
         <div
           className="flex h-full w-full items-center justify-center"
@@ -299,7 +384,7 @@ export function PanZoomImage({
             transformOrigin: "center center",
           }}
         >
-          <div className="relative inline-block max-h-full max-w-full">
+          <div ref={imageLayerRef} className="relative inline-block max-h-full max-w-full">
             <img
               src={src}
               alt={alt}
@@ -338,10 +423,36 @@ export function PanZoomImage({
                       {m.fallbackEmoji ?? "·"}
                     </span>
                   );
-                  const style = { left: `${m.nx * 100}%`, top: `${m.ny * 100}%` } as const;
+                  const isPersonDrag =
+                    editablePersonPins &&
+                    m.kind === "person" &&
+                    m.entityId &&
+                    personDragPreview &&
+                    personDragPreview.id === m.entityId;
+                  const nx = isPersonDrag ? personDragPreview.nx : m.nx;
+                  const ny = isPersonDrag ? personDragPreview.ny : m.ny;
+                  const style = { left: `${nx * 100}%`, top: `${ny * 100}%` } as const;
+                  const key = m.entityId ? `${m.kind ?? "m"}-${m.entityId}` : `m-${mi}`;
+
+                  if (editablePersonPins && m.kind === "person" && m.entityId && commitPersonPin) {
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        title={m.label}
+                        aria-label={`${m.label} — drag to move, click to open profile`}
+                        className="pointer-events-auto absolute z-[2] h-11 w-11 -translate-x-1/2 -translate-y-1/2 cursor-grab rounded-full border-0 bg-transparent p-0 active:cursor-grabbing"
+                        style={style}
+                        onPointerDown={(e) => onPersonMarkerPointerDown(e, m)}
+                      >
+                        {inner}
+                      </button>
+                    );
+                  }
+
                   return m.href ? (
                     <Link
-                      key={`m-${mi}`}
+                      key={key}
                       to={m.href}
                       title={m.label}
                       className="pointer-events-auto absolute z-[2] h-11 w-11 -translate-x-1/2 -translate-y-1/2 rounded-full focus:outline-none focus:ring-2 focus:ring-amber-400"
@@ -351,12 +462,7 @@ export function PanZoomImage({
                       {inner}
                     </Link>
                   ) : (
-                    <div
-                      key={`m-${mi}`}
-                      title={m.label}
-                      className="absolute z-[2] h-11 w-11 -translate-x-1/2 -translate-y-1/2 rounded-full"
-                      style={style}
-                    >
+                    <div key={key} title={m.label} className="absolute z-[2] h-11 w-11 -translate-x-1/2 -translate-y-1/2 rounded-full" style={style}>
                       {inner}
                     </div>
                   );

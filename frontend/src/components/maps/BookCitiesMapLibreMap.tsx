@@ -135,6 +135,8 @@ function boundsFromPaulArcs(arcs: PaulArcDatum[]): LngLatBoundsLike | null {
 
 function placeTypeIcon(t: string | undefined): string {
   switch (t) {
+    case "kairos-place":
+      return "📌";
     case "city":
       return "🏛";
     case "mountain":
@@ -170,6 +172,8 @@ function placesToGeoJson(places: BibleMapLocationJson[]) {
         name: loc.name,
         id: loc.id,
         placeType: loc.type ?? "",
+        markerSource: loc.kairosPlaceId ? "kairos" : "catalog",
+        kairosPlaceId: loc.kairosPlaceId ?? "",
       },
       geometry: {
         type: "Point" as const,
@@ -471,7 +475,12 @@ export function BookCitiesMapLibreMap({
             type="circle"
             paint={{
               "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 3.2, 7, 5.5, 11, 9],
-              "circle-color": panelTone === "dark" ? "#f59e0b" : "#b45309",
+              "circle-color": [
+                "case",
+                ["==", ["get", "markerSource"], "kairos"],
+                panelTone === "dark" ? "#2dd4bf" : "#0d9488",
+                panelTone === "dark" ? "#f59e0b" : "#b45309",
+              ],
               "circle-opacity": 0.88,
               "circle-stroke-width": 1.5,
               "circle-stroke-color": "#ffffff",
@@ -483,22 +492,33 @@ export function BookCitiesMapLibreMap({
           .filter((p) => openPlaceIds.has(p.id))
           .map((p) => (
             <Marker key={`open-label-${p.id}`} longitude={p.lng} latitude={p.lat} anchor="top" offset={[0, -8]}>
-              <button
-                type="button"
-                className="rounded-md border border-neutral-200 bg-white/95 px-2 py-1 text-[11px] font-medium text-neutral-800 shadow-sm"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setOpenPlaceIds((prev) => {
-                    const next = new Set(prev);
-                    next.delete(p.id);
-                    return next;
-                  });
-                }}
-              >
-                <span className="mr-1">{placeTypeIcon(p.type)}</span>
-                {p.name}
-              </button>
+              <div className="rounded-md border border-neutral-200 bg-white/95 px-2 py-1 text-[11px] font-medium text-neutral-800 shadow-sm">
+                <button
+                  type="button"
+                  className="w-full text-left"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setOpenPlaceIds((prev) => {
+                      const next = new Set(prev);
+                      next.delete(p.id);
+                      return next;
+                    });
+                  }}
+                >
+                  <span className="mr-1">{placeTypeIcon(p.type)}</span>
+                  {p.name}
+                </button>
+                {p.kairosPlaceId ? (
+                  <a
+                    href={`/places/${p.kairosPlaceId}`}
+                    className="mt-1 block text-[10px] font-medium text-teal-700 underline hover:text-teal-900"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    Open in Places
+                  </a>
+                ) : null}
+              </div>
             </Marker>
           ))}
       </MapLibreMap>

@@ -8,6 +8,9 @@ export type PlaceRecord = {
   name: string;
   /** Optional area label (e.g. Judea, Galilee) for grouping and filters on the Places page. */
   region?: string;
+  /** Optional WGS84 coordinates for the Book cities (MapLibre) map — shown on every chapter once set. */
+  lat?: number;
+  lng?: number;
   /** Optional pin on a workspace atlas plate (same plate as reader sidebar for that era). */
   atlasPin?: AtlasMapPin;
   description?: string;

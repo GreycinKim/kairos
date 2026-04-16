@@ -73,6 +73,10 @@ export type AtlasMapMarkerView = {
   href?: string;
   imageSrc?: string | null;
   fallbackEmoji?: string;
+  /** When set, the reader map can treat this marker as a draggable person pin. */
+  kind?: "place" | "person";
+  /** Place id or timeline person event id (matches `kind`). */
+  entityId?: string;
 };
 
 export function atlasMarkersForCatalogMap(
@@ -94,11 +98,14 @@ export function atlasMarkersForCatalogMap(
       href: `/places/${p.id}`,
       imageSrc: p.imageDataUrl ?? null,
       fallbackEmoji: "📍",
+      kind: "place",
+      entityId: p.id,
     });
   }
   for (const ev of ctx.events) {
     if (ev.type !== "person" && ev.type !== "ruler") continue;
     const prof = ctx.profiles[ev.id];
+    if (prof?.hidden) continue;
     const pin = prof?.atlasPin;
     if (!pin || pin.catalogMapId !== catalogMapId) continue;
     markers.push({
@@ -108,6 +115,8 @@ export function atlasMarkersForCatalogMap(
       href: `/timeline/person/${ev.id}`,
       imageSrc: prof?.imageDataUrl ?? null,
       fallbackEmoji: ev.icon ?? "👤",
+      kind: "person",
+      entityId: ev.id,
     });
   }
   markers.sort((a, b) => a.label.localeCompare(b.label));

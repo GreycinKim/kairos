@@ -1,14 +1,15 @@
-import { ChevronLeft, ChevronRight, Library, Search, X } from "lucide-react";
-import { PanZoomImage } from "@/components/maps/PanZoomImage";
-import { useDeferredValue, useEffect, useMemo, useState } from "react";
+import { ChevronLeft, ChevronRight, GripVertical, Library, Search, X } from "lucide-react";
+import { KAIROS_PERSON_DRAG_MIME, PanZoomImage } from "@/components/maps/PanZoomImage";
+import { useCallback, useDeferredValue, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { atlasMarkersForCatalogMap, loadAtlasRoutes, routesForCatalogMapId } from "@/lib/mapAtlasOverlays";
+import { atlasMarkersForCatalogMap, clampAtlasCoord, loadAtlasRoutes, routesForCatalogMapId } from "@/lib/mapAtlasOverlays";
 import { mapForPassage, mapsForPassageRotation, type PassageMapResult } from "@/lib/mapForPassage";
 import { loadPlaces } from "@/lib/places";
-import { loadPeopleProfiles } from "@/lib/timelinePeople";
+import { loadPeopleProfiles, profileAppearsInBook, savePeopleProfiles } from "@/lib/timelinePeople";
+import { bumpWorkspaceEpoch } from "@/lib/workspaceRemoteSync";
 import { pickReaderWorkspaceMap } from "@/lib/workspaceMapReaderMatch";
 import { useTimelineStore } from "@/store/timelineStore";
 import {
@@ -99,6 +100,8 @@ export function WorkspaceMapsGallery({
   const rotationKey = readerRotation.map((p) => p.entry.id).join("|");
   const [carouselIdx, setCarouselIdx] = useState(0);
   const [toast, setToast] = useState<string | null>(null);
+  const [peopleDropdownId, setPeopleDropdownId] = useState("");
+  const [peopleSearchQ, setPeopleSearchQ] = useState("");
 
   useEffect(() => {
     setCarouselIdx(0);
@@ -132,6 +135,56 @@ export function WorkspaceMapsGallery({
       color: "#ea580c",
     }));
   }, [readerEntry?.id, workspaceEpoch]);
+
+  const peopleInBook = useMemo(() => {
+    if (!matchBook) return [];
+    const profiles = loadPeopleProfiles();
+    const rows: { id: string; name: string }[] = [];
+    for (const ev of events) {
+      if (ev.type !== "person" && ev.type !== "ruler") continue;
+      const prof = profiles[ev.id];
+      if (!prof || prof.hidden) continue;
+      if (!profileAppearsInBook(prof, matchBook)) continue;
+      rows.push({ id: ev.id, name: prof.name || ev.title });
+    }
+    rows.sort((a, b) => a.name.localeCompare(b.name));
+    return rows;
+  }, [events, matchBook, workspaceEpoch]);
+
+  const commitPersonPin = useCallback(
+    (personEventId: string, nx: number, ny: number) => {
+      if (!readerEntry) return;
+      const profiles = loadPeopleProfiles();
+      const prof = profiles[personEventId];
+      if (!prof) return;
+      savePeopleProfiles({
+        ...profiles,
+        [personEventId]: {
+          ...prof,
+          atlasPin: {
+            catalogMapId: readerEntry.id,
+            nx: clampAtlasCoord(nx),
+            ny: clampAtlasCoord(ny),
+          },
+        },
+      });
+      bumpWorkspaceEpoch();
+    },
+    [readerEntry?.id],
+  );
+
+  const peopleListRows = useMemo(() => {
+    const q = peopleSearchQ.trim().toLowerCase();
+    let rows = peopleInBook;
+    if (peopleDropdownId) rows = rows.filter((p) => p.id === peopleDropdownId);
+    if (q) rows = rows.filter((p) => p.name.toLowerCase().includes(q));
+    return rows;
+  }, [peopleInBook, peopleDropdownId, peopleSearchQ]);
+
+  useEffect(() => {
+    setPeopleDropdownId("");
+    setPeopleSearchQ("");
+  }, [matchBook]);
 
   const previewAtlasMarkers = useMemo(() => {
     if (!preview) return [];
@@ -249,20 +302,82 @@ export function WorkspaceMapsGallery({
 
         {readerEntry && readerMeta ? (
           <>
-            <div className="relative min-h-0 flex-1 overflow-hidden">
-              <div
-                key={readerEntry.id}
-                className="h-full min-h-0 opacity-100 transition-opacity duration-300 ease-out"
-              >
-                <PanZoomImage
-                  src={publicAssetUrl(`bible-map/workspace-maps/${readerEntry.file}`)}
-                  alt={readerEntry.title}
-                  className="h-full min-h-0"
-                  atlasMarkers={readerAtlasMarkers}
-                  atlasRoutes={readerAtlasRoutes}
-                  doubleTapZoom={readerMeta.set === "B"}
-                />
+            <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
+              <div className="relative min-h-0 min-w-0 flex-1 overflow-hidden">
+                <div
+                  key={readerEntry.id}
+                  className="h-full min-h-0 opacity-100 transition-opacity duration-300 ease-out"
+                >
+                  <PanZoomImage
+                    src={publicAssetUrl(`bible-map/workspace-maps/${readerEntry.file}`)}
+                    alt={readerEntry.title}
+                    className="h-full min-h-0"
+                    atlasMarkers={readerAtlasMarkers}
+                    atlasRoutes={readerAtlasRoutes}
+                    doubleTapZoom={readerMeta.set === "B"}
+                    editablePersonPins
+                    onPersonPinCommit={commitPersonPin}
+                  />
+                </div>
               </div>
+              <aside className="flex max-h-[min(40vh,280px)] min-h-0 w-full shrink-0 flex-col overflow-hidden border-neutral-200 bg-neutral-50/95 md:max-h-none md:w-[min(13.5rem,38vw)] md:max-w-[15rem] md:border-l md:border-t-0 border-t">
+                <div className="shrink-0 space-y-1.5 border-b border-neutral-200 px-2 py-2">
+                  <p className="text-[10px] font-semibold uppercase tracking-wide text-neutral-500">People in this book</p>
+                  <label className="sr-only" htmlFor="reader-map-people-dropdown">
+                    Choose a person
+                  </label>
+                  <select
+                    id="reader-map-people-dropdown"
+                    value={peopleDropdownId}
+                    onChange={(e) => setPeopleDropdownId(e.target.value)}
+                    className="w-full rounded-md border border-neutral-200 bg-white px-2 py-1.5 text-[11px] text-neutral-800"
+                  >
+                    <option value="">All in this book ({peopleInBook.length})</option>
+                    {peopleInBook.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name}
+                      </option>
+                    ))}
+                  </select>
+                  <Input
+                    value={peopleSearchQ}
+                    onChange={(e) => setPeopleSearchQ(e.target.value)}
+                    placeholder="Filter names…"
+                    className="h-8 text-xs"
+                    aria-label="Filter people by name"
+                  />
+                </div>
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-1 py-1">
+                  {peopleListRows.length === 0 ? (
+                    <p className="px-1.5 py-2 text-[11px] leading-relaxed text-neutral-500">
+                      {peopleInBook.length === 0
+                        ? "No one is tied to this book yet. Add scripture passages on each person’s profile, then drag them here onto the map."
+                        : "No names match this filter."}
+                    </p>
+                  ) : (
+                    <ul className="space-y-0.5">
+                      {peopleListRows.map((p) => (
+                        <li key={p.id}>
+                          <div
+                            draggable
+                            onDragStart={(e) => {
+                              e.dataTransfer.setData(KAIROS_PERSON_DRAG_MIME, p.id);
+                              e.dataTransfer.effectAllowed = "copy";
+                            }}
+                            className="flex cursor-grab items-center gap-1 rounded-md border border-neutral-100 bg-white px-1.5 py-1.5 text-left text-[11px] text-neutral-800 shadow-sm hover:border-amber-300/80 active:cursor-grabbing"
+                          >
+                            <GripVertical className="h-3.5 w-3.5 shrink-0 text-neutral-400" aria-hidden />
+                            <span className="min-w-0 flex-1 truncate">{p.name}</span>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+                <p className="shrink-0 border-t border-neutral-200 px-2 py-1.5 text-[9px] leading-snug text-neutral-500">
+                  Drag a row onto the map to place. Drag a pin to move. Click a pin to open their profile. Saves automatically.
+                </p>
+              </aside>
             </div>
             {canStep ? (
               <div className="flex shrink-0 items-center justify-between gap-2 border-t border-neutral-200 bg-white px-2 py-2">
@@ -295,8 +410,8 @@ export function WorkspaceMapsGallery({
               </p>
               <p className="mt-0.5 text-center text-[10px] text-neutral-500">
                 {readerMeta.set === "B"
-                  ? "Life of Jesus plate: pinch, double-tap / double-click to zoom · drag to pan"
-                  : "Wheel or pinch zoom · drag to pan · reset to fit"}
+                  ? "Life of Jesus plate: pinch, double-tap / double-click to zoom · drag empty area to pan · use the list to place people"
+                  : "Wheel or pinch zoom · drag empty area to pan · people list on the right"}
               </p>
             </div>
           </>

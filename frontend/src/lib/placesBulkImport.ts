@@ -8,6 +8,8 @@ export type PlacePackPlace = {
   id?: string;
   name: string;
   region?: string | null;
+  lat?: number | null;
+  lng?: number | null;
   atlasPin?: AtlasMapPin | null;
   description?: string | null;
   imageDataUrl?: string | null;
@@ -90,10 +92,21 @@ export function importPlacesFromPack(
           }
         : undefined;
 
+    const lat = raw.lat;
+    const lng = raw.lng;
+    const geo =
+      typeof lat === "number" &&
+      Number.isFinite(lat) &&
+      typeof lng === "number" &&
+      Number.isFinite(lng)
+        ? { lat, lng }
+        : {};
+
     const record: PlaceRecord = {
       id,
       name,
       region: raw.region?.trim() || undefined,
+      ...geo,
       atlasPin,
       description: raw.description?.trim() || undefined,
       imageDataUrl: raw.imageDataUrl ?? undefined,
