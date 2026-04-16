@@ -1,3 +1,4 @@
+import type { ChapterAtlasState } from "@/lib/chapterAtlasState";
 import type { PlaceRecord } from "@/lib/places";
 import type { PersonProfile } from "@/lib/timelinePeople";
 import type { TimelineEvent } from "@/types";
@@ -77,7 +78,55 @@ export type AtlasMapMarkerView = {
   kind?: "place" | "person";
   /** Place id or timeline person event id (matches `kind`). */
   entityId?: string;
+  /** Locked position (no drag) until unpinned in the sidebar. */
+  pinned?: boolean;
 };
+
+/** Markers for one passage from per-chapter atlas state (positions + pin flags). */
+export function markersFromChapterState(
+  state: ChapterAtlasState,
+  ctx: {
+    events: TimelineEvent[];
+    profiles: Record<string, PersonProfile>;
+    places: Record<string, PlaceRecord>;
+  },
+): AtlasMapMarkerView[] {
+  const markers: AtlasMapMarkerView[] = [];
+  for (const [placeId, pin] of Object.entries(state.places)) {
+    const p = ctx.places[placeId];
+    if (!p) continue;
+    markers.push({
+      nx: clampAtlasCoord(pin.nx),
+      ny: clampAtlasCoord(pin.ny),
+      label: p.name,
+      href: `/places/${placeId}`,
+      imageSrc: p.imageDataUrl ?? null,
+      fallbackEmoji: "📍",
+      kind: "place",
+      entityId: placeId,
+      pinned: pin.pinned,
+    });
+  }
+  for (const [eventId, pin] of Object.entries(state.people)) {
+    const ev = ctx.events.find((e) => e.id === eventId);
+    const prof = ctx.profiles[eventId];
+    if (!ev || (ev.type !== "person" && ev.type !== "ruler")) continue;
+    if (prof?.hidden) continue;
+    markers.push({
+      nx: clampAtlasCoord(pin.nx),
+      ny: clampAtlasCoord(pin.ny),
+      label: prof?.name || ev.title,
+      href: `/timeline/person/${eventId}`,
+      imageSrc: prof?.imageDataUrl ?? null,
+      fallbackEmoji: ev.icon ?? "👤",
+      kind: "person",
+      entityId: eventId,
+      pinned: pin.pinned,
+    });
+  }
+  markers.sort((a, b) => a.label.localeCompare(b.label));
+  return markers;
+}
 
 export function atlasMarkersForCatalogMap(
   catalogMapId: string,

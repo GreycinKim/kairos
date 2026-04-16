@@ -6,8 +6,15 @@ from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
-from app.models.user_library import PlaceRecordRow
-from app.schemas.user_library import PersonProfilesPut, PersonProfilesRead, PlaceRecordsPut, PlaceRecordsRead
+from app.models.user_library import ChapterAtlasLibraryRow, PlaceRecordRow
+from app.schemas.user_library import (
+    ChapterAtlasPut,
+    ChapterAtlasRead,
+    PersonProfilesPut,
+    PersonProfilesRead,
+    PlaceRecordsPut,
+    PlaceRecordsRead,
+)
 from app.services.person_lore_store import load_one_profile, load_profile_map, save_all_profiles, save_profile_dict
 
 router = APIRouter(prefix="/library", tags=["library"])
@@ -71,3 +78,30 @@ async def put_place_records(body: PlaceRecordsPut, db: AsyncSession = Depends(ge
         db.add(PlaceRecordRow(id=place_id.strip(), place=merged))
     await db.flush()
     return await get_place_records(db)
+
+
+_CHAPTER_ATLAS_SINGLETON_ID = "default"
+
+
+@router.get("/chapter-atlas", response_model=ChapterAtlasRead)
+async def get_chapter_atlas(db: AsyncSession = Depends(get_db)) -> ChapterAtlasRead:
+    row = await db.get(ChapterAtlasLibraryRow, _CHAPTER_ATLAS_SINGLETON_ID)
+    if row is None:
+        return ChapterAtlasRead(chapters={})
+    ch = row.chapters
+    return ChapterAtlasRead(chapters=ch if isinstance(ch, dict) else {})
+
+
+@router.put("/chapter-atlas", response_model=ChapterAtlasRead)
+async def put_chapter_atlas(body: ChapterAtlasPut, db: AsyncSession = Depends(get_db)) -> ChapterAtlasRead:
+    chapters = body.chapters if isinstance(body.chapters, dict) else {}
+    row = await db.get(ChapterAtlasLibraryRow, _CHAPTER_ATLAS_SINGLETON_ID)
+    if row is None:
+        row = ChapterAtlasLibraryRow(id=_CHAPTER_ATLAS_SINGLETON_ID, chapters=chapters)
+        db.add(row)
+    else:
+        row.chapters = chapters
+    await db.flush()
+    await db.refresh(row)
+    ch = row.chapters
+    return ChapterAtlasRead(chapters=ch if isinstance(ch, dict) else {})

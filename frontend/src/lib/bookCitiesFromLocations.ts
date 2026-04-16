@@ -1,5 +1,4 @@
 import { ALL_BIBLE_BOOKS } from "@/lib/bibleCanon";
-import type { PlaceRecord } from "@/lib/places";
 
 /** Minimal shape from `public/bible-map/data/locations.json`. */
 export type BibleMapLocationJson = {
@@ -12,7 +11,7 @@ export type BibleMapLocationJson = {
   /** Tags such as `patriarchs`, `exodus-conquest`, `jesus-ministry` (see `locations.json`). */
   era?: string[];
   scripture?: { ref: string; text?: string }[];
-  /** When set, marker comes from the Places library; links to `/places/{id}`. */
+  /** Optional; used when a marker is not from the static catalog. */
   kairosPlaceId?: string;
 };
 
@@ -37,26 +36,6 @@ export function locationMentionsBook(loc: BibleMapLocationJson, book: string): b
 }
 
 /** Eastern Mediterranean / Levant bounding box → 0–1 on the overview plate (approximate). */
-/** MapLibre markers for user places that have `lat`/`lng` (always shown, regardless of chapter filters). */
-export function bibleMapLocationsFromUserPlaces(places: Record<string, PlaceRecord>): BibleMapLocationJson[] {
-  const out: BibleMapLocationJson[] = [];
-  for (const p of Object.values(places)) {
-    const lat = p.lat;
-    const lng = p.lng;
-    if (typeof lat !== "number" || typeof lng !== "number" || !Number.isFinite(lat) || !Number.isFinite(lng)) continue;
-    out.push({
-      id: `kairos-place-${p.id}`,
-      name: p.name,
-      lat,
-      lng,
-      type: "kairos-place",
-      description: p.description,
-      kairosPlaceId: p.id,
-    });
-  }
-  return out;
-}
-
 export function latLngToOverviewMap(lng: number, lat: number): { nx: number; ny: number } {
   const LNG0 = 14;
   const LNG1 = 52;

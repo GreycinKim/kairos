@@ -1,15 +1,21 @@
-import { ChevronLeft, ChevronRight, GripVertical, Library, Search, X } from "lucide-react";
-import { KAIROS_PERSON_DRAG_MIME, PanZoomImage } from "@/components/maps/PanZoomImage";
+import { ChevronLeft, ChevronRight, GripVertical, Library, Search, Trash2, X } from "lucide-react";
+import { KAIROS_PERSON_DRAG_MIME, KAIROS_PLACE_DRAG_MIME, PanZoomImage } from "@/components/maps/PanZoomImage";
 import { useCallback, useDeferredValue, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { atlasMarkersForCatalogMap, clampAtlasCoord, loadAtlasRoutes, routesForCatalogMapId } from "@/lib/mapAtlasOverlays";
+import {
+  getMergedChapterState,
+  removeChapterMarker,
+  setChapterCatalogAndCustom,
+  toggleChapterMarkerPinned,
+  upsertChapterMarker,
+} from "@/lib/chapterAtlasState";
+import { atlasMarkersForCatalogMap, clampAtlasCoord, markersFromChapterState } from "@/lib/mapAtlasOverlays";
 import { mapForPassage, mapsForPassageRotation, type PassageMapResult } from "@/lib/mapForPassage";
-import { loadPlaces } from "@/lib/places";
-import { loadPeopleProfiles, profileAppearsInBook, savePeopleProfiles } from "@/lib/timelinePeople";
-import { bumpWorkspaceEpoch } from "@/lib/workspaceRemoteSync";
+import { loadPlaces, placeScriptureMentionsChapter } from "@/lib/places";
+import { loadPeopleProfiles, profileAppearsInBook } from "@/lib/timelinePeople";
 import { pickReaderWorkspaceMap } from "@/lib/workspaceMapReaderMatch";
 import { useTimelineStore } from "@/store/timelineStore";
 import {
@@ -97,21 +103,46 @@ export function WorkspaceMapsGallery({
     return [{ entry: fb, meta }];
   }, [readerMatchMode, matchBook, matchChapter, matchVerse, catalog?.entries]);
 
-  const rotationKey = readerRotation.map((p) => p.entry.id).join("|");
+  const defaultCatalogId = readerRotation[0]?.entry.id ?? null;
+
+  const chapterState = useMemo(
+    () => (matchBook ? getMergedChapterState(matchBook, matchChapter, defaultCatalogId) : null),
+    [matchBook, matchChapter, defaultCatalogId, workspaceEpoch],
+  );
+
+  const effectiveRotation = useMemo(() => {
+    if (!readerMatchMode || !matchBook || !catalog?.entries.length || !chapterState) return [];
+    if (chapterState.customMapDataUrl) {
+      const meta = mapForPassage(matchBook, matchChapter, matchVerse);
+      return [{ entry: { id: "kairos-custom-map", file: "__custom__", title: "Custom map" }, meta }];
+    }
+    if (chapterState.catalogMapId) {
+      const e = catalog.entries.find((x) => x.id === chapterState.catalogMapId);
+      if (e) {
+        const meta = mapForPassage(matchBook, matchChapter, matchVerse);
+        return [{ entry: e, meta }];
+      }
+    }
+    return readerRotation;
+  }, [readerMatchMode, matchBook, matchChapter, matchVerse, catalog?.entries, chapterState, readerRotation]);
+
+  const rotationKey = effectiveRotation.map((p) => p.entry.id).join("|");
   const [carouselIdx, setCarouselIdx] = useState(0);
   const [toast, setToast] = useState<string | null>(null);
   const [peopleDropdownId, setPeopleDropdownId] = useState("");
   const [peopleSearchQ, setPeopleSearchQ] = useState("");
+  const [placesSearchQ, setPlacesSearchQ] = useState("");
+  const [sidebarTab, setSidebarTab] = useState<"people" | "places">("people");
 
   useEffect(() => {
     setCarouselIdx(0);
   }, [rotationKey]);
 
-  const readerEntry = readerRotation[carouselIdx]?.entry;
-  const readerMeta = readerRotation[carouselIdx]?.meta;
+  const readerEntry = effectiveRotation[carouselIdx]?.entry;
+  const readerMeta = effectiveRotation[carouselIdx]?.meta;
 
   useEffect(() => {
-    const first = readerRotation[0];
+    const first = effectiveRotation[0];
     if (!first) return;
     setToast(`Map updated · ${first.meta.title}`);
     const t = window.setTimeout(() => setToast(null), 2000);
@@ -119,22 +150,19 @@ export function WorkspaceMapsGallery({
   }, [rotationKey]);
 
   const readerAtlasMarkers = useMemo(() => {
-    if (!readerEntry) return [];
-    return atlasMarkersForCatalogMap(readerEntry.id, {
+    if (!matchBook || !chapterState) return [];
+    return markersFromChapterState(chapterState, {
       events,
       profiles: loadPeopleProfiles(),
       places: loadPlaces(),
     });
-  }, [readerEntry?.id, events, workspaceEpoch]);
+  }, [matchBook, chapterState, events, workspaceEpoch]);
 
-  const readerAtlasRoutes = useMemo(() => {
-    if (!readerEntry) return [];
-    const all = loadAtlasRoutes();
-    return routesForCatalogMapId(all, readerEntry.id).map((r) => ({
-      points: r.points.map((p) => ({ nx: p.nx, ny: p.ny })),
-      color: "#ea580c",
-    }));
-  }, [readerEntry?.id, workspaceEpoch]);
+  const readerMapSrc = useMemo(() => {
+    if (!readerEntry) return "";
+    if (chapterState?.customMapDataUrl) return chapterState.customMapDataUrl;
+    return publicAssetUrl(`bible-map/workspace-maps/${readerEntry.file}`);
+  }, [readerEntry, chapterState?.customMapDataUrl]);
 
   const peopleInBook = useMemo(() => {
     if (!matchBook) return [];
@@ -151,27 +179,26 @@ export function WorkspaceMapsGallery({
     return rows;
   }, [events, matchBook, workspaceEpoch]);
 
-  const commitPersonPin = useCallback(
-    (personEventId: string, nx: number, ny: number) => {
-      if (!readerEntry) return;
-      const profiles = loadPeopleProfiles();
-      const prof = profiles[personEventId];
-      if (!prof) return;
-      savePeopleProfiles({
-        ...profiles,
-        [personEventId]: {
-          ...prof,
-          atlasPin: {
-            catalogMapId: readerEntry.id,
-            nx: clampAtlasCoord(nx),
-            ny: clampAtlasCoord(ny),
-          },
-        },
+  const commitAtlasMarker = useCallback(
+    (kind: "person" | "place", entityId: string, nx: number, ny: number) => {
+      if (!matchBook) return;
+      upsertChapterMarker(matchBook, matchChapter, defaultCatalogId, kind, entityId, {
+        nx: clampAtlasCoord(nx),
+        ny: clampAtlasCoord(ny),
+        pinned: false,
       });
-      bumpWorkspaceEpoch();
     },
-    [readerEntry?.id],
+    [matchBook, matchChapter, defaultCatalogId],
   );
+
+  const placesInChapter = useMemo(() => {
+    if (!matchBook) return [];
+    const ch = Math.max(1, matchChapter);
+    return Object.values(loadPlaces())
+      .filter((p) => placeScriptureMentionsChapter(p, matchBook, ch))
+      .map((p) => ({ id: p.id, name: p.name }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [matchBook, matchChapter, workspaceEpoch]);
 
   const peopleListRows = useMemo(() => {
     const q = peopleSearchQ.trim().toLowerCase();
@@ -181,10 +208,18 @@ export function WorkspaceMapsGallery({
     return rows;
   }, [peopleInBook, peopleDropdownId, peopleSearchQ]);
 
+  const placesListRows = useMemo(() => {
+    const q = placesSearchQ.trim().toLowerCase();
+    let rows = placesInChapter;
+    if (q) rows = rows.filter((p) => p.name.toLowerCase().includes(q));
+    return rows;
+  }, [placesInChapter, placesSearchQ]);
+
   useEffect(() => {
     setPeopleDropdownId("");
     setPeopleSearchQ("");
-  }, [matchBook]);
+    setPlacesSearchQ("");
+  }, [matchBook, matchChapter]);
 
   const previewAtlasMarkers = useMemo(() => {
     if (!preview) return [];
@@ -194,15 +229,6 @@ export function WorkspaceMapsGallery({
       places: loadPlaces(),
     });
   }, [preview?.id, events, workspaceEpoch]);
-
-  const previewAtlasRoutes = useMemo(() => {
-    if (!preview) return [];
-    const all = loadAtlasRoutes();
-    return routesForCatalogMapId(all, preview.id).map((r) => ({
-      points: r.points.map((p) => ({ nx: p.nx, ny: p.ny })),
-      color: "#fb923c",
-    }));
-  }, [preview?.id, workspaceEpoch]);
 
   const filtered = useMemo(() => {
     const entries = catalog?.entries ?? [];
@@ -259,9 +285,34 @@ export function WorkspaceMapsGallery({
 
   if (readerMatchMode) {
     const atlasBrowse = `/scripture/maps?book=${encodeURIComponent(matchBook!)}&chapter=${String(matchChapter)}`;
-    const canStep = readerRotation.length > 1;
-    const stepPrev = () => setCarouselIdx((i) => (i - 1 + readerRotation.length) % readerRotation.length);
-    const stepNext = () => setCarouselIdx((i) => (i + 1) % readerRotation.length);
+    const canStep = effectiveRotation.length > 1;
+    const stepPrev = () => setCarouselIdx((i) => (i - 1 + effectiveRotation.length) % effectiveRotation.length);
+    const stepNext = () => setCarouselIdx((i) => (i + 1) % effectiveRotation.length);
+
+    const onPlateChange = (catalogId: string) => {
+      setChapterCatalogAndCustom(matchBook!, matchChapter, defaultCatalogId, {
+        catalogMapId: catalogId || null,
+        customMapDataUrl: null,
+      });
+    };
+
+    const onCustomMapFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file || !matchBook) return;
+      const fr = new FileReader();
+      fr.onload = () => {
+        const u = typeof fr.result === "string" ? fr.result : null;
+        if (!u) return;
+        if (u.length > 4_500_000) {
+          window.alert("Image is too large to store. Try a smaller file (under ~3MB).");
+          return;
+        }
+        setChapterCatalogAndCustom(matchBook, matchChapter, defaultCatalogId, { customMapDataUrl: u });
+      };
+      fr.readAsDataURL(file);
+      e.target.value = "";
+    };
+
     return (
       <div className="relative flex h-full min-h-0 flex-1 flex-col bg-neutral-50">
         {toast ? (
@@ -279,7 +330,7 @@ export function WorkspaceMapsGallery({
           </div>
           {canStep ? (
             <span className="shrink-0 tabular-nums text-[10px] text-neutral-500">
-              Map {carouselIdx + 1} of {readerRotation.length}
+              Map {carouselIdx + 1} of {effectiveRotation.length}
             </span>
           ) : null}
           <Link
@@ -300,82 +351,239 @@ export function WorkspaceMapsGallery({
           ) : null}
         </div>
 
-        {readerEntry && readerMeta ? (
+        {readerEntry && readerMeta && chapterState ? (
           <>
             <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
               <div className="relative min-h-0 min-w-0 flex-1 overflow-hidden">
                 <div
-                  key={readerEntry.id}
+                  key={`${readerEntry.id}-${chapterState.customMapDataUrl ? "custom" : "std"}`}
                   className="h-full min-h-0 opacity-100 transition-opacity duration-300 ease-out"
                 >
                   <PanZoomImage
-                    src={publicAssetUrl(`bible-map/workspace-maps/${readerEntry.file}`)}
+                    src={readerMapSrc}
                     alt={readerEntry.title}
                     className="h-full min-h-0"
                     atlasMarkers={readerAtlasMarkers}
-                    atlasRoutes={readerAtlasRoutes}
                     doubleTapZoom={readerMeta.set === "B"}
-                    editablePersonPins
-                    onPersonPinCommit={commitPersonPin}
+                    editableMarkerPins
+                    onAtlasMarkerCommit={commitAtlasMarker}
                   />
                 </div>
               </div>
-              <aside className="flex max-h-[min(40vh,280px)] min-h-0 w-full shrink-0 flex-col overflow-hidden border-neutral-200 bg-neutral-50/95 md:max-h-none md:w-[min(13.5rem,38vw)] md:max-w-[15rem] md:border-l md:border-t-0 border-t">
+              <aside className="flex max-h-[min(52vh,420px)] min-h-0 w-full shrink-0 flex-col overflow-hidden border-neutral-200 bg-neutral-50/95 md:max-h-none md:w-[min(15rem,42vw)] md:max-w-[17rem] md:border-l md:border-t-0 border-t">
                 <div className="shrink-0 space-y-1.5 border-b border-neutral-200 px-2 py-2">
-                  <p className="text-[10px] font-semibold uppercase tracking-wide text-neutral-500">People in this book</p>
-                  <label className="sr-only" htmlFor="reader-map-people-dropdown">
-                    Choose a person
-                  </label>
+                  <p className="text-[10px] font-semibold uppercase tracking-wide text-neutral-500">Atlas for this chapter</p>
+                  <p className="text-[9px] leading-snug text-neutral-500">
+                    Saved per book and chapter. Upload replaces the plate image until you clear it.
+                  </p>
+                  <label className="text-[10px] font-medium text-neutral-600">Workspace plate</label>
                   <select
-                    id="reader-map-people-dropdown"
-                    value={peopleDropdownId}
-                    onChange={(e) => setPeopleDropdownId(e.target.value)}
+                    value={chapterState.catalogMapId ?? defaultCatalogId ?? ""}
+                    onChange={(e) => onPlateChange(e.target.value)}
                     className="w-full rounded-md border border-neutral-200 bg-white px-2 py-1.5 text-[11px] text-neutral-800"
                   >
-                    <option value="">All in this book ({peopleInBook.length})</option>
-                    {peopleInBook.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name}
+                    {(catalog?.entries ?? []).map((e) => (
+                      <option key={e.id} value={e.id}>
+                        {e.title}
                       </option>
                     ))}
                   </select>
-                  <Input
-                    value={peopleSearchQ}
-                    onChange={(e) => setPeopleSearchQ(e.target.value)}
-                    placeholder="Filter names…"
-                    className="h-8 text-xs"
-                    aria-label="Filter people by name"
-                  />
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <label className="cursor-pointer rounded border border-neutral-200 bg-white px-2 py-1 text-[10px] font-medium text-neutral-700 hover:bg-neutral-50">
+                      Upload map
+                      <input type="file" accept="image/*" className="sr-only" onChange={onCustomMapFile} />
+                    </label>
+                    {chapterState.customMapDataUrl ? (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 px-1.5 text-[10px]"
+                        onClick={() =>
+                          setChapterCatalogAndCustom(matchBook!, matchChapter, defaultCatalogId, { customMapDataUrl: null })
+                        }
+                      >
+                        Clear upload
+                      </Button>
+                    ) : null}
+                  </div>
                 </div>
-                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-1 py-1">
-                  {peopleListRows.length === 0 ? (
-                    <p className="px-1.5 py-2 text-[11px] leading-relaxed text-neutral-500">
-                      {peopleInBook.length === 0
-                        ? "No one is tied to this book yet. Add scripture passages on each person’s profile, then drag them here onto the map."
-                        : "No names match this filter."}
-                    </p>
-                  ) : (
-                    <ul className="space-y-0.5">
-                      {peopleListRows.map((p) => (
-                        <li key={p.id}>
-                          <div
-                            draggable
-                            onDragStart={(e) => {
-                              e.dataTransfer.setData(KAIROS_PERSON_DRAG_MIME, p.id);
-                              e.dataTransfer.effectAllowed = "copy";
-                            }}
-                            className="flex cursor-grab items-center gap-1 rounded-md border border-neutral-100 bg-white px-1.5 py-1.5 text-left text-[11px] text-neutral-800 shadow-sm hover:border-amber-300/80 active:cursor-grabbing"
-                          >
-                            <GripVertical className="h-3.5 w-3.5 shrink-0 text-neutral-400" aria-hidden />
-                            <span className="min-w-0 flex-1 truncate">{p.name}</span>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                <div className="flex shrink-0 gap-0.5 border-b border-neutral-200 px-1.5 py-1">
+                  <button
+                    type="button"
+                    onClick={() => setSidebarTab("people")}
+                    className={`flex-1 rounded-md px-2 py-1.5 text-[11px] font-semibold ${
+                      sidebarTab === "people" ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-500 hover:text-neutral-800"
+                    }`}
+                  >
+                    People
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSidebarTab("places")}
+                    className={`flex-1 rounded-md px-2 py-1.5 text-[11px] font-semibold ${
+                      sidebarTab === "places" ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-500 hover:text-neutral-800"
+                    }`}
+                  >
+                    Cities
+                  </button>
                 </div>
+
+                {sidebarTab === "people" ? (
+                  <>
+                    <div className="shrink-0 space-y-1.5 border-b border-neutral-200 px-2 py-2">
+                      <label className="sr-only" htmlFor="reader-map-people-dropdown">
+                        Choose a person
+                      </label>
+                      <select
+                        id="reader-map-people-dropdown"
+                        value={peopleDropdownId}
+                        onChange={(e) => setPeopleDropdownId(e.target.value)}
+                        className="w-full rounded-md border border-neutral-200 bg-white px-2 py-1.5 text-[11px] text-neutral-800"
+                      >
+                        <option value="">All in this book ({peopleInBook.length})</option>
+                        {peopleInBook.map((p) => (
+                          <option key={p.id} value={p.id}>
+                            {p.name}
+                          </option>
+                        ))}
+                      </select>
+                      <Input
+                        value={peopleSearchQ}
+                        onChange={(e) => setPeopleSearchQ(e.target.value)}
+                        placeholder="Filter names…"
+                        className="h-8 text-xs"
+                        aria-label="Filter people by name"
+                      />
+                    </div>
+                    <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-1 py-1">
+                      {peopleListRows.length === 0 ? (
+                        <p className="px-1.5 py-2 text-[11px] leading-relaxed text-neutral-500">
+                          {peopleInBook.length === 0
+                            ? "No one is tied to this book yet. Add scripture passages on each person’s profile."
+                            : "No names match this filter."}
+                        </p>
+                      ) : (
+                        <ul className="space-y-1">
+                          {peopleListRows.map((p) => {
+                            const onMap = Boolean(chapterState.people[p.id]);
+                            const pin = chapterState.people[p.id];
+                            return (
+                              <li key={p.id} className="rounded-md border border-neutral-100 bg-white p-1 shadow-sm">
+                                <div className="flex items-start gap-1">
+                                  <div
+                                    draggable
+                                    onDragStart={(e) => {
+                                      e.dataTransfer.setData(KAIROS_PERSON_DRAG_MIME, p.id);
+                                      e.dataTransfer.effectAllowed = "copy";
+                                    }}
+                                    className="flex min-w-0 flex-1 cursor-grab items-center gap-1 rounded px-0.5 py-0.5 text-left text-[11px] text-neutral-800 active:cursor-grabbing"
+                                  >
+                                    <GripVertical className="h-3.5 w-3.5 shrink-0 text-neutral-400" aria-hidden />
+                                    <span className="min-w-0 flex-1 truncate">{p.name}</span>
+                                  </div>
+                                  {onMap ? (
+                                    <div className="flex shrink-0 flex-col gap-0.5">
+                                      <button
+                                        type="button"
+                                        className="rounded px-1 text-[9px] font-medium text-amber-800 hover:bg-amber-50"
+                                        onClick={() =>
+                                          toggleChapterMarkerPinned(matchBook!, matchChapter, defaultCatalogId, "person", p.id)
+                                        }
+                                      >
+                                        {pin?.pinned ? "Unpin" : "Pin"}
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className="rounded p-0.5 text-neutral-400 hover:bg-rose-50 hover:text-rose-600"
+                                        aria-label={`Remove ${p.name} from map`}
+                                        onClick={() =>
+                                          removeChapterMarker(matchBook!, matchChapter, defaultCatalogId, "person", p.id)
+                                        }
+                                      >
+                                        <Trash2 className="h-3.5 w-3.5" />
+                                      </button>
+                                    </div>
+                                  ) : null}
+                                </div>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="shrink-0 border-b border-neutral-200 px-2 py-2">
+                      <Input
+                        value={placesSearchQ}
+                        onChange={(e) => setPlacesSearchQ(e.target.value)}
+                        placeholder="Filter cities…"
+                        className="h-8 text-xs"
+                        aria-label="Filter cities"
+                      />
+                    </div>
+                    <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-1 py-1">
+                      {placesListRows.length === 0 ? (
+                        <p className="px-1.5 py-2 text-[11px] leading-relaxed text-neutral-500">
+                          {placesInChapter.length === 0
+                            ? "No places list this chapter under Scripture scenes on the Places page."
+                            : "No names match this filter."}
+                        </p>
+                      ) : (
+                        <ul className="space-y-1">
+                          {placesListRows.map((p) => {
+                            const onMap = Boolean(chapterState.places[p.id]);
+                            const pin = chapterState.places[p.id];
+                            return (
+                              <li key={p.id} className="rounded-md border border-neutral-100 bg-white p-1 shadow-sm">
+                                <div className="flex items-start gap-1">
+                                  <div
+                                    draggable
+                                    onDragStart={(e) => {
+                                      e.dataTransfer.setData(KAIROS_PLACE_DRAG_MIME, p.id);
+                                      e.dataTransfer.effectAllowed = "copy";
+                                    }}
+                                    className="flex min-w-0 flex-1 cursor-grab items-center gap-1 rounded px-0.5 py-0.5 text-left text-[11px] text-neutral-800 active:cursor-grabbing"
+                                  >
+                                    <GripVertical className="h-3.5 w-3.5 shrink-0 text-neutral-400" aria-hidden />
+                                    <span className="min-w-0 flex-1 truncate">{p.name}</span>
+                                  </div>
+                                  {onMap ? (
+                                    <div className="flex shrink-0 flex-col gap-0.5">
+                                      <button
+                                        type="button"
+                                        className="rounded px-1 text-[9px] font-medium text-amber-800 hover:bg-amber-50"
+                                        onClick={() =>
+                                          toggleChapterMarkerPinned(matchBook!, matchChapter, defaultCatalogId, "place", p.id)
+                                        }
+                                      >
+                                        {pin?.pinned ? "Unpin" : "Pin"}
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className="rounded p-0.5 text-neutral-400 hover:bg-rose-50 hover:text-rose-600"
+                                        aria-label={`Remove ${p.name} from map`}
+                                        onClick={() =>
+                                          removeChapterMarker(matchBook!, matchChapter, defaultCatalogId, "place", p.id)
+                                        }
+                                      >
+                                        <Trash2 className="h-3.5 w-3.5" />
+                                      </button>
+                                    </div>
+                                  ) : null}
+                                </div>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
+                    </div>
+                  </>
+                )}
                 <p className="shrink-0 border-t border-neutral-200 px-2 py-1.5 text-[9px] leading-snug text-neutral-500">
-                  Drag a row onto the map to place. Drag a pin to move. Click a pin to open their profile. Saves automatically.
+                  Drag onto the map to place. Drag pins to move (unless pinned). Click a pin to open. Stored per chapter and synced when signed in.
                 </p>
               </aside>
             </div>
@@ -390,7 +598,7 @@ export function WorkspaceMapsGallery({
                   <ChevronLeft className="h-5 w-5" aria-hidden />
                 </button>
                 <p className="min-w-0 flex-1 text-center text-[11px] font-medium text-neutral-600">
-                  {carouselIdx + 1} / {readerRotation.length}
+                  {carouselIdx + 1} / {effectiveRotation.length}
                   <span className="mx-1 text-neutral-300">·</span>
                   <span className="text-neutral-500">More than one plate matches</span>
                 </p>
@@ -410,8 +618,8 @@ export function WorkspaceMapsGallery({
               </p>
               <p className="mt-0.5 text-center text-[10px] text-neutral-500">
                 {readerMeta.set === "B"
-                  ? "Life of Jesus plate: pinch, double-tap / double-click to zoom · drag empty area to pan · use the list to place people"
-                  : "Wheel or pinch zoom · drag empty area to pan · people list on the right"}
+                  ? "Life of Jesus plate: pinch, double-tap / double-click to zoom · drag empty area to pan"
+                  : "Wheel or pinch zoom · drag empty area to pan"}
               </p>
             </div>
           </>
@@ -507,7 +715,6 @@ export function WorkspaceMapsGallery({
               className="min-h-0 flex-1 bg-[#0f1420]"
               controlsClassName="border-white/10 bg-[#141c2e] [&_button]:text-neutral-200 hover:[&_button]:bg-white/10 [&_span]:text-neutral-400"
               atlasMarkers={previewAtlasMarkers}
-              atlasRoutes={previewAtlasRoutes}
             />
           </div>
         </div>

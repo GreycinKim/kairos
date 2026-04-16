@@ -24,3 +24,13 @@ class PlaceRecordRow(Base):
     id = Column(Text, primary_key=True)
     place = Column(JSONB, nullable=False)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
+class ChapterAtlasLibraryRow(Base):
+    """Single-row blob: { chapterKey: ChapterAtlasState, ... } keyed by frontend (e.g. Luke:5)."""
+
+    __tablename__ = "chapter_atlas_library"
+
+    id = Column(Text, primary_key=True)
+    chapters = Column(JSONB, nullable=False)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

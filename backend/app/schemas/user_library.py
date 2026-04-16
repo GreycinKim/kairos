@@ -50,3 +50,13 @@ class PlaceRecordsRead(BaseModel):
 
 class PlaceRecordsPut(BaseModel):
     places: dict[str, Any]
+
+
+class ChapterAtlasRead(BaseModel):
+    """Map of chapter key (e.g. Luke:5) → atlas state JSON (markers, custom map data URL, catalog id)."""
+
+    chapters: dict[str, Any]
+
+
+class ChapterAtlasPut(BaseModel):
+    chapters: dict[str, Any]

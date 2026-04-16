@@ -8,6 +8,7 @@ import clsx from "clsx";
 
 /** Drag-and-drop payload for placing a timeline person on the atlas (reader sidebar list → map). */
 export const KAIROS_PERSON_DRAG_MIME = "application/kairos-person-id";
+export const KAIROS_PLACE_DRAG_MIME = "application/kairos-place-id";
 
 function clientToNormalizedOnEl(el: HTMLElement, clientX: number, clientY: number): { nx: number; ny: number } | null {
   const rect = el.getBoundingClientRect();
@@ -78,9 +79,9 @@ type PanZoomImageProps = {
   atlasRoutes?: PanZoomAtlasRoute[];
   /** Stronger double-tap / double-click zoom (e.g. Life of Jesus plates). */
   doubleTapZoom?: boolean;
-  /** When set, person markers can be dragged; map accepts drops from the reader people list. */
-  editablePersonPins?: boolean;
-  onPersonPinCommit?: (personEventId: string, nx: number, ny: number) => void;
+  /** When set, person/place markers can be dragged (unless pinned); map accepts drops from the sidebar lists. */
+  editableMarkerPins?: boolean;
+  onAtlasMarkerCommit?: (kind: "person" | "place", entityId: string, nx: number, ny: number) => void;
 };
 
 type Pt = { x: number; y: number };
@@ -107,14 +108,21 @@ export function PanZoomImage({
   atlasMarkers,
   atlasRoutes,
   doubleTapZoom = false,
-  editablePersonPins = false,
-  onPersonPinCommit,
+  editableMarkerPins = false,
+  onAtlasMarkerCommit,
 }: PanZoomImageProps) {
   const navigate = useNavigate();
   const vpRef = useRef<HTMLDivElement>(null);
   const imageLayerRef = useRef<HTMLDivElement>(null);
-  const [personDragPreview, setPersonDragPreview] = useState<{ id: string; nx: number; ny: number } | null>(null);
-  const personMarkerDragRef = useRef<{ id: string; startX: number; startY: number; moved: boolean } | null>(null);
+  const [markerDragPreview, setMarkerDragPreview] = useState<{
+    kind: "person" | "place";
+    id: string;
+    nx: number;
+    ny: number;
+  } | null>(null);
+  const markerDragRef = useRef<{ kind: "person" | "place"; id: string; startX: number; startY: number; moved: boolean } | null>(
+    null,
+  );
   const [t, dispatch] = useReducer(reduceTransform, { x: 0, y: 0, k: 1 });
   const tRef = useRef(t);
   tRef.current = t;
@@ -244,39 +252,40 @@ export function PanZoomImage({
     [doubleTapZoom],
   );
 
-  const commitPersonPin = onPersonPinCommit;
+  const commitMarker = onAtlasMarkerCommit;
 
-  const onPersonMarkerPointerDown = useCallback(
+  const onEditableMarkerPointerDown = useCallback(
     (e: ReactPointerEvent, m: AtlasMapMarkerView) => {
-      if (!editablePersonPins || !commitPersonPin || m.kind !== "person" || !m.entityId) return;
+      if (!editableMarkerPins || !commitMarker || !m.entityId || (m.kind !== "person" && m.kind !== "place") || m.pinned) return;
       e.stopPropagation();
       e.preventDefault();
-      const personId = m.entityId;
+      const kind = m.kind;
+      const id = m.entityId;
       const href = m.href;
-      personMarkerDragRef.current = { id: personId, startX: e.clientX, startY: e.clientY, moved: false };
+      markerDragRef.current = { kind, id, startX: e.clientX, startY: e.clientY, moved: false };
       const onMove = (ev: PointerEvent) => {
         const el = imageLayerRef.current;
-        if (!el || !personMarkerDragRef.current) return;
+        if (!el || !markerDragRef.current) return;
         const n = clientToNormalizedOnEl(el, ev.clientX, ev.clientY);
         if (!n) return;
-        if (Math.hypot(ev.clientX - personMarkerDragRef.current.startX, ev.clientY - personMarkerDragRef.current.startY) > 6) {
-          personMarkerDragRef.current.moved = true;
+        if (Math.hypot(ev.clientX - markerDragRef.current.startX, ev.clientY - markerDragRef.current.startY) > 6) {
+          markerDragRef.current.moved = true;
         }
-        setPersonDragPreview({ id: personId, nx: n.nx, ny: n.ny });
+        setMarkerDragPreview({ kind, id, nx: n.nx, ny: n.ny });
       };
       const onUp = (ev: PointerEvent) => {
         window.removeEventListener("pointermove", onMove);
         window.removeEventListener("pointerup", onUp);
-        const ref = personMarkerDragRef.current;
-        personMarkerDragRef.current = null;
-        setPersonDragPreview(null);
-        if (!ref || !commitPersonPin) return;
+        const ref = markerDragRef.current;
+        markerDragRef.current = null;
+        setMarkerDragPreview(null);
+        if (!ref || !commitMarker) return;
         const el = imageLayerRef.current;
         if (!el) return;
         const n = clientToNormalizedOnEl(el, ev.clientX, ev.clientY);
         if (!n) return;
         if (ref.moved) {
-          commitPersonPin(ref.id, n.nx, n.ny);
+          commitMarker(ref.kind, ref.id, n.nx, n.ny);
         } else if (href) {
           navigate(href);
         }
@@ -284,27 +293,29 @@ export function PanZoomImage({
       window.addEventListener("pointermove", onMove);
       window.addEventListener("pointerup", onUp);
     },
-    [commitPersonPin, editablePersonPins, navigate],
+    [commitMarker, editableMarkerPins, navigate],
   );
 
   const onMapDragOver = useCallback((e: React.DragEvent) => {
-    if (!editablePersonPins || !commitPersonPin) return;
+    if (!editableMarkerPins || !commitMarker) return;
     e.preventDefault();
     e.dataTransfer.dropEffect = "copy";
-  }, [commitPersonPin, editablePersonPins]);
+  }, [commitMarker, editableMarkerPins]);
 
   const onMapDrop = useCallback(
     (e: React.DragEvent) => {
-      if (!editablePersonPins || !commitPersonPin) return;
+      if (!editableMarkerPins || !commitMarker) return;
       e.preventDefault();
-      const personId = e.dataTransfer.getData(KAIROS_PERSON_DRAG_MIME);
-      if (!personId.trim()) return;
+      const personId = e.dataTransfer.getData(KAIROS_PERSON_DRAG_MIME).trim();
+      const placeId = e.dataTransfer.getData(KAIROS_PLACE_DRAG_MIME).trim();
       const el = imageLayerRef.current;
       if (!el) return;
       const n = clientToNormalizedOnEl(el, e.clientX, e.clientY);
-      if (n) commitPersonPin(personId.trim(), n.nx, n.ny);
+      if (!n) return;
+      if (personId) commitMarker("person", personId, n.nx, n.ny);
+      else if (placeId) commitMarker("place", placeId, n.nx, n.ny);
     },
-    [commitPersonPin, editablePersonPins],
+    [commitMarker, editableMarkerPins],
   );
 
   const onDoubleClickZoom = useCallback(
@@ -423,30 +434,47 @@ export function PanZoomImage({
                       {m.fallbackEmoji ?? "·"}
                     </span>
                   );
-                  const isPersonDrag =
-                    editablePersonPins &&
-                    m.kind === "person" &&
+                  const isDragPreview =
+                    editableMarkerPins &&
+                    markerDragPreview &&
                     m.entityId &&
-                    personDragPreview &&
-                    personDragPreview.id === m.entityId;
-                  const nx = isPersonDrag ? personDragPreview.nx : m.nx;
-                  const ny = isPersonDrag ? personDragPreview.ny : m.ny;
+                    m.kind &&
+                    markerDragPreview.id === m.entityId &&
+                    markerDragPreview.kind === m.kind;
+                  const nx = isDragPreview ? markerDragPreview!.nx : m.nx;
+                  const ny = isDragPreview ? markerDragPreview!.ny : m.ny;
                   const style = { left: `${nx * 100}%`, top: `${ny * 100}%` } as const;
                   const key = m.entityId ? `${m.kind ?? "m"}-${m.entityId}` : `m-${mi}`;
+                  const canDrag = editableMarkerPins && (m.kind === "person" || m.kind === "place") && m.entityId && commitMarker && !m.pinned;
 
-                  if (editablePersonPins && m.kind === "person" && m.entityId && commitPersonPin) {
+                  if (canDrag) {
                     return (
                       <button
                         key={key}
                         type="button"
-                        title={m.label}
-                        aria-label={`${m.label} — drag to move, click to open profile`}
+                        title={m.pinned ? `${m.label} (pinned)` : m.label}
+                        aria-label={`${m.label} — drag to move, click to open`}
                         className="pointer-events-auto absolute z-[2] h-11 w-11 -translate-x-1/2 -translate-y-1/2 cursor-grab rounded-full border-0 bg-transparent p-0 active:cursor-grabbing"
                         style={style}
-                        onPointerDown={(e) => onPersonMarkerPointerDown(e, m)}
+                        onPointerDown={(e) => onEditableMarkerPointerDown(e, m)}
                       >
                         {inner}
                       </button>
+                    );
+                  }
+
+                  if (editableMarkerPins && m.pinned && m.href) {
+                    return (
+                      <Link
+                        key={key}
+                        to={m.href}
+                        title={`${m.label} (pinned)`}
+                        className="pointer-events-auto absolute z-[2] h-11 w-11 -translate-x-1/2 -translate-y-1/2 rounded-full ring-2 ring-amber-400/80 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                        style={style}
+                        onPointerDown={(e) => e.stopPropagation()}
+                      >
+                        {inner}
+                      </Link>
                     );
                   }
 

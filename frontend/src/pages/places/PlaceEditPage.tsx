@@ -30,8 +30,6 @@ export function PlaceEditPage() {
   const [atlasCatalogId, setAtlasCatalogId] = useState("");
   const [atlasNx, setAtlasNx] = useState("0.5");
   const [atlasNy, setAtlasNy] = useState("0.5");
-  const [latStr, setLatStr] = useState("");
-  const [lngStr, setLngStr] = useState("");
 
   useEffect(() => {
     void fetchEvents();
@@ -69,13 +67,6 @@ export function PlaceEditPage() {
       setAtlasNx("0.5");
       setAtlasNy("0.5");
     }
-    if (p.lat != null && Number.isFinite(p.lat) && p.lng != null && Number.isFinite(p.lng)) {
-      setLatStr(String(p.lat));
-      setLngStr(String(p.lng));
-    } else {
-      setLatStr("");
-      setLngStr("");
-    }
   }, [placeId, isNew, workspaceEpoch]);
 
   const toggleRelated = (id: string) => {
@@ -102,19 +93,6 @@ export function PlaceEditPage() {
           }
         : undefined;
 
-    const latTrim = latStr.trim();
-    const lngTrim = lngStr.trim();
-    let lat: number | undefined;
-    let lng: number | undefined;
-    if (latTrim && lngTrim) {
-      const la = parseFloat(latTrim);
-      const ln = parseFloat(lngTrim);
-      if (Number.isFinite(la) && Number.isFinite(ln)) {
-        lat = la;
-        lng = ln;
-      }
-    }
-
     const record: PlaceRecord = {
       id,
       name: trimmed,
@@ -122,7 +100,6 @@ export function PlaceEditPage() {
       description: description.trim() || undefined,
       imageDataUrl: imageDataUrl ?? undefined,
       atlasPin,
-      ...(lat !== undefined && lng !== undefined ? { lat, lng } : {}),
       scriptureAppearances: scriptureAppearances.length ? scriptureAppearances : undefined,
       relatedTimelineEventIds: relatedIds.length ? relatedIds : undefined,
     };
@@ -217,37 +194,6 @@ export function PlaceEditPage() {
                 })
               }
             />
-          </div>
-          <div className="border-t border-border pt-4">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Book cities map</p>
-            <p className="mb-2 text-[11px] text-muted-foreground">
-              Optional latitude and longitude (WGS84) for the MapLibre &quot;Book cities&quot; map in the reader. Once set, this marker stays visible in every chapter. Edit or clear here to remove it from that map.
-            </p>
-            <div className="grid gap-2 sm:grid-cols-2">
-              <div>
-                <label className="mb-1 block text-[10px] font-medium text-muted-foreground">Latitude</label>
-                <Input
-                  value={latStr}
-                  onChange={(e) => setLatStr(e.target.value)}
-                  placeholder="e.g. 31.78"
-                  className="h-9 text-xs"
-                  inputMode="decimal"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-[10px] font-medium text-muted-foreground">Longitude</label>
-                <Input
-                  value={lngStr}
-                  onChange={(e) => setLngStr(e.target.value)}
-                  placeholder="e.g. 35.23"
-                  className="h-9 text-xs"
-                  inputMode="decimal"
-                />
-              </div>
-            </div>
-            <p className="mt-2 text-[11px] text-muted-foreground">
-              Leave both empty to hide this place on the geographic map. People markers on the workspace plate follow your current book and chapter when their profile lists those passages.
-            </p>
           </div>
           {mapCatalogEntries.length ? (
             <div className="border-t border-border pt-4">

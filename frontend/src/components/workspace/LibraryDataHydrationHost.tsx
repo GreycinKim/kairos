@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 import { useAuth } from "@/contexts/AuthContext";
+import { hydrateChapterAtlasFromServer } from "@/lib/chapterAtlasState";
 import { hydratePlacesFromServer } from "@/lib/places";
 import { migrateReadingLogLocalToServer, refreshReadingLogFromServer } from "@/lib/readingLog";
 import { hydratePeopleProfilesFromServer } from "@/lib/timelinePeople";
@@ -17,7 +18,11 @@ export function LibraryDataHydrationHost() {
     if (!ready || !authed) return;
     let cancelled = false;
     const runSync = async () => {
-      await Promise.all([hydratePeopleProfilesFromServer(), hydratePlacesFromServer()]);
+      await Promise.all([
+        hydratePeopleProfilesFromServer(),
+        hydratePlacesFromServer(),
+        hydrateChapterAtlasFromServer(),
+      ]);
       if (cancelled) return;
       await refreshReadingLogFromServer();
       if (cancelled) return;
