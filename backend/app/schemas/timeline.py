@@ -48,6 +48,14 @@ class TimelineEventRead(TimelineEventBase):
     updated_at: datetime
 
 
+class TimelineBulkDeleteRequest(BaseModel):
+    event_ids: list[UUID]
+
+
+class TimelineBulkDeleteResult(BaseModel):
+    deleted: int
+
+
 class MilestoneBase(BaseModel):
     title: str
     milestone_date: date

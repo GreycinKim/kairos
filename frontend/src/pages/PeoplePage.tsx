@@ -163,12 +163,17 @@ export function PeoplePage() {
     setBulkBusy(true);
     const succeeded = new Set<string>();
     const failed: { id: string; error: string }[] = [];
-    for (const eventId of ids) {
-      try {
-        await api.delete(`/timeline/events/${eventId}`);
-        succeeded.add(eventId);
-      } catch (e) {
-        failed.push({ id: eventId, error: e instanceof Error ? e.message : "Request failed" });
+    try {
+      await api.post("/timeline/events/bulk-delete", { event_ids: ids });
+      for (const eventId of ids) succeeded.add(eventId);
+    } catch {
+      for (const eventId of ids) {
+        try {
+          await api.delete(`/timeline/events/${eventId}`);
+          succeeded.add(eventId);
+        } catch (e) {
+          failed.push({ id: eventId, error: e instanceof Error ? e.message : "Request failed" });
+        }
       }
     }
     if (succeeded.size) {

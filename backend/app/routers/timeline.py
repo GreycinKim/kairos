@@ -6,7 +6,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
 from app.models import TimelineEvent
-from app.schemas.timeline import TimelineEventCreate, TimelineEventRead, TimelineEventUpdate
+from app.schemas.timeline import (
+    TimelineBulkDeleteRequest,
+    TimelineBulkDeleteResult,
+    TimelineEventCreate,
+    TimelineEventRead,
+    TimelineEventUpdate,
+)
 
 router = APIRouter(prefix="/timeline/events", tags=["timeline"])
 
@@ -65,3 +71,14 @@ async def delete_event(event_id: UUID, db: AsyncSession = Depends(get_db)) -> No
     res = await db.execute(delete(TimelineEvent).where(TimelineEvent.id == event_id))
     if res.rowcount == 0:
         raise HTTPException(status_code=404, detail="Event not found")
+
+
+@router.post("/bulk-delete", response_model=TimelineBulkDeleteResult)
+async def bulk_delete_events(
+    body: TimelineBulkDeleteRequest, db: AsyncSession = Depends(get_db)
+) -> TimelineBulkDeleteResult:
+    ids = list(dict.fromkeys(body.event_ids))
+    if not ids:
+        return TimelineBulkDeleteResult(deleted=0)
+    res = await db.execute(delete(TimelineEvent).where(TimelineEvent.id.in_(ids)))
+    return TimelineBulkDeleteResult(deleted=int(res.rowcount or 0))
