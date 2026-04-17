@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 from typing import Any
 from uuid import UUID
 
@@ -133,7 +134,14 @@ async def _delete_children(db: AsyncSession, event_id: UUID) -> None:
     await db.execute(delete(PersonLoreFamilyLinkRow).where(PersonLoreFamilyLinkRow.event_id == event_id))
 
 
-async def save_profile_dict(db: AsyncSession, event_id: UUID, prof: dict[str, Any]) -> dict[str, Any]:
+async def save_profile_dict(
+    db: AsyncSession,
+    event_id: UUID,
+    prof: dict[str, Any],
+    *,
+    hydrate_response: bool = True,
+    flush: bool = True,
+) -> dict[str, Any]:
     """Replace normalized rows for this event from a client PersonProfile-shaped dict."""
     name = str(prof.get("name") or "").strip() or "Unknown"
     scope_raw = prof.get("scope")
@@ -191,9 +199,7 @@ async def save_profile_dict(db: AsyncSession, event_id: UUID, prof: dict[str, An
     detail.atlas_ny = ny
     detail.related_event_ids = rel_ids
 
-    await db.flush()
     await _delete_children(db, event_id)
-    await db.flush()
 
     srows = prof.get("scriptureAppearances") or []
     if isinstance(srows, list):
@@ -257,8 +263,11 @@ async def save_profile_dict(db: AsyncSession, event_id: UUID, prof: dict[str, An
                 continue
             db.add(PersonLoreFamilyLinkRow(event_id=event_id, relation=rel, linked_person_event_id=uid))
 
-    await db.flush()
-    return (await load_one_profile(db, event_id)) or {}
+    if flush:
+        await db.flush()
+    if hydrate_response:
+        return (await load_one_profile(db, event_id)) or {}
+    return {**prof, "eventId": str(event_id)}
 
 
 async def save_all_profiles(db: AsyncSession, profiles: dict[str, Any]) -> dict[str, Any]:
@@ -269,6 +278,10 @@ async def save_all_profiles(db: AsyncSession, profiles: dict[str, Any]) -> dict[
         return {}
 
     incoming: set[UUID] = set()
+    saved_profiles: dict[str, Any] = {}
+    # Keep the event loop responsive and avoid one giant flush for large imports.
+    flush_every = 25
+    saved_count = 0
     for event_id_str in profiles:
         uid = _uuid(event_id_str)
         if uid is None:
@@ -276,11 +289,16 @@ async def save_all_profiles(db: AsyncSession, profiles: dict[str, Any]) -> dict[
         prof = profiles[event_id_str]
         if not isinstance(prof, dict):
             continue
-        await save_profile_dict(db, uid, prof)
+        saved = await save_profile_dict(db, uid, prof, hydrate_response=False, flush=False)
         incoming.add(uid)
+        saved_profiles[str(uid)] = saved
+        saved_count += 1
+        if saved_count % flush_every == 0:
+            await db.flush()
+            await asyncio.sleep(0)
 
     if incoming:
         await db.execute(delete(PersonLoreDetail).where(~PersonLoreDetail.event_id.in_(incoming)))
 
     await db.flush()
-    return await load_profile_map(db)
+    return saved_profiles
